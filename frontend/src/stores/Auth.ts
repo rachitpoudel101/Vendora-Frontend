@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import axios from 'axios'
-import { authAPI } from '../../core/endpoints/auth';
+import { authAPI } from "../core/auth"
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
@@ -13,7 +13,7 @@ export const useAuthStore = defineStore('auth', {
     self: (state) => state.user,
   },
   actions: {
-    async login(credentials: { email: string; password: string }) {
+    async login(credentials: { username: string; password: string }) {
       this.loading = true
       this.error = null
       try {
