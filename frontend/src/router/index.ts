@@ -9,7 +9,7 @@ const routes = [
   {
     path: '/dashboard',
     name: 'Dashboard',
-    component: () => import('../views/Dashboard.vue'), // Create this file if it doesn't exist
+    component: () => import('../views/Dashboard.vue'),
   },
 ];
 
