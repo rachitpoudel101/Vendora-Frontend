@@ -2,9 +2,17 @@ import { authAPI } from '../core/auth'
 import axios from 'axios'
 import { defineStore } from 'pinia'
 
+function getToken() {
+  return localStorage.getItem('token')
+}
+function getRefresh() {
+  return localStorage.getItem('refresh')
+}
+
 export const useAuthStore = defineStore('auth', {
   state: () => ({
-    token: null as string | null,
+    token: getToken(), 
+    refresh: getRefresh(), 
     error: null as string | null,
     loading: false,
     user: null as any, 
@@ -17,10 +25,16 @@ export const useAuthStore = defineStore('auth', {
       try {
         const res = await axios.post(authAPI.login, { username, password })
         this.token = res.data.access
+        this.refresh = res.data.refresh
+        localStorage.setItem('token', this.token)
+        localStorage.setItem('refresh', this.refresh)
         axios.defaults.headers.common['Authorization'] = `Bearer ${this.token}`
         this.error = null
       } catch (err: any) {
         this.token = null
+        this.refresh = null
+        localStorage.removeItem('token')
+        localStorage.removeItem('refresh')
         this.error = err.response?.data?.detail || 'Login failed'
       } finally {
         this.loading = false
@@ -29,12 +43,29 @@ export const useAuthStore = defineStore('auth', {
 
     async logout() {
       this.loading = true
+      this.error = null
+      let success = false
       try {
-        await axios.post(authAPI.logout)
-      } catch {}
-      this.token = null
-      this.user = null
-      delete axios.defaults.headers.common['Authorization']
+        const res = await axios.post(authAPI.logout, {
+          refresh: this.refresh
+        }, {
+          headers: {
+            Authorization: this.token ? `Bearer ${this.token}` : undefined,
+          }
+        })
+        if (res.status === 205) {
+          success = true
+        }
+      } catch (err: any) {
+        this.error = err.response?.data?.detail || 'Logout failed'      }
+      if (success) {
+        this.token = null
+        this.refresh = null
+        this.user = null
+        localStorage.removeItem('token')
+        localStorage.removeItem('refresh')
+        delete axios.defaults.headers.common['Authorization']
+      }
       this.loading = false
     },
 
