@@ -3,17 +3,15 @@
     <div
       class="bg-white/80 backdrop-blur-lg p-8 rounded-2xl shadow-xl w-full max-w-sm border border-gray-200"
     >
-      <!-- Title -->
       <h2 class="text-3xl font-bold mb-6 text-center text-gray-800">
         Welcome Back 👋
       </h2>
 
-      <!-- Login Form -->
       <form @submit.prevent="handleLogin" class="space-y-5">
-        <!-- Username -->
+
         <div>
           <label
-            for="username"
+            for="username" 
             class="block text-sm font-semibold text-gray-700 mb-1"
             >Username</label
           >
@@ -34,7 +32,6 @@
           </div>
         </div>
 
-        <!-- Password -->
         <div>
           <label
             for="password"
@@ -58,7 +55,6 @@
           </div>
         </div>
 
-        <!-- Submit Button -->
         <button
           type="submit"
           :disabled="auth.loading"
@@ -67,20 +63,17 @@
           <span v-if="auth.loading" class="animate-pulse">Logging in...</span>
           <span v-else>Login</span>
         </button>
-
-        <!-- Error Message -->
         <div
           v-if="auth.error"
           class="text-red-500 text-sm mt-2 text-center font-medium"
         >
           {{ auth.error }}
         </div>
-
-        <!-- Extra Links -->
+<!-- 
         <div class="flex justify-between text-sm text-gray-600 mt-4">
           <a href="#" class="hover:underline">Forgot Password?</a>
           <a href="#" class="hover:underline">Create Account</a>
-        </div>
+        </div> -->
       </form>
     </div>
   </div>

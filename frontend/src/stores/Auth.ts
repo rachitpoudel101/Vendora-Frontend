@@ -1,47 +1,52 @@
-import { defineStore } from 'pinia'
+import { authAPI } from '../core/auth'
 import axios from 'axios'
-import { authAPI } from "../core/auth"
+import { defineStore } from 'pinia'
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
-    user: null as null | Record<string, any>,
-    token: '' as string,
+    token: null as string | null,
+    error: null as string | null,
     loading: false,
-    error: null as null | string,
+    user: null as any, 
   }),
-  getters: {
-    self: (state) => state.user,
-  },
   actions: {
-    async login(credentials: { username: string; password: string }) {
+    async login(payload: { username: string; password: string }) {
+      const { username, password } = payload
       this.loading = true
       this.error = null
       try {
-        const res = await axios.post(authAPI.login, credentials)
-        this.token = res.data.token
-        this.user = res.data.user
+        const res = await axios.post(authAPI.login, { username, password })
+        this.token = res.data.access
         axios.defaults.headers.common['Authorization'] = `Bearer ${this.token}`
+        this.error = null
       } catch (err: any) {
-        this.error = err.response?.data?.message || 'Login failed'
+        this.token = null
+        this.error = err.response?.data?.detail || 'Login failed'
       } finally {
         this.loading = false
       }
     },
+
     async logout() {
       this.loading = true
       try {
         await axios.post(authAPI.logout)
       } catch {}
-      this.token = ''
+      this.token = null
       this.user = null
       delete axios.defaults.headers.common['Authorization']
       this.loading = false
     },
+
     async self() {
       this.loading = true
       this.error = null
       try {
-        const res = await axios.get(authAPI.self)
+        const res = await axios.get(authAPI.self, {
+          headers: {
+            Authorization: this.token ? `Bearer ${this.token}` : undefined,
+          }
+        })
         this.user = res.data
       } catch (err: any) {
         this.error = err.response?.data?.message || 'Failed to fetch user details'
