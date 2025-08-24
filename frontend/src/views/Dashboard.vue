@@ -1,26 +1,25 @@
 <template>
-  <div class="flex items-center justify-center min-h-screen bg-gray-50">
-    <div class="bg-white p-8 rounded shadow w-full max-w-lg text-center">
-      <h2 class="text-3xl font-bold mb-4 text-blue-700">Dashboard</h2>
-      <template v-if="auth.user">
-        <p class="text-gray-700 text-lg">
-          Welcome, <span class="font-semibold">{{ auth.user.username }}</span>!
-        </p>
+  <div class="min-h-screen bg-gray-50 flex flex-col">
+    <Navbar @logout="handleLogout" />
+    <div class="flex flex-1">
+      <Sidebar />
+      <main class="flex-1 flex items-center justify-center">
+        <div class="bg-white p-8 rounded shadow w-full max-w-lg text-center">
+          <h2 class="text-3xl font-bold mb-4 text-blue-700">Dashboard</h2>
+          <template v-if="auth.user">
+            <p class="text-gray-700 text-lg">
+              Welcome, <span class="font-semibold">{{ auth.user.username }}</span>!
+            </p>
 
-        <button
-          @click="handleLogout"
-          class="mt-6 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition font-semibold"
-        >
-          Logout
-        </button>
-
-        <div v-if="logoutMsg" class="mt-4 text-sm font-medium" :class="logoutMsgType">
-          {{ logoutMsg }}
+            <div v-if="logoutMsg" class="mt-4 text-sm font-medium" :class="logoutMsgType">
+              {{ logoutMsg }}
+            </div>
+          </template>
+          <template v-else>
+            <p class="text-gray-700 text-lg">Loading user info...</p>
+          </template>
         </div>
-      </template>
-      <template v-else>
-        <p class="text-gray-700 text-lg">Loading user info...</p>
-      </template>
+      </main>
     </div>
   </div>
 </template>
@@ -29,6 +28,8 @@
 import { useAuthStore } from '../stores/Auth'
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import Sidebar from '../components/Sidebar.vue'
+import Navbar from '../components/Navbar.vue'
 
 const auth = useAuthStore()
 const router = useRouter()
@@ -41,7 +42,6 @@ onMounted(async () => {
     router.push({ name: 'Login' })
     return
   }
-  // If token exists, try to fetch user info but do not redirect
   if (!auth.user) {
     await auth.self()
   }
