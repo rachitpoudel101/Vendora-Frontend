@@ -1,5 +1,5 @@
 <template>
-  <aside class="bg-blue-700 text-white w-64 min-h-screen flex flex-col py-6 px-4 shadow-lg">
+  <aside class="bg-[#6A89A7] text-white w-64 min-h-screen flex flex-col py-6 px-4 shadow-lg">
     <nav class="flex flex-col gap-2">
       <router-link
         v-for="item in navItems"
@@ -29,6 +29,6 @@ const navItems = [
   { label: 'Dashboard', path: '/dashboard', icon: '🏠' },
   { label: 'Items', path: '/items', icon: '📦' },
   { label: 'Orders', path: '/orders', icon: '📝' },
-  { label: 'Profile', path: '/profile', icon: '👤' }
+  { label: 'Users', path: '/users', icon: '👤' }
 ]
 </script>

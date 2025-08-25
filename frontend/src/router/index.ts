@@ -11,6 +11,26 @@ const routes = [
     name: 'Dashboard',
     component: () => import('../views/Dashboard.vue'),
   },
+  {
+    path: '/items',
+    name: 'Items',
+    component: () => import('../views/Items.vue'),
+  },
+  {
+    path: '/orders',
+    name: 'Orders',
+    component: () => import('../views/Orders.vue'),
+  },
+  {
+    path: '/users',
+    name: 'Users',
+    component: () => import('../views/Users/index.vue'),
+  },
+    {
+    path: '/users/create',
+    name: 'Create',
+    component: () => import('@/views/Users/Create.vue'),
+  },
 ];
 
 const router = createRouter({
