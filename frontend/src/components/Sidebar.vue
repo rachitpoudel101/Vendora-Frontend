@@ -27,7 +27,7 @@ const $route = useRoute()
 
 const navItems = [
   { label: 'Dashboard', path: '/dashboard', icon: '🏠' },
-  { label: 'Items', path: '/items', icon: '📦' },
+  { label: 'Stocks', path: '/stocks', icon: '📦' },
   { label: 'Orders', path: '/orders', icon: '📝' },
   { label: 'Users', path: '/users', icon: '👤' }
 ]

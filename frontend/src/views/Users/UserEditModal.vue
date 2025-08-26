@@ -34,7 +34,7 @@
 import { ref, watch } from "vue"
 import axios from "axios"
 import Modal from "@/components/Modal.vue"
-import { getUser, updateUser } from "@/core/api"
+import { getUser, updateUser } from "@/core/usersAPI"
 
 // Props
 const props = defineProps({

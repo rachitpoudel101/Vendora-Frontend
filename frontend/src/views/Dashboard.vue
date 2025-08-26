@@ -21,11 +21,11 @@
 </template>
 
 <script setup lang="ts">
-import { useAuthStore } from '@/stores/Auth'
+import { useAuthStore } from '@/stores/auth'
 import { onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import Sidebar from '../components/Sidebar.vue'
-import Navbar from '../components/Navbar.vue'
+import Sidebar from '@/components/Sidebar.vue'
+import Navbar from '@/components/Navbar.vue'
 
 const auth = useAuthStore()
 const router = useRouter()

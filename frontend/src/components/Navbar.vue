@@ -36,7 +36,7 @@
 </template>
 
 <script setup lang="ts">
-import { useAuthStore } from '../stores/Auth'
+import { useAuthStore } from '@//stores/auth'
 import {  useRouter } from 'vue-router'
 import { onMounted, onBeforeUnmount, ref, computed } from 'vue'
 const router = useRouter()

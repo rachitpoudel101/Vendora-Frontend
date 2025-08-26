@@ -1,5 +1,5 @@
 import axios from 'axios'
-import {UserApi} from '@/core/Users'
+import {UserApi} from '@/core/users'
 import {authAPI} from "@/core/auth"
 
 const token = localStorage.getItem('token')

@@ -34,8 +34,8 @@ import Sidebar from "@/components/Sidebar.vue"
 import Navbar from '@/components/Navbar.vue'
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { createUser } from '../../core/api' 
-import { useAuthStore } from '@/stores/Auth'
+import { createUser } from '@/core/usersAPI' 
+import { useAuthStore } from '@/stores/auth'
 
 
 const username = ref('')

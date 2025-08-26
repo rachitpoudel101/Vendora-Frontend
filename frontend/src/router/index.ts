@@ -4,37 +4,32 @@ const routes = [
   {
     path: '/',
     name: 'Login',
-    component: () => import('../views/Login.vue'),
+    component: () => import('@/views/Login.vue'),
   },
   {
     path: '/dashboard',
     name: 'Dashboard',
-    component: () => import('../views/Dashboard.vue'),
+    component: () => import('@/views/Dashboard.vue'),
   },
   {
-    path: '/items',
-    name: 'Items',
-    component: () => import('../views/Items.vue'),
+    path: '/stocks',
+    name: 'Stocks',
+    component: () => import('@/views/Stocks/Index.vue'),
   },
   {
     path: '/orders',
     name: 'Orders',
-    component: () => import('../views/Orders.vue'),
+    component: () => import('@/views/Orders.vue'),
   },
   {
     path: '/users',
     name: 'Users',
-    component: () => import('../views/Users/index.vue'),
+    component: () => import('@/views/Users/index.vue'),
   },
     {
     path: '/users/create',
     name: 'Create',
     component: () => import('@/views/Users/Create.vue'),
-  },
-      {
-    path: '/users/EditROle',
-    name: 'Editrole',
-    component: () => import('@/views/Users/UserEditRole.vue'),
   },
 ];
 

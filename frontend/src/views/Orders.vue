@@ -12,6 +12,14 @@
   </div>
 </template>
 <script setup lang="ts">
-import Sidebar from '../components/Sidebar.vue'
-import Navbar from '../components/Navbar.vue'
+import { onMounted } from 'vue'
+import Sidebar from '@/components/Sidebar.vue'
+import Navbar from '@/components/Navbar.vue'
+import { useAuthStore } from '@/stores/auth'
+const auth = useAuthStore()
+onMounted(async () => {
+  if (!auth.user) {
+    await auth.self()
+  }
+})
 </script>

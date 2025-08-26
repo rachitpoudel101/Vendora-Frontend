@@ -20,9 +20,10 @@
                   <tr class="bg-gradient-to-r from-blue-200 via-purple-100 to-blue-100 text-blue-800">
                     <th class="py-4 px-4 text-left font-bold">S.N.</th>
                     <th class="py-4 px-4 text-left font-bold">Name</th>
+                    <th class="py-4 px-4 text-left font-bold">Username</th>
                     <th class="py-4 px-4 text-left font-bold">Email</th>
                     <th class="py-4 px-4 text-left font-bold">Role</th>
-                    <th class="py-4 px-4 text-center font-bold">Actions</th>
+                    <th class="py-4 px-4 text-center font-bold w-40">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -32,6 +33,7 @@
                     class="even:bg-blue-50 odd:bg-white hover:bg-purple-50 transition-colors border-b border-blue-100"
                   >
                     <td class="py-3 px-4 font-bold text-blue-600">{{ (currentPage - 1) * pageSize + idx + 1 }}</td>
+                    <td class="py-3 px-4 text-gray-700">{{ user.first_name }} {{ user.last_name }}</td>
                     <td class="py-3 px-4 text-gray-700">{{ user.name }}</td>
                     <td class="py-3 px-4 text-gray-700">{{ user.email }}</td>
                     <td class="py-3 px-4 text-purple-700 font-semibold">{{ user.role }}</td>
@@ -111,19 +113,22 @@ import Navbar from '@/components/Navbar.vue'
 import { ref, onMounted, computed, watch } from 'vue'
 import UserEditModal from "@/views/Users/UserEditModal.vue"
 import UserEditRole from "@/views/Users/UserEditRole.vue"
-import { fetchUsers } from '../../core/api'
+import { fetchUsers } from '@/core/usersAPI'
 import { useRouter } from 'vue-router'
-
+// import { useAuthStore } from '@/stores/auth'
+// const auth = useAuthStore()
 const users = ref([])
 const showModal = ref(false)
 const selectedUserId = ref(null)
-// const selectedUserRoleId = ref(null)
 const showRoleEditModal = ref(false)
 
 const router = useRouter()
 
 onMounted(async () => {
   users.value = await fetchUsers()
+  // if (!auth.user) {
+  //   await auth.self()
+//}
 })
 
 function onCreateUser() {

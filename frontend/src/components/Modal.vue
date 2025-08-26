@@ -3,6 +3,7 @@
     <!-- Modal Box -->
     <div 
       class="relative bg-white rounded-lg shadow-lg p-6"
+      :class="customClass"
       :style="{ width, height }"
     >
       <!-- Close button -->
@@ -23,6 +24,7 @@
 defineProps({
   show: { type: Boolean, required: true },
   width: { type: String, default: "500px" },   // configurable width
-  height: { type: String, default: "auto" }    // configurable height
+  height: { type: String, default: "auto" },    // configurable height
+  customClass: { type: String, default: "" } // new prop
 })
 </script>
