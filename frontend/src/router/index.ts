@@ -31,6 +31,11 @@ const routes = [
     name: 'Create',
     component: () => import('@/views/Users/Create.vue'),
   },
+      {
+    path: '/users/EditROle',
+    name: 'Editrole',
+    component: () => import('@/views/Users/UserEditRole.vue'),
+  },
 ];
 
 const router = createRouter({
