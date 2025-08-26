@@ -29,16 +29,28 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="(item, idx) in sampleStocks" :key="item.id" class="hover:bg-gray-50">
+                <tr
+                  v-for="(item, idx) in sampleStocks"
+                  :key="item.id"
+                  class="hover:bg-gray-50"
+                >
                   <td class="px-4 py-2 border-b">{{ idx + 1 }}</td>
                   <td class="px-4 py-2 border-b">{{ item.productName }}</td>
                   <td class="px-4 py-2 border-b">{{ item.categoryName }}</td>
                   <td class="px-4 py-2 border-b">{{ item.stocks }}</td>
                   <td class="px-4 py-2 border-b">
-                    <button class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 text-sm"
-                      @click="openViewModal(item.id)">View</button>
-                    <button class="bg-gray-200 text-gray-700 px-3 py-1 rounded hover:bg-gray-300 text-sm ml-2"
-                      @click="openEditModal(item.id)">Edit</button>
+                    <button
+                      class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 text-sm"
+                      @click="openViewModal(item.id)"
+                    >
+                      View
+                    </button>
+                    <button
+                      class="bg-gray-200 text-gray-700 px-3 py-1 rounded hover:bg-gray-300 text-sm ml-2"
+                      @click="openEditModal(item.id)"
+                    >
+                      Edit
+                    </button>
                   </td>
                 </tr>
               </tbody>
@@ -55,11 +67,25 @@
           >
             <h3 class="text-xl font-bold mb-4 text-blue-700">View Stock</h3>
             <div class="mb-2 text-left">
-              <div><span class="font-semibold">Product Name:</span> {{ selectedStock?.productName }}</div>
-              <div><span class="font-semibold">Category:</span> {{ selectedStock?.categoryName }}</div>
-              <div><span class="font-semibold">Stocks:</span> {{ selectedStock?.stocks }}</div>
+              <div>
+                <span class="font-semibold">Product Name:</span>
+                {{ selectedStock?.productName }}
+              </div>
+              <div>
+                <span class="font-semibold">Category:</span>
+                {{ selectedStock?.categoryName }}
+              </div>
+              <div>
+                <span class="font-semibold">Stocks:</span>
+                {{ selectedStock?.stocks }}
+              </div>
             </div>
-            <button class="mt-6 px-4 py-2 bg-blue-500 text-white rounded" @click="showViewModal = false">Close</button>
+            <button
+              class="mt-6 px-4 py-2 bg-blue-500 text-white rounded"
+              @click="showViewModal = false"
+            >
+              Close
+            </button>
           </Modal>
           <Modal
             v-if="showEditModal"
@@ -70,13 +96,42 @@
             @close="showEditModal = false"
           >
             <h3 class="text-xl font-bold mb-4 text-blue-700">Edit Stock</h3>
-            <form @submit.prevent="showEditModal = false" class="flex flex-col gap-3">
-              <input v-model="editForm.productName" type="text" placeholder="Product Name" class="border rounded px-3 py-2" />
-              <input v-model="editForm.categoryName" type="text" placeholder="Category Name" class="border rounded px-3 py-2" />
-              <input v-model="editForm.stocks" type="number" placeholder="Stocks" class="border rounded px-3 py-2" />
+            <form
+              @submit.prevent="showEditModal = false"
+              class="flex flex-col gap-3"
+            >
+              <input
+                v-model="editForm.productName"
+                type="text"
+                placeholder="Product Name"
+                class="border rounded px-3 py-2"
+              />
+              <input
+                v-model="editForm.categoryName"
+                type="text"
+                placeholder="Category Name"
+                class="border rounded px-3 py-2"
+              />
+              <input
+                v-model="editForm.stocks"
+                type="number"
+                placeholder="Stocks"
+                class="border rounded px-3 py-2"
+              />
               <div class="flex justify-end gap-2 mt-4">
-                <button type="button" class="px-4 py-2 bg-gray-200 rounded" @click="showEditModal = false">Cancel</button>
-                <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded">Save</button>
+                <button
+                  type="button"
+                  class="px-4 py-2 bg-gray-200 rounded"
+                  @click="showEditModal = false"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  class="px-4 py-2 bg-blue-500 text-white rounded"
+                >
+                  Save
+                </button>
               </div>
             </form>
           </Modal>
@@ -89,19 +144,58 @@
             @close="showCreateModal = false"
           >
             <h3 class="text-xl font-bold mb-4 text-blue-700">Create Stock</h3>
-            <form @submit.prevent="showCreateModal = false" class="flex flex-col gap-3">
-              <input v-model="createForm.productName" type="text" placeholder="Product Name" class="border rounded px-3 py-2" />
-              <input v-model="createForm.categoryName" type="text" placeholder="Category Name" class="border rounded px-3 py-2" />
-              <input v-model.number="createForm.cp" type="number" placeholder="Cost Price (cp)" class="border rounded px-3 py-2" />
-              <input v-model.number="createForm.margin" type="number" placeholder="Margin" class="border rounded px-3 py-2" />
-              <input v-model.number="createForm.stocks" type="number" placeholder="Stocks" class="border rounded px-3 py-2" />
+            <form
+              @submit.prevent="showCreateModal = false"
+              class="flex flex-col gap-3"
+            >
+              <input
+                v-model="createForm.productName"
+                type="text"
+                placeholder="Product Name"
+                class="border rounded px-3 py-2"
+              />
+              <input
+                v-model="createForm.categoryName"
+                type="text"
+                placeholder="Category Name"
+                class="border rounded px-3 py-2"
+              />
+              <input
+                v-model.number="createForm.cp"
+                type="number"
+                placeholder="Cost Price (cp)"
+                class="border rounded px-3 py-2"
+              />
+              <input
+                v-model.number="createForm.margin"
+                type="number"
+                placeholder="Margin"
+                class="border rounded px-3 py-2"
+              />
+              <input
+                v-model.number="createForm.stocks"
+                type="number"
+                placeholder="Stocks"
+                class="border rounded px-3 py-2"
+              />
               <div class="flex items-center gap-2">
                 <span class="font-semibold">Selling Price (sp):</span>
                 <span class="text-blue-700 font-bold">{{ sellingPrice }}</span>
               </div>
               <div class="flex justify-end gap-2 mt-4">
-                <button type="button" class="px-4 py-2 bg-gray-200 rounded" @click="showCreateModal = false">Cancel</button>
-                <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded">Create</button>
+                <button
+                  type="button"
+                  class="px-4 py-2 bg-gray-200 rounded"
+                  @click="showCreateModal = false"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  class="px-4 py-2 bg-blue-500 text-white rounded"
+                >
+                  Create
+                </button>
               </div>
             </form>
           </Modal>
@@ -111,60 +205,63 @@
   </div>
 </template>
 <script setup lang="ts">
-import { onMounted, ref, computed } from 'vue'
-import Sidebar from '@/components/Sidebar.vue'
-import Navbar from '@/components/Navbar.vue'
-import Modal from '@/components/Modal.vue'
-import { useAuthStore } from '@/stores/auth'
+import { onMounted, ref, computed } from "vue";
+import Sidebar from "@/components/Sidebar.vue";
+import Navbar from "@/components/Navbar.vue";
+import Modal from "@/components/Modal.vue";
+import { useAuthStore } from "@/stores/auth";
 
-const auth = useAuthStore()
+const auth = useAuthStore();
 onMounted(async () => {
   if (!auth.user) {
-    await auth.self()
+    await auth.self();
   }
-})
+});
 const sampleStocks = [
-  { id: 1, productName: 'Pen', categoryName: 'Stationery', stocks: 120 },
-  { id: 2, productName: 'Notebook', categoryName: 'Stationery', stocks: 80 },
-  { id: 3, productName: 'Marker', categoryName: 'Stationery', stocks: 45 }
-]
-const showViewModal = ref(false)
-const showEditModal = ref(false)
-const showCreateModal = ref(false)
-const selectedStockId = ref(null)
-const selectedStock = ref(null)
-const editForm = ref({ productName: '', categoryName: '', stocks: 0 })
+  { id: 1, productName: "Pen", categoryName: "Stationery", stocks: 120 },
+  { id: 2, productName: "Notebook", categoryName: "Stationery", stocks: 80 },
+  { id: 3, productName: "Marker", categoryName: "Stationery", stocks: 45 },
+];
+const showViewModal = ref(false);
+const showEditModal = ref(false);
+const showCreateModal = ref(false);
+const selectedStockId = ref(null);
+const selectedStock = ref(null);
+const editForm = ref({ productName: "", categoryName: "", stocks: 0 });
 const createForm = ref({
-  productName: '',
-  categoryName: '',
+  productName: "",
+  categoryName: "",
   cp: 0,
   margin: 0,
-  stocks: 0
-})
+  stocks: 0,
+});
 const sellingPrice = computed(() => {
-  const cp = Number(createForm.value.cp) || 0
-  const margin = Number(createForm.value.margin) || 0
-  return cp + margin
-})
+  const cp = Number(createForm.value.cp) || 0;
+  const margin = Number(createForm.value.margin) || 0;
+  return cp + margin;
+});
 
 function openViewModal(id) {
-  selectedStockId.value = id
-  selectedStock.value = sampleStocks.find(s => s.id === id)
-  showViewModal.value = true
+  selectedStockId.value = id;
+  selectedStock.value = sampleStocks.find((s) => s.id === id);
+  showViewModal.value = true;
 }
 function openEditModal(id) {
-  selectedStockId.value = id
-  const stock = sampleStocks.find(s => s.id === id)
-  editForm.value = { ...stock }
-  showEditModal.value = true
+  selectedStockId.value = id;
+  const stock = sampleStocks.find((s) => s.id === id);
+  editForm.value = { ...stock };
+  showEditModal.value = true;
 }
 </script>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+@import url("https://fonts.googleapis.com/icon?family=Material+Icons");
 .modal-overlay {
   position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   background: rgba(60, 60, 120, 0.15);
   backdrop-filter: blur(2px);
   z-index: 50;
@@ -172,10 +269,12 @@ function openEditModal(id) {
   align-items: center;
   justify-content: center;
 }
-.modal-fade-enter-active, .modal-fade-leave-active {
+.modal-fade-enter-active,
+.modal-fade-leave-active {
   transition: opacity 0.3s;
 }
-.modal-fade-enter-from, .modal-fade-leave-to {
+.modal-fade-enter-from,
+.modal-fade-leave-to {
   opacity: 0;
 }
 .stock-modal {

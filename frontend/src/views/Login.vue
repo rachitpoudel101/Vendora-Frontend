@@ -1,5 +1,7 @@
 <template>
-  <div class="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-100 via-white to-blue-50">
+  <div
+    class="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-100 via-white to-blue-50"
+  >
     <div
       class="bg-white/80 backdrop-blur-lg p-8 rounded-2xl shadow-xl w-full max-w-sm border border-gray-200"
     >
@@ -8,10 +10,9 @@
       </h2>
 
       <form @submit.prevent="handleLogin" class="space-y-5">
-
         <div>
           <label
-            for="username" 
+            for="username"
             class="block text-sm font-semibold text-gray-700 mb-1"
             >Username</label
           >
@@ -69,7 +70,7 @@
         >
           {{ auth.error }}
         </div>
-<!-- 
+        <!-- 
         <div class="flex justify-between text-sm text-gray-600 mt-4">
           <a href="#" class="hover:underline">Forgot Password?</a>
           <a href="#" class="hover:underline">Create Account</a>
@@ -79,21 +80,20 @@
   </div>
 </template>
 
-
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
-import { useAuthStore } from '@/stores/auth'
+import { ref } from "vue";
+import { useRouter } from "vue-router";
+import { useAuthStore } from "@/stores/auth";
 
-const router = useRouter()
-const auth = useAuthStore()
-const username = ref('')
-const password = ref('')
+const router = useRouter();
+const auth = useAuthStore();
+const username = ref("");
+const password = ref("");
 
 async function handleLogin() {
-  await auth.login({ username: username.value, password: password.value })
+  await auth.login({ username: username.value, password: password.value });
   if (!auth.error && auth.token) {
-    router.push({ name: 'Dashboard' })
+    router.push({ name: "Dashboard" });
   }
 }
 </script>

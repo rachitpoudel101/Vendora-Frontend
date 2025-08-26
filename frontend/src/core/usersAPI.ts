@@ -1,21 +1,21 @@
-import axios from 'axios'
-import {UserApi} from '@/core/users'
-import {authAPI} from "@/core/auth"
+import axios from "axios";
+import { UserApi } from "@/core/users";
+import { authAPI } from "@/core/auth";
 
-const token = localStorage.getItem('token')
+const token = localStorage.getItem("token");
 
 // ✅ Fetch all users
 export async function fetchUsers() {
   try {
     const res = await axios.get(UserApi.fetchUsers, {
       headers: {
-        Authorization: token ? `Bearer ${token}` : ''
-      }
-    })
-    return res.data
+        Authorization: token ? `Bearer ${token}` : "",
+      },
+    });
+    return res.data;
   } catch (e) {
-    console.error("Error fetching users:", e)
-    return []
+    console.error("Error fetching users:", e);
+    return [];
   }
 }
 
@@ -24,16 +24,15 @@ export async function getUser(id: number | string) {
   try {
     const res = await axios.get(UserApi.getUser(id), {
       headers: {
-        Authorization: token ? `Bearer ${token}` : ''
-      }
-    })
-    return res.data
+        Authorization: token ? `Bearer ${token}` : "",
+      },
+    });
+    return res.data;
   } catch (e) {
-    console.error(`Error fetching user with id ${id}:`, e)
-    throw new Error('Failed to fetch user')
+    console.error(`Error fetching user with id ${id}:`, e);
+    throw new Error("Failed to fetch user");
   }
 }
-
 
 // ✅ Create user
 export async function createUser(
@@ -45,7 +44,7 @@ export async function createUser(
     last_name?: string;
     password: string;
   },
-  token?: string
+  token?: string,
 ) {
   try {
     const res = await axios.post(
@@ -60,15 +59,15 @@ export async function createUser(
       },
       {
         headers: {
-          'Content-Type': 'application/json',
-          ...(token ? { Authorization: `Bearer ${token}` } : {})
-        }
-      }
-    )
-    return res.data
+          "Content-Type": "application/json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+      },
+    );
+    return res.data;
   } catch (e) {
-    console.error("Error creating user:", e)
-    throw new Error('Failed to create user')
+    console.error("Error creating user:", e);
+    throw new Error("Failed to create user");
   }
 }
 
@@ -82,58 +81,48 @@ export async function updateUser(
     first_name?: string;
     last_name?: string;
     password?: string;
-  }
+  },
 ) {
   try {
-    const res = await axios.patch(
-      UserApi.getUser(id),
-      updates,
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: token ? `Bearer ${token}` : ''
-        }
-      }
-    )
-    return res.data
+    const res = await axios.patch(UserApi.getUser(id), updates, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: token ? `Bearer ${token}` : "",
+      },
+    });
+    return res.data;
   } catch (e) {
-    console.error(`Error updating user with id ${id}:`, e)
-    throw new Error('Failed to update user')
+    console.error(`Error updating user with id ${id}:`, e);
+    throw new Error("Failed to update user");
   }
 }
 
-
-export async function fetchROles(
-) {
+export async function fetchROles() {
   try {
-      const res = await axios.get(authAPI.rolesConfig,
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: token ? `Bearer ${token}` : ''
-        }
-      }
-    )
-    return res.data.roles
+    const res = await axios.get(authAPI.rolesConfig, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: token ? `Bearer ${token}` : "",
+      },
+    });
+    return res.data.roles;
   } catch (e) {
-    console.error(`Error updating user with id:`, e)
-    throw new Error('Failed to update user')
+    console.error(`Error updating user with id:`, e);
+    throw new Error("Failed to update user");
   }
 }
 
 export async function UpdateRoles(user_id, payload) {
   try {
-      const res = await axios.post(UserApi.updateUserRole(user_id),payload,
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: token ? `Bearer ${token}` : ''
-        }
-      }
-    )
-    return res.data.roles
+    const res = await axios.post(UserApi.updateUserRole(user_id), payload, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: token ? `Bearer ${token}` : "",
+      },
+    });
+    return res.data.roles;
   } catch (e) {
-    console.error(`Error updating user with id:`, e)
-    throw new Error('Failed to update user')
+    console.error(`Error updating user with id:`, e);
+    throw new Error("Failed to update user");
   }
 }

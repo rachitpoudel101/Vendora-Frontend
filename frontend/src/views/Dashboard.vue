@@ -8,7 +8,9 @@
           <h2 class="text-3xl font-bold mb-4 text-blue-700">Dashboard</h2>
           <template v-if="auth.user">
             <p class="text-gray-700 text-lg">
-              Welcome, <span class="font-semibold">{{ auth.user.username }}</span>!
+              Welcome,
+              <span class="font-semibold">{{ auth.user.username }}</span
+              >!
             </p>
           </template>
           <template v-else>
@@ -21,22 +23,22 @@
 </template>
 
 <script setup lang="ts">
-import { useAuthStore } from '@/stores/auth'
-import { onMounted } from 'vue'
-import { useRouter } from 'vue-router'
-import Sidebar from '@/components/Sidebar.vue'
-import Navbar from '@/components/Navbar.vue'
+import { useAuthStore } from "@/stores/auth";
+import { onMounted } from "vue";
+import { useRouter } from "vue-router";
+import Sidebar from "@/components/Sidebar.vue";
+import Navbar from "@/components/Navbar.vue";
 
-const auth = useAuthStore()
-const router = useRouter()
+const auth = useAuthStore();
+const router = useRouter();
 
 onMounted(async () => {
   if (!auth.token) {
-    router.push({ name: 'Login' })
-    return
+    router.push({ name: "Login" });
+    return;
   }
   if (!auth.user) {
-    await auth.self()
+    await auth.self();
   }
-})
+});
 </script>
