@@ -37,9 +37,8 @@
 
 <script setup lang="ts">
 import { useAuthStore } from '../stores/Auth'
-import { useRoute, useRouter } from 'vue-router'
+import {  useRouter } from 'vue-router'
 import { onMounted, onBeforeUnmount, ref, computed } from 'vue'
-const $route = useRoute()
 const router = useRouter()
 const auth = useAuthStore()
 const user = computed(() => auth.user)

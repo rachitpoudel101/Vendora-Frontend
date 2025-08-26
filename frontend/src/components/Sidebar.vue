@@ -1,5 +1,5 @@
 <template>
-  <aside class="bg-[#6A89A7] text-white w-64 min-h-screen flex flex-col py-6 px-4 shadow-lg">
+  <div class="bg-[#6A89A7] text-white w-64 flex flex-col py-6 px-4 shadow-lg">
     <nav class="flex flex-col gap-2">
       <router-link
         v-for="item in navItems"
@@ -18,7 +18,7 @@
     <div class="mt-auto pt-8 text-xs text-blue-200 text-center">
       &copy; {{ new Date().getFullYear() }} Stationary App
     </div>
-  </aside>
+  </div>
 </template>
 
 <script setup lang="ts">
