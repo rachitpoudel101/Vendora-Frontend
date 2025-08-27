@@ -2,6 +2,11 @@
   <div
     class="min-h-screen bg-gradient-to-br from-gray-100 via-blue-50 to-purple-100 flex flex-col"
   >
+    <!-- Toast notification with transition -->
+    <transition name="toast-slide">
+      <div class="v-toast v-toast--top fixed top-6 right-6 z-[9999]"></div>
+    </transition>
+    <!-- Add toast container at the very top -->
     <Navbar />
     <div class="flex flex-1">
       <Sidebar />
@@ -75,14 +80,10 @@
                   <td class="px-4 py-3 text-center border-b">
                     {{ (currentPage - 1) * itemsPerPage + idx + 1 }}
                   </td>
-                  <td
-                    class="px-4 py-3 border-b text-center font-medium text-blue-900"
-                  >
+                  <td class="px-4 py-3 border-b text-center font-medium text-blue-900">
                     {{ item.name }}
                   </td>
-                  <td
-                    class="px-4 py-3 border-b text-center font-medium text-green-700"
-                  >
+                  <td class="px-4 py-3 border-b text-center font-medium text-green-700">
                     {{ item.category_name }}
                   </td>
                   <td
@@ -136,25 +137,15 @@
                     </div>
                   </td>
                 </tr>
-                <tr v-if="loading">
-                  <td
-                    colspan="5"
-                    class="text-center py-6 text-blue-600 font-semibold animate-pulse"
-                  >
-                    Loading...
-                  </td>
-                </tr>
-                <tr v-if="error">
-                  <td
-                    colspan="5"
-                    class="text-center py-6 text-red-500 font-semibold"
-                  >
-                    {{ error }}
-                  </td>
-                </tr>
               </tbody>
             </table>
-
+            <!-- Add loading/error notification below the table -->
+            <div v-if="loading" class="text-center py-6 text-blue-600 font-semibold animate-pulse">
+              Loading...
+            </div>
+            <div v-if="error" class="text-center py-6 text-red-500 font-semibold">
+              {{ error }}
+            </div>
             <!-- Pagination Controls -->
             <div class="flex justify-between items-center mt-4">
               <button
@@ -203,9 +194,7 @@
                 customClass="stock-modal"
                 @close="showViewModal = false"
               >
-                <h3 class="text-2xl font-bold mb-4 text-blue-700">
-                  View Stock
-                </h3>
+                <h3 class="text-2xl font-bold mb-4 text-blue-700">View Stock</h3>
                 <div class="mb-2 text-left space-y-2">
                   <div>
                     <span class="font-semibold">Product Name:</span>
@@ -213,27 +202,19 @@
                   </div>
                   <div>
                     <span class="font-semibold">Category:</span>
-                    <span class="text-green-700">{{
-                      selectedStock?.category_name
-                    }}</span>
+                    <span class="text-green-700">{{ selectedStock?.category_name }}</span>
                   </div>
                   <div>
                     <span class="font-semibold">Stocks:</span>
-                    <span class="text-purple-700">{{
-                      selectedStock?.stock
-                    }}</span>
+                    <span class="text-purple-700">{{ selectedStock?.stock }}</span>
                   </div>
                   <div>
                     <span class="font-semibold">Cost Price:</span>
-                    <span class="text-gray-700">{{
-                      selectedStock?.cost_price
-                    }}</span>
+                    <span class="text-gray-700">{{ selectedStock?.cost_price }}</span>
                   </div>
                   <div>
                     <span class="font-semibold">Margin:</span>
-                    <span class="text-gray-700">{{
-                      selectedStock?.margin
-                    }}</span>
+                    <span class="text-gray-700">{{ selectedStock?.margin }}</span>
                   </div>
                 </div>
                 <button
@@ -256,9 +237,7 @@
                 customClass="stock-modal"
                 @close="showEditModal = false"
               >
-                <h3 class="text-3xl font-bold mb-1 text-blue-700">
-                  Edit Stock
-                </h3>
+                <h3 class="text-3xl font-bold mb-1 text-blue-700">Edit Stock</h3>
                 <form @submit.prevent="handleEdit" class="flex flex-col gap-2">
                   <input
                     v-model="editForm.name"
@@ -271,11 +250,7 @@
                     class="border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
                   >
                     <option value="" disabled>Select Category</option>
-                    <option
-                      v-for="cat in categories"
-                      :key="cat.id"
-                      :value="cat.id"
-                    >
+                    <option v-for="cat in categories" :key="cat.id" :value="cat.id">
                       {{ cat.name }}
                     </option>
                   </select>
@@ -327,13 +302,8 @@
                 customClass="stock-modal"
                 @close="showCreateModal = false"
               >
-                <h3 class="text-2xl font-bold mb-4 text-blue-700">
-                  Create Stock
-                </h3>
-                <form
-                  @submit.prevent="handleCreate"
-                  class="flex flex-col gap-4"
-                >
+                <h3 class="text-2xl font-bold mb-4 text-blue-700">Create Stock</h3>
+                <form @submit.prevent="handleCreate" class="flex flex-col gap-4">
                   <input
                     v-model="createForm.name"
                     type="text"
@@ -345,17 +315,14 @@
                     class="border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
                   >
                     <option value="" disabled>Select Category</option>
-                    <option
-                      v-for="cat in categories"
-                      :key="cat.id"
-                      :value="cat.id"
-                    >
+                    <option v-for="cat in categories" :key="cat.id" :value="cat.id">
                       {{ cat.name }}
                     </option>
                   </select>
                   <input
                     v-model.number="createForm.cost_price"
                     type="number"
+                    min="0"
                     placeholder="Cost Price (cp)"
                     class="border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
                   />
@@ -363,19 +330,19 @@
                     v-model.number="createForm.margin"
                     type="number"
                     placeholder="Margin"
+                    min="0"
                     class="border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
                   />
                   <input
                     v-model.number="createForm.stock"
                     type="number"
                     placeholder="Stocks"
+                    min="0"
                     class="border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
                   />
                   <div class="flex items-center gap-2">
                     <span class="font-semibold">Selling Price (sp):</span>
-                    <span class="text-blue-700 font-bold">{{
-                      sellingPrice
-                    }}</span>
+                    <span class="text-blue-700 font-bold">{{ sellingPrice }}</span>
                   </div>
                   <div class="flex justify-end gap-2 mt-4">
                     <button
@@ -407,13 +374,8 @@
                 customClass="stock-modal"
                 @close="showCreateCategoryModal = false"
               >
-                <h3 class="text-2xl font-bold mb-4 text-green-700">
-                  Create Category
-                </h3>
-                <form
-                  @submit.prevent="handleCreateCategory"
-                  class="flex flex-col gap-4"
-                >
+                <h3 class="text-2xl font-bold mb-4 text-green-700">Create Category</h3>
+                <form @submit.prevent="handleCreateCategory" class="flex flex-col gap-4">
                   <input
                     v-model="createCategoryForm.name"
                     type="text"
@@ -467,9 +429,7 @@ import {
 } from "@/stores/InventoryAPI";
 const currentPage = ref(1);
 const itemsPerPage = ref(10);
-const totalPages = computed(() =>
-  Math.ceil(stocks.value.length / itemsPerPage.value),
-);
+const totalPages = computed(() => Math.ceil(stocks.value.length / itemsPerPage.value));
 
 const paginatedStocks = computed(() => {
   const start = (currentPage.value - 1) * itemsPerPage.value;
@@ -505,16 +465,16 @@ const selectedStock = ref(null);
 const editForm = ref({
   name: "",
   category: "",
-  cost_price: 0,
-  margin: 0,
-  stock: 0,
+  cost_price: null,
+  margin: null,
+  stock: null,
 });
 const createForm = ref({
   name: "",
   category: "",
-  cost_price: 0,
-  margin: 0,
-  stock: 0,
+  cost_price: null,
+  margin: null,
+  stock: null,
 });
 const createCategoryForm = ref({
   name: "",
@@ -528,12 +488,11 @@ const sellingPrice = computed(() => {
 
 async function loadStocks() {
   loading.value = true;
-  error.value = "";
   try {
     const data = await fetchProduct();
     stocks.value = Array.isArray(data) ? data : [];
   } catch (e) {
-    error.value = "Failed to fetch stocks.";
+    $toast.error("Failed to fetch stocks.", { position: "top-right", duration: 3000, dismissible: true });
   } finally {
     loading.value = false;
   }
@@ -544,36 +503,29 @@ async function loadCategories() {
     const data = await fetchCategory();
     categories.value = Array.isArray(data) ? data : [];
   } catch (e) {
-    $toast.error("Failed to fetch categories.");
+    $toast.error("Failed to fetch categories.", { position: "top-right", duration: 3000, dismissible: true });
   }
 }
+
 async function deleteProducts(id) {
   const confirmed = confirm("Are you sure you want to delete this product?");
   if (!confirmed) return;
 
   try {
     await deleteProduct(id);
-
-    stocks.value = stocks.value.filter((stock) => stock.id !== id);
+    stocks.value = stocks.value.filter((s) => s.id !== id);
 
     // Adjust pagination if needed
     if (currentPage.value > totalPages.value)
       currentPage.value = totalPages.value || 1;
-    currentPage.value = totalPages.value || 1;
 
-    alert("Product deleted successfully!");
+    $toast.success("Product deleted successfully!", { position: "top-right", duration: 3000, dismissible: true });
   } catch (error) {
-    console.error("Failed to delete product:", error);
-    alert("Failed to delete product. Try again.");
+    console.error(error);
+    $toast.error("Failed to delete product.", { position: "top-right", duration: 3000, dismissible: true });
   }
 }
 
-onMounted(async () => {
-  if (!auth.user) {
-    await auth.self();
-  }
-  await Promise.all([loadStocks(), loadCategories()]);
-});
 
 function openViewModal(id) {
   selectedStockId.value = id;
@@ -592,12 +544,18 @@ async function handleEdit() {
     await updateProduct(selectedStockId.value, { ...editForm.value });
     showEditModal.value = false;
     await loadStocks();
+    $toast.success("Stock updated successfully!", {
+      position: "top-right",
+      duration: 3000,
+    });
   } catch (e) {
-    error.value = "Failed to update stock.";
+    console.error(e);
+    $toast.error("Failed to update stock.", { position: "top-right", duration: 3000 });
   } finally {
     loading.value = false;
   }
 }
+
 async function handleCreate() {
   loading.value = true;
   try {
@@ -611,12 +569,18 @@ async function handleCreate() {
       stock: 0,
     };
     await loadStocks();
+    $toast.success("Stock created successfully!", {
+      position: "top-right",
+      duration: 3000,
+    });
   } catch (e) {
-    error.value = "Failed to create stock.";
+    console.error(e);
+    $toast.error("Failed to create stock.", { position: "top-right", duration: 3000 });
   } finally {
     loading.value = false;
   }
 }
+
 async function handleCreateCategory() {
   loading.value = true;
   try {
@@ -624,16 +588,16 @@ async function handleCreateCategory() {
     showCreateCategoryModal.value = false;
     createCategoryForm.value = { name: "", description: "" };
     await loadCategories();
+    $toast.success("Category created successfully!", { position: "top-right", duration: 3000, dismissible: true });
   } catch (e) {
-    error.value = "Failed to create category.";
+    console.error(e);
+    $toast.error("Failed to create category.", { position: "top-right", duration: 3000, dismissible: true });
   } finally {
     loading.value = false;
   }
 }
-// function getCategoryName(categoryId: string | number) {
-//   const cat = categories.value.find((c) => c.id === categoryId);
-//   return cat ? cat.name : categoryId;
-// }
+
+
 
 // Close dropdown on outside click
 const handleClickOutside = (event) => {
@@ -641,6 +605,12 @@ const handleClickOutside = (event) => {
     dropdownOpen.value = null;
   }
 };
+onMounted(async () => {
+  if (!auth.user) {
+    await auth.self();
+  }
+  await Promise.all([loadStocks(), loadCategories()]);
+});
 
 onMounted(() => {
   window.addEventListener("click", handleClickOutside);
@@ -653,60 +623,52 @@ onUnmounted(() => {
 
 <style scoped>
 @import url("https://fonts.googleapis.com/icon?family=Material+Icons");
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(60, 60, 120, 0.15);
-  backdrop-filter: blur(2px);
-  z-index: 50;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+/* ...existing code... */
+
+/* Toast notification transition and animation */
+.toast-slide-enter-active,
+.toast-slide-leave-active {
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
-.modal-fade-enter-active,
-.modal-fade-leave-active {
-  transition: opacity 0.3s;
-}
-.modal-fade-enter-from,
-.modal-fade-leave-to {
+.toast-slide-enter-from {
   opacity: 0;
+  transform: translateX(100px);
+}
+.toast-slide-enter-to {
+  opacity: 1;
+  transform: translateX(0);
+}
+.toast-slide-leave-from {
+  opacity: 1;
+  transform: translateX(0);
+}
+.toast-slide-leave-to {
+  opacity: 0;
+  transform: translateX(100px);
 }
 
-.modal-overlay {
+/* Toast container position */
+.v-toast.v-toast--top {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.4); /* semi-dark overlay */
-  backdrop-filter: blur(8px); /* this creates blur */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
+  top: 1.5rem;
+  right: 1.5rem;
+  z-index: 9999;
 }
 
-.modal-box {
-  background: white;
-  border-radius: 1rem;
-  padding: 2rem;
-  max-width: 900px;
-  width: 80%;
-  max-height: 80vh;
-  animation: scaleIn 0.3s ease forwards;
+/* Toast type backgrounds - fix specificity and appearance */
+.v-toast.v-toast--error {
+  background: #f87171 !important; /* red-400 */
+  color: #fff !important;
+  background-clip: padding-box !important;
+  border-radius: 0.75rem !important;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+}
+.v-toast.v-toast--success {
+  background: #22c55e !important; /* green-500 */
+  color: #fff !important;
+  background-clip: padding-box !important;
+  border-radius: 0.75rem !important;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
 }
 
-@keyframes scaleIn {
-  from {
-    opacity: 0;
-    transform: scale(0.9);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
 </style>
