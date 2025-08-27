@@ -8,7 +8,7 @@
         class="px-3 py-2 rounded transition-colors duration-200 flex items-center gap-2"
         :class="{
           'bg-blue-900 font-semibold shadow': $route.path === item.path,
-          'hover:bg-blue-800': $route.path !== item.path
+          'hover:bg-blue-800': $route.path !== item.path,
         }"
       >
         <span v-if="item.icon" class="text-lg">{{ item.icon }}</span>
@@ -22,13 +22,13 @@
 </template>
 
 <script setup lang="ts">
-import { useRoute } from 'vue-router'
-const $route = useRoute()
+import { useRoute } from "vue-router";
+const $route = useRoute();
 
 const navItems = [
-  { label: 'Dashboard', path: '/dashboard', icon: '🏠' },
-  { label: 'Items', path: '/items', icon: '📦' },
-  { label: 'Orders', path: '/orders', icon: '📝' },
-  { label: 'Users', path: '/users', icon: '👤' }
-]
+  { label: "Dashboard", path: "/dashboard", icon: "🏠" },
+  { label: "Stocks", path: "/stocks", icon: "📦" },
+  { label: "Orders", path: "/orders", icon: "📝" },
+  { label: "Users", path: "/users", icon: "👤" },
+];
 </script>
