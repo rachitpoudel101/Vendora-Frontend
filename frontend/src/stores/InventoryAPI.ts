@@ -1,42 +1,42 @@
-import axios from 'axios'
-import { InventoryApi } from '@/core/endpoints/inventory'
+import axios from "axios";
+import { InventoryApi } from "@/core/endpoints/inventory";
 
 const token = localStorage.getItem("token");
 ///////////////////////////////////////////////////////////////    FOR CATEGORY  //////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
 // FetchAll Category
 
-export async function  fetchCategory(){
-    try {
-        const res =await axios.get(InventoryApi.fetchCategory,{
-            headers: {
-                Authorization: token ? `Bearer ${token}` : "",
-            },
+export async function fetchCategory() {
+  try {
+    const res = await axios.get(InventoryApi.fetchCategory, {
+      headers: {
+        Authorization: token ? `Bearer ${token}` : "",
+      },
     });
     return res.data;
-} catch (e) {
+  } catch (e) {
     console.error("Error fetching Category:", e);
     return [];
-}}
-
+  }
+}
 
 // FetchAll Category BY ID
 
-export async function  fetchCategoryById(id: number | string){
-    try {
-        const res =await axios.get(InventoryApi.getProduct(id),{
-            headers: {
-                Authorization: token ? `Bearer ${token}` : "",
-            },
+export async function fetchCategoryById(id: number | string) {
+  try {
+    const res = await axios.get(InventoryApi.getProduct(id), {
+      headers: {
+        Authorization: token ? `Bearer ${token}` : "",
+      },
     });
     return res.data;
-} catch (e) {
+  } catch (e) {
     console.error(`Error fetching Category with id ${id}:`, e);
     throw new Error("Failed to fetch Category");
-}}
+  }
+}
 
 // ✅ Create Category
 export async function createCatyregory(
@@ -56,7 +56,9 @@ export async function createCatyregory(
       {
         headers: {
           "Content-Type": "application/json",
-          ...(tokenOverride || token ? { Authorization: `Bearer ${tokenOverride || token}` } : {}),
+          ...(tokenOverride || token
+            ? { Authorization: `Bearer ${tokenOverride || token}` }
+            : {}),
         },
       },
     );
@@ -66,7 +68,6 @@ export async function createCatyregory(
     throw new Error("Failed to create Category");
   }
 }
-
 
 // ✅ Update CAtegory by ID (partial update using PATCH)
 export async function updateCategory(
@@ -96,35 +97,35 @@ export async function updateCategory(
 
 // FetchAll Product
 
-export async function  fetchProduct(){
-    try {
-        const res =await axios.get(InventoryApi.fetchProduct,{
-            headers: {
-                Authorization: token ? `Bearer ${token}` : "",
-            },
+export async function fetchProduct() {
+  try {
+    const res = await axios.get(InventoryApi.fetchProduct, {
+      headers: {
+        Authorization: token ? `Bearer ${token}` : "",
+      },
     });
     return res.data;
-} catch (e) {
+  } catch (e) {
     console.error("Error fetching Product:", e);
     return [];
-}}
-
+  }
+}
 
 // FetchAll Product BY ID
 
-export async function  getProduct(id: number | string){
-    try {
-        const res =await axios.get(InventoryApi.getProduct(id),{
-            headers: {
-                Authorization: token ? `Bearer ${token}` : "",
-            },
+export async function getProduct(id: number | string) {
+  try {
+    const res = await axios.get(InventoryApi.getProduct(id), {
+      headers: {
+        Authorization: token ? `Bearer ${token}` : "",
+      },
     });
     return res.data;
-} catch (e) {
+  } catch (e) {
     console.error(`Error fetching Category with id ${id}:`, e);
     throw new Error("Failed to fetch Category");
-}}
-
+  }
+}
 
 // ✅ Create Product
 export async function createProduct(
@@ -150,7 +151,9 @@ export async function createProduct(
       {
         headers: {
           "Content-Type": "application/json",
-          ...(tokenOverride || token ? { Authorization: `Bearer ${tokenOverride || token}` } : {}),
+          ...(tokenOverride || token
+            ? { Authorization: `Bearer ${tokenOverride || token}` }
+            : {}),
         },
       },
     );
@@ -160,7 +163,6 @@ export async function createProduct(
     throw new Error("Failed to create Product");
   }
 }
-
 
 // ✅ Update Product by ID (partial update using PATCH)
 
@@ -173,8 +175,7 @@ export async function updateProduct(
     margin: number;
     stock: number;
   },
-) 
-{
+) {
   try {
     const res = await axios.patch(InventoryApi.getProduct(id), updates, {
       headers: {

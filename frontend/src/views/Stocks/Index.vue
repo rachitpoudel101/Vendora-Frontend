@@ -41,7 +41,9 @@
                 >
                   <td class="px-4 py-2 border-b">{{ idx + 1 }}</td>
                   <td class="px-4 py-2 border-b">{{ item.name }}</td>
-                  <td class="px-4 py-2 border-b">{{ getCategoryName(item.category) }}</td>
+                  <td class="px-4 py-2 border-b">
+                    {{ getCategoryName(item.category) }}
+                  </td>
                   <td class="px-4 py-2 border-b">{{ item.stock }}</td>
                   <td class="px-4 py-2 border-b">
                     <button
@@ -62,7 +64,9 @@
                   <td colspan="5" class="text-center py-4">Loading...</td>
                 </tr>
                 <tr v-if="error">
-                  <td colspan="5" class="text-center py-4 text-red-500">{{ error }}</td>
+                  <td colspan="5" class="text-center py-4 text-red-500">
+                    {{ error }}
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -115,10 +119,7 @@
             @close="showEditModal = false"
           >
             <h3 class="text-xl font-bold mb-4 text-blue-700">Edit Stock</h3>
-            <form
-              @submit.prevent="handleEdit"
-              class="flex flex-col gap-3"
-            >
+            <form @submit.prevent="handleEdit" class="flex flex-col gap-3">
               <input
                 v-model="editForm.name"
                 type="text"
@@ -130,7 +131,11 @@
                 class="border rounded px-3 py-2"
               >
                 <option value="" disabled>Select Category</option>
-                <option v-for="cat in categories" :key="cat.id" :value="cat.name">
+                <option
+                  v-for="cat in categories"
+                  :key="cat.id"
+                  :value="cat.name"
+                >
                   {{ cat.name }}
                 </option>
               </select>
@@ -178,10 +183,7 @@
             @close="showCreateModal = false"
           >
             <h3 class="text-xl font-bold mb-4 text-blue-700">Create Stock</h3>
-            <form
-              @submit.prevent="handleCreate"
-              class="flex flex-col gap-3"
-            >
+            <form @submit.prevent="handleCreate" class="flex flex-col gap-3">
               <input
                 v-model="createForm.name"
                 type="text"
@@ -193,7 +195,11 @@
                 class="border rounded px-3 py-2"
               >
                 <option value="" disabled>Select Category</option>
-                <option v-for="cat in categories" :key="cat.id" :value="cat.name">
+                <option
+                  v-for="cat in categories"
+                  :key="cat.id"
+                  :value="cat.name"
+                >
                   {{ cat.name }}
                 </option>
               </select>
@@ -244,7 +250,9 @@
             customClass="stock-modal"
             @close="showCreateCategoryModal = false"
           >
-            <h3 class="text-xl font-bold mb-4 text-green-700">Create Category</h3>
+            <h3 class="text-xl font-bold mb-4 text-green-700">
+              Create Category
+            </h3>
             <form
               @submit.prevent="handleCreateCategory"
               class="flex flex-col gap-3"
@@ -289,8 +297,14 @@ import Sidebar from "@/components/Sidebar.vue";
 import Navbar from "@/components/Navbar.vue";
 import Modal from "@/components/Modal.vue";
 import { useAuthStore } from "@/stores/auth";
-import {useToast} from 'vue-toast-notification';
-import { fetchProduct, createProduct, updateProduct, fetchCategory, createCatyregory } from "@/stores/InventoryAPI";
+import { useToast } from "vue-toast-notification";
+import {
+  fetchProduct,
+  createProduct,
+  updateProduct,
+  fetchCategory,
+  createCatyregory,
+} from "@/stores/InventoryAPI";
 
 const auth = useAuthStore();
 const $toast = useToast();
@@ -304,7 +318,13 @@ const showCreateModal = ref(false);
 const showCreateCategoryModal = ref(false);
 const selectedStockId = ref(null);
 const selectedStock = ref(null);
-const editForm = ref({ name: "", category: "", cost_price: 0, margin: 0, stock: 0 });
+const editForm = ref({
+  name: "",
+  category: "",
+  cost_price: 0,
+  margin: 0,
+  stock: 0,
+});
 const createForm = ref({
   name: "",
   category: "",
@@ -379,7 +399,13 @@ async function handleCreate() {
   try {
     await createProduct({ ...createForm.value });
     showCreateModal.value = false;
-    createForm.value = { name: "", category: "", cost_price: 0, margin: 0, stock: 0 };
+    createForm.value = {
+      name: "",
+      category: "",
+      cost_price: 0,
+      margin: 0,
+      stock: 0,
+    };
     await loadStocks();
   } catch (e) {
     error.value = "Failed to create stock.";
