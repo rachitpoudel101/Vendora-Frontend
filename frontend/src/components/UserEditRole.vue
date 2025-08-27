@@ -27,10 +27,10 @@
 import { onMounted, ref, watch } from "vue";
 import Modal from "@/components/Modal.vue";
 import axios from "axios";
-import { UserApi } from "@/core/users";
-import { authAPI } from "@/core/auth";
-import { fetchROles } from "@/core/usersAPI";
-import { getUser, UpdateRoles } from "@/core/usersAPI";
+import { UserApi } from "@/core/endpoints/users";
+import { authAPI } from "@/core/endpoints/auth"
+import { fetchROles } from "@/stores/usersAPI";
+import { getUser, UpdateRoles } from "@/stores/usersAPI";
 
 // Props
 const props = defineProps({

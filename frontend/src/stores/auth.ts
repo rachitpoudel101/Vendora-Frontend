@@ -1,4 +1,4 @@
-import { authAPI } from "@/core/auth";
+import { authAPI } from "@/core/endpoints/auth";
 import axios from "axios";
 import { defineStore } from "pinia";
 

@@ -138,9 +138,7 @@
 import Sidebar from "@/components/Sidebar.vue";
 import Navbar from "@/components/Navbar.vue";
 import { ref, onMounted, computed, watch } from "vue";
-import UserEditModal from "@/views/Users/UserEditModal.vue";
-import UserEditRole from "@/views/Users/UserEditRole.vue";
-import { fetchUsers } from "@/core/usersAPI";
+import { fetchUsers } from "@/stores/usersAPI";
 import { useRouter } from "vue-router";
 // import { useAuthStore } from '@/stores/auth'
 // const auth = useAuthStore()

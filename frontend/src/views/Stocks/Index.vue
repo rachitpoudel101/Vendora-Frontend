@@ -6,14 +6,19 @@
       <main class="flex-1 flex items-center justify-center px-6 py-10">
         <div class="bg-white p-8 rounded shadow w-full max-w-lg text-center">
           <h2 class="text-3xl font-bold mb-4 text-blue-700">Stocks</h2>
-          <!-- Create Stock Button -->
-          <div class="flex justify-end mb-4">
+          <!-- Create Stock & Category Buttons -->
+          <div class="flex justify-end mb-4 gap-2">
             <button
               class="px-5 py-2 bg-gradient-to-r from-blue-600 to-purple-500 text-white rounded-full shadow hover:scale-105 transition-transform flex items-center gap-2"
               @click="showCreateModal = true"
             >
-              <span class="material-icons text-lg">add_box</span>
               <span>Create Stock</span>
+            </button>
+            <button
+              class="px-5 py-2 bg-gradient-to-r from-green-600 to-blue-500 text-white rounded-full shadow hover:scale-105 transition-transform flex items-center gap-2"
+              @click="showCreateCategoryModal = true"
+            >
+              <span>Create Category</span>
             </button>
           </div>
           <!-- Stocks Table UI -->
@@ -30,14 +35,14 @@
               </thead>
               <tbody>
                 <tr
-                  v-for="(item, idx) in sampleStocks"
+                  v-for="(item, idx) in stocks"
                   :key="item.id"
                   class="hover:bg-gray-50"
                 >
                   <td class="px-4 py-2 border-b">{{ idx + 1 }}</td>
-                  <td class="px-4 py-2 border-b">{{ item.productName }}</td>
-                  <td class="px-4 py-2 border-b">{{ item.categoryName }}</td>
-                  <td class="px-4 py-2 border-b">{{ item.stocks }}</td>
+                  <td class="px-4 py-2 border-b">{{ item.name }}</td>
+                  <td class="px-4 py-2 border-b">{{ getCategoryName(item.category) }}</td>
+                  <td class="px-4 py-2 border-b">{{ item.stock }}</td>
                   <td class="px-4 py-2 border-b">
                     <button
                       class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 text-sm"
@@ -52,6 +57,12 @@
                       Edit
                     </button>
                   </td>
+                </tr>
+                <tr v-if="loading">
+                  <td colspan="5" class="text-center py-4">Loading...</td>
+                </tr>
+                <tr v-if="error">
+                  <td colspan="5" class="text-center py-4 text-red-500">{{ error }}</td>
                 </tr>
               </tbody>
             </table>
@@ -69,15 +80,23 @@
             <div class="mb-2 text-left">
               <div>
                 <span class="font-semibold">Product Name:</span>
-                {{ selectedStock?.productName }}
+                {{ selectedStock?.name }}
               </div>
               <div>
                 <span class="font-semibold">Category:</span>
-                {{ selectedStock?.categoryName }}
+                {{ selectedStock?.category }}
               </div>
               <div>
                 <span class="font-semibold">Stocks:</span>
-                {{ selectedStock?.stocks }}
+                {{ selectedStock?.stock }}
+              </div>
+              <div>
+                <span class="font-semibold">Cost Price:</span>
+                {{ selectedStock?.cost_price }}
+              </div>
+              <div>
+                <span class="font-semibold">Margin:</span>
+                {{ selectedStock?.margin }}
               </div>
             </div>
             <button
@@ -97,23 +116,38 @@
           >
             <h3 class="text-xl font-bold mb-4 text-blue-700">Edit Stock</h3>
             <form
-              @submit.prevent="showEditModal = false"
+              @submit.prevent="handleEdit"
               class="flex flex-col gap-3"
             >
               <input
-                v-model="editForm.productName"
+                v-model="editForm.name"
                 type="text"
                 placeholder="Product Name"
                 class="border rounded px-3 py-2"
               />
+              <select
+                v-model="editForm.category"
+                class="border rounded px-3 py-2"
+              >
+                <option value="" disabled>Select Category</option>
+                <option v-for="cat in categories" :key="cat.id" :value="cat.name">
+                  {{ cat.name }}
+                </option>
+              </select>
               <input
-                v-model="editForm.categoryName"
-                type="text"
-                placeholder="Category Name"
+                v-model="editForm.cost_price"
+                type="number"
+                placeholder="Cost Price"
                 class="border rounded px-3 py-2"
               />
               <input
-                v-model="editForm.stocks"
+                v-model="editForm.margin"
+                type="number"
+                placeholder="Margin"
+                class="border rounded px-3 py-2"
+              />
+              <input
+                v-model="editForm.stock"
                 type="number"
                 placeholder="Stocks"
                 class="border rounded px-3 py-2"
@@ -145,23 +179,26 @@
           >
             <h3 class="text-xl font-bold mb-4 text-blue-700">Create Stock</h3>
             <form
-              @submit.prevent="showCreateModal = false"
+              @submit.prevent="handleCreate"
               class="flex flex-col gap-3"
             >
               <input
-                v-model="createForm.productName"
+                v-model="createForm.name"
                 type="text"
                 placeholder="Product Name"
                 class="border rounded px-3 py-2"
               />
-              <input
-                v-model="createForm.categoryName"
-                type="text"
-                placeholder="Category Name"
+              <select
+                v-model="createForm.category"
                 class="border rounded px-3 py-2"
-              />
+              >
+                <option value="" disabled>Select Category</option>
+                <option v-for="cat in categories" :key="cat.id" :value="cat.name">
+                  {{ cat.name }}
+                </option>
+              </select>
               <input
-                v-model.number="createForm.cp"
+                v-model.number="createForm.cost_price"
                 type="number"
                 placeholder="Cost Price (cp)"
                 class="border rounded px-3 py-2"
@@ -173,7 +210,7 @@
                 class="border rounded px-3 py-2"
               />
               <input
-                v-model.number="createForm.stocks"
+                v-model.number="createForm.stock"
                 type="number"
                 placeholder="Stocks"
                 class="border rounded px-3 py-2"
@@ -199,6 +236,48 @@
               </div>
             </form>
           </Modal>
+          <Modal
+            v-if="showCreateCategoryModal"
+            :show="showCreateCategoryModal"
+            width="400px"
+            height="260px"
+            customClass="stock-modal"
+            @close="showCreateCategoryModal = false"
+          >
+            <h3 class="text-xl font-bold mb-4 text-green-700">Create Category</h3>
+            <form
+              @submit.prevent="handleCreateCategory"
+              class="flex flex-col gap-3"
+            >
+              <input
+                v-model="createCategoryForm.name"
+                type="text"
+                placeholder="Category Name"
+                class="border rounded px-3 py-2"
+              />
+              <input
+                v-model="createCategoryForm.description"
+                type="text"
+                placeholder="Description"
+                class="border rounded px-3 py-2"
+              />
+              <div class="flex justify-end gap-2 mt-4">
+                <button
+                  type="button"
+                  class="px-4 py-2 bg-gray-200 rounded"
+                  @click="showCreateCategoryModal = false"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  class="px-4 py-2 bg-green-500 text-white rounded"
+                >
+                  Create
+                </button>
+              </div>
+            </form>
+          </Modal>
         </div>
       </main>
     </div>
@@ -210,47 +289,120 @@ import Sidebar from "@/components/Sidebar.vue";
 import Navbar from "@/components/Navbar.vue";
 import Modal from "@/components/Modal.vue";
 import { useAuthStore } from "@/stores/auth";
+import {useToast} from 'vue-toast-notification';
+import { fetchProduct, createProduct, updateProduct, fetchCategory, createCatyregory } from "@/stores/InventoryAPI";
 
 const auth = useAuthStore();
-onMounted(async () => {
-  if (!auth.user) {
-    await auth.self();
-  }
-});
-const sampleStocks = [
-  { id: 1, productName: "Pen", categoryName: "Stationery", stocks: 120 },
-  { id: 2, productName: "Notebook", categoryName: "Stationery", stocks: 80 },
-  { id: 3, productName: "Marker", categoryName: "Stationery", stocks: 45 },
-];
+const $toast = useToast();
+const stocks = ref([]);
+const categories = ref([]);
+const loading = ref(false);
+const error = ref("");
 const showViewModal = ref(false);
 const showEditModal = ref(false);
 const showCreateModal = ref(false);
+const showCreateCategoryModal = ref(false);
 const selectedStockId = ref(null);
 const selectedStock = ref(null);
-const editForm = ref({ productName: "", categoryName: "", stocks: 0 });
+const editForm = ref({ name: "", category: "", cost_price: 0, margin: 0, stock: 0 });
 const createForm = ref({
-  productName: "",
-  categoryName: "",
-  cp: 0,
+  name: "",
+  category: "",
+  cost_price: 0,
   margin: 0,
-  stocks: 0,
+  stock: 0,
+});
+const createCategoryForm = ref({
+  name: "",
+  description: "",
 });
 const sellingPrice = computed(() => {
-  const cp = Number(createForm.value.cp) || 0;
+  const cp = Number(createForm.value.cost_price) || 0;
   const margin = Number(createForm.value.margin) || 0;
   return cp + margin;
 });
 
+async function loadStocks() {
+  loading.value = true;
+  error.value = "";
+  try {
+    const data = await fetchProduct();
+    stocks.value = Array.isArray(data) ? data : [];
+  } catch (e) {
+    error.value = "Failed to fetch stocks.";
+  } finally {
+    loading.value = false;
+  }
+}
+
+async function loadCategories() {
+  try {
+    const data = await fetchCategory();
+    categories.value = Array.isArray(data) ? data : [];
+  } catch (e) {
+    $toast.error("Failed to fetch categories.");
+  }
+}
+
+onMounted(async () => {
+  if (!auth.user) {
+    await auth.self();
+  }
+  await Promise.all([loadStocks(), loadCategories()]);
+});
+
 function openViewModal(id) {
   selectedStockId.value = id;
-  selectedStock.value = sampleStocks.find((s) => s.id === id);
+  selectedStock.value = stocks.value.find((s) => s.id === id);
   showViewModal.value = true;
 }
 function openEditModal(id) {
   selectedStockId.value = id;
-  const stock = sampleStocks.find((s) => s.id === id);
+  const stock = stocks.value.find((s) => s.id === id);
   editForm.value = { ...stock };
   showEditModal.value = true;
+}
+async function handleEdit() {
+  loading.value = true;
+  try {
+    await updateProduct(selectedStockId.value, { ...editForm.value });
+    showEditModal.value = false;
+    await loadStocks();
+  } catch (e) {
+    error.value = "Failed to update stock.";
+  } finally {
+    loading.value = false;
+  }
+}
+async function handleCreate() {
+  loading.value = true;
+  try {
+    await createProduct({ ...createForm.value });
+    showCreateModal.value = false;
+    createForm.value = { name: "", category: "", cost_price: 0, margin: 0, stock: 0 };
+    await loadStocks();
+  } catch (e) {
+    error.value = "Failed to create stock.";
+  } finally {
+    loading.value = false;
+  }
+}
+async function handleCreateCategory() {
+  loading.value = true;
+  try {
+    await createCatyregory({ ...createCategoryForm.value });
+    showCreateCategoryModal.value = false;
+    createCategoryForm.value = { name: "", description: "" };
+    await loadCategories();
+  } catch (e) {
+    error.value = "Failed to create category.";
+  } finally {
+    loading.value = false;
+  }
+}
+function getCategoryName(categoryId: string | number) {
+  const cat = categories.value.find((c) => c.id === categoryId);
+  return cat ? cat.name : categoryId;
 }
 </script>
 

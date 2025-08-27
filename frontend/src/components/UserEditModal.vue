@@ -53,7 +53,7 @@
 import { ref, watch } from "vue";
 import axios from "axios";
 import Modal from "@/components/Modal.vue";
-import { getUser, updateUser } from "@/core/usersAPI";
+import { getUser, updateUser } from "@/stores/usersAPI";
 
 // Props
 const props = defineProps({
@@ -90,11 +90,16 @@ watch(
 // Update user
 async function handleUpdateUser() {
   try {
-    await updateUser(props.userId, userData.value);
+    await updateUser(props.userId, {
+      username: userData.value.username,
+      email: userData.value.email,
+      first_name: userData.value.first_name,
+      last_name: userData.value.last_name,
+    });
     emit("close");
   } catch (err) {
     console.error("Failed to update user:", err);
+    emit("close");
   }
-  emit("close");
 }
 </script>

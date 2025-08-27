@@ -1,6 +1,6 @@
 import axios from "axios";
-import { UserApi } from "@/core/users";
-import { authAPI } from "@/core/auth";
+import { UserApi } from "@/core/endpoints/users";
+import { authAPI } from "@/core/endpoints/auth";
 
 const token = localStorage.getItem("token");
 
