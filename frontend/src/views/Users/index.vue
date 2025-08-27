@@ -99,6 +99,16 @@
                             >
                             Change Role
                           </button>
+                          <button
+                            class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors flex items-center gap-2 shadow w-full text-left text-sm font-semibold"
+                            @click="
+                              deleteUsers(user.id);
+                              dropdownOpen = null;
+                            "
+                          >
+                            <span class="material-icons text-base">delete</span>
+                            Delete
+                          </button>
                         </div>
                       </div>
                     </td>
@@ -167,7 +177,7 @@ import Navbar from "@/components/Navbar.vue";
 import { ref, onMounted, computed, watch, onUnmounted } from "vue";
 import UserEditModal from "@/components/UserEditModal.vue";
 import UserEditRole from "@/components/UserEditRole.vue";
-import { fetchUsers } from "@/stores/usersAPI";
+import { fetchUsers, deleteUser } from "@/stores/usersAPI";
 import { useRouter } from "vue-router";
 // import { useAuthStore } from '@/stores/auth'
 // const auth = useAuthStore()
@@ -176,7 +186,6 @@ const showModal = ref(false);
 const selectedUserId = ref(null);
 const showRoleEditModal = ref(false);
 const dropdownOpen = ref(null);
-
 const router = useRouter();
 
 onMounted(async () => {
@@ -216,6 +225,26 @@ const paginatedUsers = computed(() =>
     currentPage.value * pageSize,
   ),
 );
+
+async function deleteUsers(id) {
+  const confirmed = confirm("Are you sure you want to delete this user?");
+  if (!confirmed) return;
+
+  try {
+    await deleteUser(id);
+
+    users.value = users.value.filter((user) => user.id !== id);
+
+    // Adjust pagination if needed
+    if (currentPage.value > totalPages.value)
+      currentPage.value = totalPages.value || 1;
+
+    alert("User deleted successfully!");
+  } catch (error) {
+    console.error("Failed to delete user:", error);
+    alert("Failed to delete user. Try again.");
+  }
+}
 
 watch(users, () => {
   if (currentPage.value > totalPages.value)
