@@ -126,3 +126,18 @@ export async function UpdateRoles(user_id, payload) {
     throw new Error("Failed to update user");
   }
 }
+
+// ✅ Delete user by ID
+export async function deleteUser(id: number | string) {
+  try {
+    const res = await axios.delete(UserApi.getUser(id), {
+      headers: {
+        Authorization: token ? `Bearer ${token}` : "",
+      },
+    });
+    return res.data;
+  } catch (e) {
+    console.error(`Error deleting user with id ${id}:`, e);
+    throw new Error("Failed to delete user");
+  }
+}

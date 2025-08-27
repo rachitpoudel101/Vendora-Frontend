@@ -91,7 +91,9 @@
                     {{ item.stock }}
                   </td>
                   <td class="px-4 py-3 text-center border-b relative">
-                    <div class="dropdown-container">
+                    <div
+                      class="dropdown-container flex justify-center items-center gap-1"
+                    >
                       <button
                         @click.stop="
                           dropdownOpen === item.id
@@ -123,6 +125,12 @@
                           "
                         >
                           Edit
+                        </button>
+                        <button
+                          class="bg-red-500 text-white px-3 py-1 shadow hover:bg-red-600 hover:shadow-md text-sm font-semibold transition-all w-full text-left"
+                          @click="deleteProducts(item.id)"
+                        >
+                          Delete
                         </button>
                       </div>
                     </div>
@@ -455,6 +463,7 @@ import {
   updateProduct,
   fetchCategory,
   createCatyregory,
+  deleteProduct,
 } from "@/stores/InventoryAPI";
 const currentPage = ref(1);
 const itemsPerPage = ref(10);
@@ -536,6 +545,26 @@ async function loadCategories() {
     categories.value = Array.isArray(data) ? data : [];
   } catch (e) {
     $toast.error("Failed to fetch categories.");
+  }
+}
+async function deleteProducts(id) {
+  const confirmed = confirm("Are you sure you want to delete this product?");
+  if (!confirmed) return;
+
+  try {
+    await deleteProduct(id);
+
+    stocks.value = stocks.value.filter((stock) => stock.id !== id);
+
+    // Adjust pagination if needed
+    if (currentPage.value > totalPages.value)
+      currentPage.value = totalPages.value || 1;
+    currentPage.value = totalPages.value || 1;
+
+    alert("Product deleted successfully!");
+  } catch (error) {
+    console.error("Failed to delete product:", error);
+    alert("Failed to delete product. Try again.");
   }
 }
 
