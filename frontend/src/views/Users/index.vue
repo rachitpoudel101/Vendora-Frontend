@@ -183,8 +183,10 @@ import UserEditModal from "@/components/UserEditModal.vue";
 import UserEditRole from "@/components/UserEditRole.vue";
 import { fetchUsers, deleteUser } from "@/stores/usersAPI";
 import { useRouter } from "vue-router";
+import { useToast } from "vue-toast-notification";
 // import { useAuthStore } from '@/stores/auth'
 // const auth = useAuthStore()
+const $toast = useToast();
 const users = ref([]);
 const showModal = ref(false);
 const selectedUserId = ref(null);
@@ -239,10 +241,21 @@ async function deleteUsers(id) {
     // Adjust pagination if needed
     if (currentPage.value > totalPages.value) currentPage.value = totalPages.value || 1;
 
-    alert("User deleted successfully!");
+    // SUCCESS TOAST
+    $toast.success("User deleted successfully!", {
+      position: "top-right",
+      duration: 3000,
+      dismissible: true,
+    });
   } catch (error) {
     console.error("Failed to delete user:", error);
-    alert("Failed to delete user. Try again.");
+
+    // ERROR TOAST
+    $toast.error("Failed to delete user. Try again.", {
+      position: "top-right",
+      duration: 3000,
+      dismissible: true,
+    });
   }
 }
 

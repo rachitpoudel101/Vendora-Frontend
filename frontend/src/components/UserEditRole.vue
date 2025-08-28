@@ -31,6 +31,10 @@ import { UserApi } from "@/core/endpoints/users";
 import { authAPI } from "@/core/endpoints/auth";
 import { fetchROles } from "@/stores/usersAPI";
 import { getUser, UpdateRoles } from "@/stores/usersAPI";
+import { useToast } from "vue-toast-notification";
+
+const $toast = useToast();
+
 
 // Props
 const props = defineProps({
@@ -45,12 +49,29 @@ const userRole = ref();
 async function handleUpdateRole() {
   try {
     await UpdateRoles(props.userId, { role: userRole.value });
+
+    // SUCCESS TOAST
+    $toast.success("User role updated successfully!", {
+      position: "top-right",
+      duration: 3000,
+      dismissible: true,
+    });
+
     emit("close");
   } catch (err) {
-    console.error("Failed to update user:", err);
+    console.error("Failed to update user role:", err);
+
+    // ERROR TOAST
+    $toast.error("Failed to update user role. Try again.", {
+      position: "top-right",
+      duration: 3000,
+      dismissible: true,
+    });
+
+    emit("close");
   }
-  emit("close");
 }
+
 
 // Watch for userId when modal opens
 watch(

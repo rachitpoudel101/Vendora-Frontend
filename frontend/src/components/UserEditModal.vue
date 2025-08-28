@@ -54,7 +54,9 @@ import { ref, watch } from "vue";
 import axios from "axios";
 import Modal from "@/components/Modal.vue";
 import { getUser, updateUser } from "@/stores/usersAPI";
+import { useToast } from "vue-toast-notification";
 
+const $toast = useToast();
 // Props
 const props = defineProps({
   show: { type: Boolean, required: true },
@@ -96,10 +98,27 @@ async function handleUpdateUser() {
       first_name: userData.value.first_name,
       last_name: userData.value.last_name,
     });
+
+    // SUCCESS TOAST
+    $toast.success("User updated successfully!", {
+      position: "top-right",
+      duration: 3000,
+      dismissible: true,
+    });
+
     emit("close");
   } catch (err) {
     console.error("Failed to update user:", err);
+
+    // ERROR TOAST
+    $toast.error("Failed to update user. Try again.", {
+      position: "top-right",
+      duration: 3000,
+      dismissible: true,
+    });
+
     emit("close");
   }
 }
+
 </script>
