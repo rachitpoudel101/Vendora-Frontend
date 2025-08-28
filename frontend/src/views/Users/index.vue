@@ -38,7 +38,9 @@
                     <th class="py-4 px-4 text-left font-bold">Username</th>
                     <th class="py-4 px-4 text-left font-bold">Email</th>
                     <th class="py-4 px-4 text-left font-bold">Role</th>
-                    <th class="py-4 px-4 text-center font-bold w-40">Actions</th>
+                    <th class="py-4 px-4 text-center font-bold w-40">
+                      Actions
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -226,7 +228,10 @@ const pageSize = 10;
 const currentPage = ref(1);
 const totalPages = computed(() => Math.ceil(users.value.length / pageSize));
 const paginatedUsers = computed(() =>
-  users.value.slice((currentPage.value - 1) * pageSize, currentPage.value * pageSize)
+  users.value.slice(
+    (currentPage.value - 1) * pageSize,
+    currentPage.value * pageSize,
+  ),
 );
 
 async function deleteUsers(id) {
@@ -239,7 +244,8 @@ async function deleteUsers(id) {
     users.value = users.value.filter((user) => user.id !== id);
 
     // Adjust pagination if needed
-    if (currentPage.value > totalPages.value) currentPage.value = totalPages.value || 1;
+    if (currentPage.value > totalPages.value)
+      currentPage.value = totalPages.value || 1;
 
     // SUCCESS TOAST
     $toast.success("User deleted successfully!", {
@@ -260,7 +266,8 @@ async function deleteUsers(id) {
 }
 
 watch(users, () => {
-  if (currentPage.value > totalPages.value) currentPage.value = totalPages.value || 1;
+  if (currentPage.value > totalPages.value)
+    currentPage.value = totalPages.value || 1;
 });
 
 const handleClickOutside = (event) => {

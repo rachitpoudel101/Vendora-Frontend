@@ -122,8 +122,8 @@ export async function getProduct(id: number | string) {
     });
     return res.data;
   } catch (e) {
-    console.error(`Error fetching Category with id ${id}:`, e);
-    throw new Error("Failed to fetch Category");
+    console.error(`Error fetching Product with id ${id}:`, e);
+    throw new Error("Failed to fetch Product");
   }
 }
 

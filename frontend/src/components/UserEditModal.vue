@@ -120,5 +120,4 @@ async function handleUpdateUser() {
     emit("close");
   }
 }
-
 </script>

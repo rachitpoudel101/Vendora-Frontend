@@ -1,6 +1,6 @@
 import { createApp } from "vue";
 import VueToast from "vue-toast-notification";
-import "vue-toast-notification/dist/theme-sugar.css"; 
+import "vue-toast-notification/dist/theme-sugar.css";
 import App from "./App.vue";
 import router from "./router";
 import { createPinia } from "pinia";
@@ -9,8 +9,8 @@ const app = createApp(App);
 app.use(createPinia());
 app.use(router);
 app.use(VueToast, {
-  position: "top-right", // default position for all toasts
+  position: "top-right",
   duration: 3000,
-  dismissible: true
+  dismissible: true,
 });
 app.mount("#app");

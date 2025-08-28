@@ -34,9 +34,9 @@ export async function fetchBillById(id: number | string) {
   }
 }
 
-// ✅ Create Category
-export async function createCatyregory(
-  category: {
+// ✅ Create Bills
+export async function createBills(
+  bill: {
     name: string;
     description: string;
   },
@@ -45,10 +45,7 @@ export async function createCatyregory(
   try {
     const res = await axios.post(
       BillingApi.fetchBill,
-      {
-        name: category.name,
-        description: category.description,
-      },
+      {},
       {
         headers: {
           "Content-Type": "application/json",

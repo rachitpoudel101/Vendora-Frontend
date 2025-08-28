@@ -75,10 +75,14 @@
                   <td class="px-4 py-3 text-center border-b">
                     {{ (currentPage - 1) * itemsPerPage + idx + 1 }}
                   </td>
-                  <td class="px-4 py-3 border-b text-center font-medium text-blue-900">
+                  <td
+                    class="px-4 py-3 border-b text-center font-medium text-blue-900"
+                  >
                     {{ item.name }}
                   </td>
-                  <td class="px-4 py-3 border-b text-center font-medium text-green-700">
+                  <td
+                    class="px-4 py-3 border-b text-center font-medium text-green-700"
+                  >
                     {{ item.category_name }}
                   </td>
                   <td
@@ -160,10 +164,16 @@
               </tbody>
             </table>
             <!-- Add loading/error notification below the table -->
-            <div v-if="loading" class="text-center py-6 text-blue-600 font-semibold animate-pulse">
+            <div
+              v-if="loading"
+              class="text-center py-6 text-blue-600 font-semibold animate-pulse"
+            >
               Loading...
             </div>
-            <div v-if="error" class="text-center py-6 text-red-500 font-semibold">
+            <div
+              v-if="error"
+              class="text-center py-6 text-red-500 font-semibold"
+            >
               {{ error }}
             </div>
             <!-- Pagination Controls -->
@@ -214,7 +224,9 @@
                 customClass="stock-modal"
                 @close="showViewModal = false"
               >
-                <h3 class="text-2xl font-bold mb-4 text-blue-700">View Stock</h3>
+                <h3 class="text-2xl font-bold mb-4 text-blue-700">
+                  View Stock
+                </h3>
                 <div class="mb-2 text-left space-y-2">
                   <div>
                     <span class="font-semibold">Product Name:</span>
@@ -222,19 +234,27 @@
                   </div>
                   <div>
                     <span class="font-semibold">Category:</span>
-                    <span class="text-green-700">{{ selectedStock?.category_name }}</span>
+                    <span class="text-green-700">{{
+                      selectedStock?.category_name
+                    }}</span>
                   </div>
                   <div>
                     <span class="font-semibold">Stocks:</span>
-                    <span class="text-purple-700">{{ selectedStock?.stock }}</span>
+                    <span class="text-purple-700">{{
+                      selectedStock?.stock
+                    }}</span>
                   </div>
                   <div>
                     <span class="font-semibold">Cost Price:</span>
-                    <span class="text-gray-700">{{ selectedStock?.cost_price }}</span>
+                    <span class="text-gray-700">{{
+                      selectedStock?.cost_price
+                    }}</span>
                   </div>
                   <div>
                     <span class="font-semibold">Margin:</span>
-                    <span class="text-gray-700">{{ selectedStock?.margin }}</span>
+                    <span class="text-gray-700">{{
+                      selectedStock?.margin
+                    }}</span>
                   </div>
                 </div>
                 <button
@@ -257,7 +277,9 @@
                 customClass="stock-modal"
                 @close="showEditModal = false"
               >
-                <h3 class="text-3xl font-bold mb-1 text-blue-700">Edit Stock</h3>
+                <h3 class="text-3xl font-bold mb-1 text-blue-700">
+                  Edit Stock
+                </h3>
                 <form @submit.prevent="handleEdit" class="flex flex-col gap-2">
                   <input
                     v-model="editForm.name"
@@ -270,7 +292,11 @@
                     class="border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
                   >
                     <option value="" disabled>Select Category</option>
-                    <option v-for="cat in categories" :key="cat.id" :value="cat.id">
+                    <option
+                      v-for="cat in categories"
+                      :key="cat.id"
+                      :value="cat.id"
+                    >
                       {{ cat.name }}
                     </option>
                   </select>
@@ -322,8 +348,13 @@
                 customClass="stock-modal"
                 @close="showCreateModal = false"
               >
-                <h3 class="text-2xl font-bold mb-4 text-blue-700">Create Stock</h3>
-                <form @submit.prevent="handleCreate" class="flex flex-col gap-4">
+                <h3 class="text-2xl font-bold mb-4 text-blue-700">
+                  Create Stock
+                </h3>
+                <form
+                  @submit.prevent="handleCreate"
+                  class="flex flex-col gap-4"
+                >
                   <input
                     v-model="createForm.name"
                     type="text"
@@ -335,7 +366,11 @@
                     class="border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
                   >
                     <option value="" disabled>Select Category</option>
-                    <option v-for="cat in categories" :key="cat.id" :value="cat.id">
+                    <option
+                      v-for="cat in categories"
+                      :key="cat.id"
+                      :value="cat.id"
+                    >
                       {{ cat.name }}
                     </option>
                   </select>
@@ -362,7 +397,9 @@
                   />
                   <div class="flex items-center gap-2">
                     <span class="font-semibold">Selling Price (sp):</span>
-                    <span class="text-blue-700 font-bold">{{ sellingPrice }}</span>
+                    <span class="text-blue-700 font-bold">{{
+                      sellingPrice
+                    }}</span>
                   </div>
                   <div class="flex justify-end gap-2 mt-4">
                     <button
@@ -394,8 +431,13 @@
                 customClass="stock-modal"
                 @close="showCreateCategoryModal = false"
               >
-                <h3 class="text-2xl font-bold mb-4 text-green-700">Create Category</h3>
-                <form @submit.prevent="handleCreateCategory" class="flex flex-col gap-4">
+                <h3 class="text-2xl font-bold mb-4 text-green-700">
+                  Create Category
+                </h3>
+                <form
+                  @submit.prevent="handleCreateCategory"
+                  class="flex flex-col gap-4"
+                >
                   <input
                     v-model="createCategoryForm.name"
                     type="text"
@@ -449,7 +491,9 @@ import {
 } from "@/stores/InventoryAPI";
 const currentPage = ref(1);
 const itemsPerPage = ref(10);
-const totalPages = computed(() => Math.ceil(stocks.value.length / itemsPerPage.value));
+const totalPages = computed(() =>
+  Math.ceil(stocks.value.length / itemsPerPage.value),
+);
 
 const paginatedStocks = computed(() => {
   const start = (currentPage.value - 1) * itemsPerPage.value;
@@ -512,7 +556,11 @@ async function loadStocks() {
     const data = await fetchProduct();
     stocks.value = Array.isArray(data) ? data : [];
   } catch (e) {
-    $toast.error("Failed to fetch stocks.", { position: "top-right", duration: 3000, dismissible: true });
+    $toast.error("Failed to fetch stocks.", {
+      position: "top-right",
+      duration: 3000,
+      dismissible: true,
+    });
   } finally {
     loading.value = false;
   }
@@ -523,7 +571,11 @@ async function loadCategories() {
     const data = await fetchCategory();
     categories.value = Array.isArray(data) ? data : [];
   } catch (e) {
-    $toast.error("Failed to fetch categories.", { position: "top-right", duration: 3000, dismissible: true });
+    $toast.error("Failed to fetch categories.", {
+      position: "top-right",
+      duration: 3000,
+      dismissible: true,
+    });
   }
 }
 
@@ -536,16 +588,24 @@ async function deleteProducts(id) {
     stocks.value = stocks.value.filter((s) => s.id !== id);
 
     // Adjust pagination if needed
-    if (currentPage.value > totalPages.value) currentPage.value = totalPages.value || 1;
+    if (currentPage.value > totalPages.value)
+      currentPage.value = totalPages.value || 1;
     currentPage.value = totalPages.value || 1;
 
-    $toast.success("Product deleted successfully!", { position: "top-right", duration: 3000, dismissible: true });
+    $toast.success("Product deleted successfully!", {
+      position: "top-right",
+      duration: 3000,
+      dismissible: true,
+    });
   } catch (error) {
     console.error(error);
-    $toast.error("Failed to delete product.", { position: "top-right", duration: 3000, dismissible: true });
+    $toast.error("Failed to delete product.", {
+      position: "top-right",
+      duration: 3000,
+      dismissible: true,
+    });
   }
 }
-
 
 function openViewModal(id) {
   selectedStockId.value = id;
@@ -564,10 +624,16 @@ async function handleEdit() {
     await updateProduct(selectedStockId.value, { ...editForm.value });
     showEditModal.value = false;
     await loadStocks();
-    $toast.success("Stock updated successfully!",{ position: "top-right", duration: 5000 });
+    $toast.success("Stock updated successfully!", {
+      position: "top-right",
+      duration: 5000,
+    });
   } catch (e) {
     console.error(e);
-    $toast.error("Failed to update stock.", { position: "top-right", duration: 500 });
+    $toast.error("Failed to update stock.", {
+      position: "top-right",
+      duration: 500,
+    });
   } finally {
     loading.value = false;
   }
@@ -592,7 +658,10 @@ async function handleCreate() {
     });
   } catch (e) {
     console.error(e);
-    $toast.error("Failed to create stock.", { position: "top-right", duration: 3000 });
+    $toast.error("Failed to create stock.", {
+      position: "top-right",
+      duration: 3000,
+    });
   } finally {
     loading.value = false;
   }
@@ -605,16 +674,22 @@ async function handleCreateCategory() {
     showCreateCategoryModal.value = false;
     createCategoryForm.value = { name: "", description: "" };
     await loadCategories();
-    $toast.success("Category created successfully!", { position: "top-right", duration: 3000, dismissible: true });
+    $toast.success("Category created successfully!", {
+      position: "top-right",
+      duration: 3000,
+      dismissible: true,
+    });
   } catch (e) {
     console.error(e);
-    $toast.error("Failed to create category.", { position: "top-right", duration: 3000, dismissible: true });
+    $toast.error("Failed to create category.", {
+      position: "top-right",
+      duration: 3000,
+      dismissible: true,
+    });
   } finally {
     loading.value = false;
   }
 }
-
-
 
 // Close dropdown on outside click
 const handleClickOutside = (event) => {
@@ -640,5 +715,4 @@ onUnmounted(() => {
 
 <style scoped>
 @import url("https://fonts.googleapis.com/icon?family=Material+Icons");
-
 </style>
