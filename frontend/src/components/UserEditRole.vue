@@ -35,7 +35,6 @@ import { useToast } from "vue-toast-notification";
 
 const $toast = useToast();
 
-
 // Props
 const props = defineProps({
   show: { type: Boolean, required: true },
@@ -71,7 +70,6 @@ async function handleUpdateRole() {
     emit("close");
   }
 }
-
 
 // Watch for userId when modal opens
 watch(

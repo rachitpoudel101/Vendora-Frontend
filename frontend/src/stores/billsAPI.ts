@@ -34,33 +34,20 @@ export async function fetchBillById(id: number | string) {
   }
 }
 
-// ✅ Create Category
-export async function createCatyregory(
-  category: {
-    name: string;
-    description: string;
-  },
-  tokenOverride?: string,
-) {
+// ✅ Create Bills
+export async function createBills(bill: any, tokenOverride?: string) {
   try {
-    const res = await axios.post(
-      BillingApi.fetchBill,
-      {
-        name: category.name,
-        description: category.description,
+    const res = await axios.post(BillingApi.fetchBill, bill, {
+      headers: {
+        "Content-Type": "application/json",
+        ...(tokenOverride || token
+          ? { Authorization: `Bearer ${tokenOverride || token}` }
+          : {}),
       },
-      {
-        headers: {
-          "Content-Type": "application/json",
-          ...(tokenOverride || token
-            ? { Authorization: `Bearer ${tokenOverride || token}` }
-            : {}),
-        },
-      },
-    );
+    });
     return res.data;
   } catch (e) {
-    console.error("Error creating Category:", e);
-    throw new Error("Failed to create Category");
+    console.error("Error creating Bill:", e);
+    throw new Error("Failed to create Bill");
   }
 }
