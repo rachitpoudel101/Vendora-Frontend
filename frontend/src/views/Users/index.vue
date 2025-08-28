@@ -22,7 +22,10 @@
         </div>
         <div class="overflow-x-auto w-full max-w-10xl">
           <div class="p-0">
-            <div class="table-scroll-area">
+            <div
+              class="table-scroll-area max-h-[70vh] overflow-y-auto rounded-2xl"
+              :class="{ 'min-h-[400px]': paginatedUsers.length <= 1 }"
+            >
               <table
                 class="w-full rounded-2xl overflow-hidden shadow-xl border border-blue-200 bg-white"
               >
@@ -35,9 +38,7 @@
                     <th class="py-4 px-4 text-left font-bold">Username</th>
                     <th class="py-4 px-4 text-left font-bold">Email</th>
                     <th class="py-4 px-4 text-left font-bold">Role</th>
-                    <th class="py-4 px-4 text-center font-bold w-40">
-                      Actions
-                    </th>
+                    <th class="py-4 px-4 text-center font-bold w-40">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -59,7 +60,7 @@
                     </td>
                     <td class="py-3 px-4 flex justify-center relative">
                       <!-- Three-dot button -->
-                      <div class="dropdown-container">
+                      <div class="dropdown-container over">
                         <button
                           @click.stop="
                             dropdownOpen === user.id
@@ -75,40 +76,43 @@
                         <!-- Dropdown menu -->
                         <div
                           v-if="dropdownOpen === user.id"
-                          class="absolute right-0 mt-2 w-44 bg-white border rounded-xl shadow-lg z-50 flex flex-col gap-2 p-2"
+                          class="absolute right-0 mt-2 w-28 bg-white border rounded-md shadow-md z-50"
                         >
-                          <button
-                            class="px-4 py-2 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 transition-colors flex items-center gap-2 shadow w-full text-left text-sm font-semibold"
-                            @click="
-                              openEditModal(user.id);
-                              dropdownOpen = null;
-                            "
-                          >
-                            <span class="material-icons text-base">edit</span>
-                            Edit
-                          </button>
-                          <button
-                            class="px-4 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 transition-colors flex items-center gap-2 shadow w-full text-left text-sm font-semibold"
-                            @click="
-                              openEditRoleModal(user.id);
-                              dropdownOpen = null;
-                            "
-                          >
-                            <span class="material-icons text-base"
-                              >manage_accounts</span
-                            >
-                            Change Role
-                          </button>
-                          <button
-                            class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors flex items-center gap-2 shadow w-full text-left text-sm font-semibold"
-                            @click="
-                              deleteUsers(user.id);
-                              dropdownOpen = null;
-                            "
-                          >
-                            <span class="material-icons text-base">delete</span>
-                            Delete
-                          </button>
+                          <ul class="flex flex-col text-sm text-gray-700">
+                            <li>
+                              <button
+                                class="w-full text-left px-3 py-2 hover:bg-gray-100"
+                                @click="
+                                  openEditModal(user.id);
+                                  dropdownOpen = null;
+                                "
+                              >
+                                Edit
+                              </button>
+                            </li>
+                            <li>
+                              <button
+                                class="w-full text-left px-3 py-2 hover:bg-gray-100"
+                                @click="
+                                  openEditRoleModal(user.id);
+                                  dropdownOpen = null;
+                                "
+                              >
+                                Change Role
+                              </button>
+                            </li>
+                            <li>
+                              <button
+                                class="w-full text-left px-3 py-2 hover:bg-gray-100 text-red-600"
+                                @click="
+                                  deleteUsers(user.id);
+                                  dropdownOpen = null;
+                                "
+                              >
+                                Delete
+                              </button>
+                            </li>
+                          </ul>
                         </div>
                       </div>
                     </td>
@@ -220,10 +224,7 @@ const pageSize = 10;
 const currentPage = ref(1);
 const totalPages = computed(() => Math.ceil(users.value.length / pageSize));
 const paginatedUsers = computed(() =>
-  users.value.slice(
-    (currentPage.value - 1) * pageSize,
-    currentPage.value * pageSize,
-  ),
+  users.value.slice((currentPage.value - 1) * pageSize, currentPage.value * pageSize)
 );
 
 async function deleteUsers(id) {
@@ -236,8 +237,7 @@ async function deleteUsers(id) {
     users.value = users.value.filter((user) => user.id !== id);
 
     // Adjust pagination if needed
-    if (currentPage.value > totalPages.value)
-      currentPage.value = totalPages.value || 1;
+    if (currentPage.value > totalPages.value) currentPage.value = totalPages.value || 1;
 
     alert("User deleted successfully!");
   } catch (error) {
@@ -247,8 +247,7 @@ async function deleteUsers(id) {
 }
 
 watch(users, () => {
-  if (currentPage.value > totalPages.value)
-    currentPage.value = totalPages.value || 1;
+  if (currentPage.value > totalPages.value) currentPage.value = totalPages.value || 1;
 });
 
 const handleClickOutside = (event) => {
@@ -334,9 +333,10 @@ tbody tr:hover {
   background: #f3e8ff !important;
 }
 
-.table-scroll-area {
-  /* max-height: px; */
-  overflow-y: auto;
-  border-radius: 1rem;
+table,
+tbody,
+tr,
+td {
+  overflow: visible !important;
 }
 </style>
