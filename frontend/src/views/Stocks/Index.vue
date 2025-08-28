@@ -86,50 +86,75 @@
                   >
                     {{ item.stock }}
                   </td>
-                  <td class="px-4 py-3 text-center border-b relative">
-                    <div
-                      class="dropdown-container flex justify-center items-center gap-1"
-                    >
+                  <td class="py-3 px-4 flex justify-center relative">
+                    <!-- Wrapper with relative -->
+                    <div class="relative">
+                      <!-- Three-dot button -->
                       <button
                         @click.stop="
                           dropdownOpen === item.id
                             ? (dropdownOpen = null)
                             : (dropdownOpen = item.id)
                         "
-                        class="text-gray-600 hover:text-gray-800 focus:outline-none text-lg font-bold"
+                        class="text-gray-700 hover:text-gray-900 focus:outline-none text-xl font-bold px-2 py-1"
                       >
                         ⋮
                       </button>
+                      <!-- Dropdown menu -->
                       <div
                         v-if="dropdownOpen === item.id"
-                        class="absolute right-0 mt-2 w-32 bg-white border rounded-lg shadow-lg z-50 flex flex-col gap-1 p-1"
+                        class="absolute right-0 mt-2 w-20 bg-white border rounded-md shadow-md z-50"
                       >
-                        <button
-                          class="bg-blue-500 text-white px-3 py-1 shadow hover:bg-blue-600 hover:shadow-md text-sm font-semibold transition-all w-full text-left"
-                          @click="
-                            openViewModal(item.id);
-                            dropdownOpen = null;
-                          "
-                        >
-                          View
-                        </button>
-                        <button
-                          class="bg-gray-200 text-gray-700 px-3 py-1 shadow hover:bg-gray-300 hover:shadow-md text-sm font-semibold transition-all w-full text-left"
-                          @click="
-                            openEditModal(item.id);
-                            dropdownOpen = null;
-                          "
-                        >
-                          Edit
-                        </button>
-                        <button
-                          class="bg-red-500 text-white px-3 py-1 shadow hover:bg-red-600 hover:shadow-md text-sm font-semibold transition-all w-full text-left"
-                          @click="deleteProducts(item.id)"
-                        >
-                          Delete
-                        </button>
+                        <ul class="flex flex-col text-sm text-gray-700">
+                          <li>
+                            <button
+                              class="w-full text-left px-3 py-2 hover:bg-gray-100"
+                              @click="
+                                openViewModal(item.id);
+                                dropdownOpen = null;
+                              "
+                            >
+                              View
+                            </button>
+                          </li>
+                          <li>
+                            <button
+                              class="w-full text-left px-3 py-2 hover:bg-gray-100"
+                              @click="
+                                openEditModal(item.id);
+                                dropdownOpen = null;
+                              "
+                            >
+                              Edit
+                            </button>
+                          </li>
+                          <li>
+                            <button
+                              class="w-full text-left px-3 py-2 hover:bg-gray-100 text-red-600"
+                              @click="deleteProducts(item.id)"
+                            >
+                              Delete
+                            </button>
+                          </li>
+                        </ul>
                       </div>
                     </div>
+                  </td>
+                </tr>
+                <tr v-if="loading">
+                  <td
+                    colspan="5"
+                    class="text-center py-6 text-blue-600 font-semibold animate-pulse"
+                  >
+                    Loading...
+                  </td>
+                </tr>
+                <tr v-if="error">
+                  <td
+                    colspan="5"
+                    class="text-center py-6 text-red-500 font-semibold"
+                  >
+                    {{ error }}
                   </td>
                 </tr>
               </tbody>
@@ -511,8 +536,8 @@ async function deleteProducts(id) {
     stocks.value = stocks.value.filter((s) => s.id !== id);
 
     // Adjust pagination if needed
-    if (currentPage.value > totalPages.value)
-      currentPage.value = totalPages.value || 1;
+    if (currentPage.value > totalPages.value) currentPage.value = totalPages.value || 1;
+    currentPage.value = totalPages.value || 1;
 
     $toast.success("Product deleted successfully!", { position: "top-right", duration: 3000, dismissible: true });
   } catch (error) {
