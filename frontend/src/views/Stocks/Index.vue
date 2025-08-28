@@ -2,11 +2,6 @@
   <div
     class="min-h-screen bg-gradient-to-br from-gray-100 via-blue-50 to-purple-100 flex flex-col"
   >
-    <!-- Toast notification with transition -->
-    <transition name="toast-slide">
-      <div class="v-toast v-toast--top fixed top-6 right-6 z-[9999]"></div>
-    </transition>
-    <!-- Add toast container at the very top -->
     <Navbar />
     <div class="flex flex-1">
       <Sidebar />
@@ -544,13 +539,10 @@ async function handleEdit() {
     await updateProduct(selectedStockId.value, { ...editForm.value });
     showEditModal.value = false;
     await loadStocks();
-    $toast.success("Stock updated successfully!", {
-      position: "top-right",
-      duration: 3000,
-    });
+    $toast.success("Stock updated successfully!",{ position: "top-right", duration: 5000 });
   } catch (e) {
     console.error(e);
-    $toast.error("Failed to update stock.", { position: "top-right", duration: 3000 });
+    $toast.error("Failed to update stock.", { position: "top-right", duration: 500 });
   } finally {
     loading.value = false;
   }
@@ -623,52 +615,5 @@ onUnmounted(() => {
 
 <style scoped>
 @import url("https://fonts.googleapis.com/icon?family=Material+Icons");
-/* ...existing code... */
-
-/* Toast notification transition and animation */
-.toast-slide-enter-active,
-.toast-slide-leave-active {
-  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-}
-.toast-slide-enter-from {
-  opacity: 0;
-  transform: translateX(100px);
-}
-.toast-slide-enter-to {
-  opacity: 1;
-  transform: translateX(0);
-}
-.toast-slide-leave-from {
-  opacity: 1;
-  transform: translateX(0);
-}
-.toast-slide-leave-to {
-  opacity: 0;
-  transform: translateX(100px);
-}
-
-/* Toast container position */
-.v-toast.v-toast--top {
-  position: fixed;
-  top: 1.5rem;
-  right: 1.5rem;
-  z-index: 9999;
-}
-
-/* Toast type backgrounds - fix specificity and appearance */
-.v-toast.v-toast--error {
-  background: #f87171 !important; /* red-400 */
-  color: #fff !important;
-  background-clip: padding-box !important;
-  border-radius: 0.75rem !important;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
-}
-.v-toast.v-toast--success {
-  background: #22c55e !important; /* green-500 */
-  color: #fff !important;
-  background-clip: padding-box !important;
-  border-radius: 0.75rem !important;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
-}
 
 </style>
