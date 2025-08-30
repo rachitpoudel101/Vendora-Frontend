@@ -15,23 +15,22 @@
             Stocks
           </h2>
           <!-- Create Stock & Category Buttons -->
-          <div class="flex justify-end mb-6 gap-4">
+          <div class="flex justify-end mb-6 gap-4" v-if="!isStaff">
             <button
               class="px-6 py-2 bg-gradient-to-r from-blue-600 to-purple-500 text-white rounded-full shadow-lg hover:scale-105 hover:shadow-xl transition-all flex items-center gap-2 font-semibold"
-              @click="showCreateModal = true"
+              @click="handleCreateStockClick"
             >
               <span class="material-icons text-lg">add_circle</span>
               <span>Create Stock</span>
             </button>
             <button
               class="px-6 py-2 bg-gradient-to-r from-green-600 to-blue-500 text-white rounded-full shadow-lg hover:scale-105 hover:shadow-xl transition-all flex items-center gap-2 font-semibold"
-              @click="showCreateCategoryModal = true"
+              @click="handleCreateCategoryClick"
             >
               <span class="material-icons text-lg">category</span>
               <span>Create Category</span>
             </button>
           </div>
-          <!-- Stocks Table UI -->
           <!-- Stocks Table UI -->
           <div class="mt-2">
             <table
@@ -121,25 +120,27 @@
                               View
                             </button>
                           </li>
-                          <li>
-                            <button
-                              class="w-full text-left px-3 py-2 hover:bg-gray-100"
-                              @click="
-                                openEditModal(item.id);
-                                dropdownOpen = null;
-                              "
-                            >
-                              Edit
-                            </button>
-                          </li>
-                          <li>
-                            <button
-                              class="w-full text-left px-3 py-2 hover:bg-gray-100 text-red-600"
-                              @click="deleteProducts(item.id)"
-                            >
-                              Delete
-                            </button>
-                          </li>
+                          <template v-if="!isStaff">
+                            <li>
+                              <button
+                                class="w-full text-left px-3 py-2 hover:bg-gray-100"
+                                @click="
+                                  openEditModal(item.id);
+                                  dropdownOpen = null;
+                                "
+                              >
+                                Edit
+                              </button>
+                            </li>
+                            <li>
+                              <button
+                                class="w-full text-left px-3 py-2 hover:bg-gray-100 text-red-600"
+                                @click="deleteProducts(item.id)"
+                              >
+                                Delete
+                              </button>
+                            </li>
+                          </template>
                         </ul>
                       </div>
                     </div>
@@ -254,6 +255,12 @@
                     <span class="font-semibold">Margin:</span>
                     <span class="text-gray-700">{{
                       selectedStock?.margin
+                    }}</span>
+                  </div>
+                  <div>
+                    <span class="font-semibold">Selling Price (sp):</span>
+                    <span class="text-blue-700 font-bold">{{
+                      viewSellingPrice
                     }}</span>
                   </div>
                 </div>
@@ -549,6 +556,12 @@ const sellingPrice = computed(() => {
   const margin = Number(createForm.value.margin) || 0;
   return cp + margin;
 });
+const viewSellingPrice = computed(() => {
+  const cp = Number(selectedStock.value?.cost_price) || 0;
+  const margin = Number(selectedStock.value?.margin) || 0;
+  return cp + margin;
+});
+const isStaff = computed(() => auth.user?.role === "staff");
 
 async function loadStocks() {
   loading.value = true;
@@ -689,6 +702,30 @@ async function handleCreateCategory() {
   } finally {
     loading.value = false;
   }
+}
+
+function handleCreateStockClick() {
+  if (auth.user?.role === "staff") {
+    $toast.error("You are not able to create users.", {
+      position: "top-right",
+      duration: 3000,
+      dismissible: true,
+    });
+    return;
+  }
+  showCreateModal.value = true;
+}
+
+function handleCreateCategoryClick() {
+  if (auth.user?.role === "staff") {
+    $toast.error("You are not able to create users.", {
+      position: "top-right",
+      duration: 3000,
+      dismissible: true,
+    });
+    return;
+  }
+  showCreateCategoryModal.value = true;
 }
 
 // Close dropdown on outside click

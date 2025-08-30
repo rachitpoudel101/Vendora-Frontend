@@ -127,7 +127,7 @@
             <button
               class="px-3 py-1 rounded border bg-gray-100 text-gray-700"
               :disabled="currentPage === totalPages"
-              @click="currentPage++"
+              @click="nextPage"
             >
               Next
             </button>
@@ -149,8 +149,9 @@ import Sidebar from "@/components/Sidebar.vue";
 import Navbar from "@/components/Navbar.vue";
 import { useAuthStore } from "@/stores/auth";
 import create from "@/views/Billing/create.vue";
-import { fetchBill, createBills } from "@/stores/billsAPI";
+import { fetchBill } from "@/stores/billsAPI";
 import { fetchProduct } from "@/stores/InventoryAPI";
+import { useToast } from "vue-toast-notification";
 
 const auth = useAuthStore();
 onMounted(async () => {
@@ -202,13 +203,6 @@ watch(bills, () => {
   currentPage.value = 1;
 });
 
-const bill = ref({
-  customer_Name: "",
-  date: new Date().toISOString().substr(0, 10),
-  payment_method: "",
-  amount: 0,
-});
-
 async function fetchBills() {
   try {
     bills.value = await fetchBill();
@@ -217,26 +211,22 @@ async function fetchBills() {
   }
 }
 
+const $toast = useToast();
+
 // Add handler for bill-created event
 function onBillCreated() {
   fetchBills();
   openModal.value = false;
+  $toast.success("Bill created successfully!", {
+    position: "top-right",
+    duration: 3000,
+    dismissible: true,
+  });
 }
 
-async function submitBill() {
-  try {
-    const res = await createBills(bill.value);
-    bills.value.push(res); // add to list
-    openModal.value = false;
-    // Reset form
-    bill.value = {
-      customer_Name: "",
-      date: new Date().toISOString().substr(0, 10),
-      payment_method: "",
-      amount: 0,
-    };
-  } catch (error) {
-    console.error("Error creating bill:", error);
+function nextPage() {
+  if (currentPage.value < totalPages.value) {
+    currentPage.value++;
   }
 }
 </script>
