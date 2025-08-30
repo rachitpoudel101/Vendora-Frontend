@@ -3,44 +3,45 @@
     class="min-h-screen bg-gradient-to-br from-blue-100 via-white to-purple-100 flex flex-col max-h-screen"
   >
     <Navbar />
-    <div class="flex flex-1 h-0 overflow-hidden max-h-screen">
-      <Sidebar />
-      <main class="w-[calc(100vw-256px)] p-5">
-        <div class="flex items-center justify-between">
+    <div class="flex flex-1 h-0 overflow-hidden max-h-screen flex-col md:flex-row">
+      <Sidebar class="w-full md:w-64" />
+      <main class="flex-1 p-2 md:p-5 w-full">
+        <!-- Header row with Users title and Create User button on opposite sides -->
+        <div class="flex flex-row items-center justify-between gap-2 mb-4 md:mb-8">
           <h2
-            class="text-4xl font-extrabold mb-8 text-blue-700 tracking-wide drop-shadow-lg max-h-screen text-left"
+            class="text-2xl md:text-4xl font-extrabold text-blue-700 tracking-wide drop-shadow-lg text-left"
           >
             👥 Users
           </h2>
-          <!-- Hide button if user role is staff -->
           <button
             v-if="auth.user?.role !== 'staff'"
-            class="max-h-screen mb-8 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-500 text-white rounded-full shadow-xl hover:scale-105 transition-transform flex items-center justify-center gap-2"
+            class="px-4 md:px-6 py-2 md:py-3 bg-gradient-to-r from-blue-600 to-purple-500 text-white rounded-full shadow-xl hover:scale-105 transition-transform flex items-center justify-center gap-2 text-sm md:text-base"
             @click="onCreateUser"
           >
             <span class="material-icons text-lg">person_add</span>
             <span>Create User</span>
           </button>
         </div>
-        <div class="overflow-x-auto w-full max-w-10xl">
+        <!-- Table area (no horizontal scroll, full width) -->
+        <div class="w-full max-w-10xl">
           <div class="p-0">
             <div
               class="table-scroll-area max-h-[70vh] overflow-y-auto rounded-2xl"
               :class="{ 'min-h-[400px]': paginatedUsers.length <= 1 }"
             >
               <table
-                class="w-full rounded-2xl overflow-hidden shadow-xl border border-blue-200 bg-white"
+                class="w-full rounded-2xl overflow-hidden shadow-xl border border-blue-200 bg-white text-xs md:text-base"
               >
                 <thead class="sticky top-0 z-10">
                   <tr
                     class="bg-gradient-to-r from-blue-200 via-purple-100 to-blue-100 text-blue-800"
                   >
-                    <th class="py-4 px-4 text-left font-bold">S.N.</th>
-                    <th class="py-4 px-4 text-left font-bold">Name</th>
-                    <th class="py-4 px-4 text-left font-bold">Username</th>
-                    <th class="py-4 px-4 text-left font-bold">Email</th>
-                    <th class="py-4 px-4 text-left font-bold">Role</th>
-                    <th class="py-4 px-4 text-center font-bold w-40">
+                    <th class="py-2 md:py-4 px-2 md:px-4 text-left font-bold">S.N.</th>
+                    <th class="py-2 md:py-4 px-2 md:px-4 text-left font-bold">Name</th>
+                    <th class="py-2 md:py-4 px-2 md:px-4 text-left font-bold">Username</th>
+                    <th class="py-2 md:py-4 px-2 md:px-4 text-left font-bold">Email</th>
+                    <th class="py-2 md:py-4 px-2 md:px-4 text-left font-bold">Role</th>
+                    <th class="py-2 md:py-4 px-2 md:px-4 text-center font-bold w-32 md:w-40">
                       Actions
                     </th>
                   </tr>
@@ -51,18 +52,18 @@
                     :key="user.id"
                     class="even:bg-blue-50 odd:bg-white hover:bg-purple-50 transition-colors border-b border-blue-100"
                   >
-                    <td class="py-3 px-4 font-bold text-blue-600">
+                    <td class="py-2 md:py-3 px-2 md:px-4 font-bold text-blue-600">
                       {{ (currentPage - 1) * pageSize + idx + 1 }}
                     </td>
-                    <td class="py-3 px-4 text-gray-700">
+                    <td class="py-2 md:py-3 px-2 md:px-4 text-gray-700">
                       {{ user.first_name }} {{ user.last_name }}
                     </td>
-                    <td class="py-3 px-4 text-gray-700">{{ user.username }}</td>
-                    <td class="py-3 px-4 text-gray-700">{{ user.email }}</td>
-                    <td class="py-3 px-4 text-purple-700 font-semibold">
+                    <td class="py-2 md:py-3 px-2 md:px-4 text-gray-700">{{ user.username }}</td>
+                    <td class="py-2 md:py-3 px-2 md:px-4 text-gray-700">{{ user.email }}</td>
+                    <td class="py-2 md:py-3 px-2 md:px-4 text-purple-700 font-semibold">
                       {{ user.role }}
                     </td>
-                    <td class="py-3 px-4 flex justify-center relative">
+                    <td class="py-2 md:py-3 px-2 md:px-4 flex justify-center relative">
                       <!-- Three-dot button -->
                       <div class="dropdown-container over">
                         <button
@@ -83,7 +84,7 @@
                           class="absolute right-0 mt-2 w-28 bg-white border rounded-md shadow-md z-50"
                         >
                           <ul class="flex flex-col text-sm text-gray-700">
-                            <li>
+                            <li v-if="!user.is_deleted">
                               <button
                                 class="w-full text-left px-3 py-2 hover:bg-gray-100"
                                 @click="
@@ -94,7 +95,7 @@
                                 Edit
                               </button>
                             </li>
-                            <li>
+                            <li v-if="!user.is_deleted">
                               <button
                                 class="w-full text-left px-3 py-2 hover:bg-gray-100"
                                 @click="
@@ -105,7 +106,7 @@
                                 Change Role
                               </button>
                             </li>
-                            <li>
+                            <li v-if="!user.is_deleted">
                               <button
                                 class="w-full text-left px-3 py-2 hover:bg-gray-100 text-red-600"
                                 @click="
@@ -116,6 +117,17 @@
                                 Delete
                               </button>
                             </li>
+                            <li v-if="user.is_deleted">
+                              <button
+                                class="w-full text-left px-3 py-2 hover:bg-gray-100 text-green-600"
+                                @click="
+                                  restoreUserHandler(user.id);
+                                  dropdownOpen = null;
+                                "
+                              >
+                                Restore
+                              </button>
+                            </li>
                           </ul>
                         </div>
                       </div>
@@ -123,8 +135,8 @@
                   </tr>
                   <tr v-if="paginatedUsers.length === 0">
                     <td
-                      colspan="5"
-                      class="py-3 px-4 text-gray-400 bg-gray-50 rounded-lg text-center"
+                      colspan="6"
+                      class="py-2 md:py-3 px-2 md:px-4 text-gray-400 bg-gray-50 rounded-lg text-center"
                     >
                       No users found.
                     </td>
@@ -132,19 +144,19 @@
                 </tbody>
               </table>
             </div>
-            <div class="flex justify-center items-center gap-2 mt-4">
+            <div class="flex flex-col md:flex-row justify-center items-center gap-2 mt-4">
               <button
-                class="px-3 py-1 rounded bg-blue-200 text-blue-700 hover:bg-blue-300 transition"
+                class="px-2 md:px-3 py-1 rounded bg-blue-200 text-blue-700 hover:bg-blue-300 transition text-xs md:text-base"
                 :disabled="currentPage === 1"
                 @click="currentPage--"
               >
                 Prev
               </button>
-              <span class="font-semibold text-blue-700"
+              <span class="font-semibold text-blue-700 text-xs md:text-base"
                 >Page {{ currentPage }} of {{ totalPages }}</span
               >
               <button
-                class="px-3 py-1 rounded bg-blue-200 text-blue-700 hover:bg-blue-300 transition"
+                class="px-2 md:px-3 py-1 rounded bg-blue-200 text-blue-700 hover:bg-blue-300 transition text-xs md:text-base"
                 :disabled="currentPage === totalPages"
                 @click="currentPage++"
               >
@@ -185,7 +197,7 @@ import Navbar from "@/components/Navbar.vue";
 import { ref, onMounted, computed, watch, onUnmounted } from "vue";
 import UserEditModal from "@/components/UserEditModal.vue";
 import UserEditRole from "@/components/UserEditRole.vue";
-import { fetchUsers, deleteUser } from "@/stores/usersAPI";
+import { fetchUsers, deleteUser, restoreUser } from "@/stores/usersAPI";
 import { useRouter } from "vue-router";
 import { useToast } from "vue-toast-notification";
 import { useAuthStore } from '@/stores/auth'
@@ -277,6 +289,25 @@ async function deleteUsers(id) {
 
     // ERROR TOAST
     $toast.error("Failed to delete user. Try again.", {
+      position: "top-right",
+      duration: 3000,
+      dismissible: true,
+    });
+  }
+}
+
+async function restoreUserHandler(id) {
+  try {
+    await restoreUser(id);
+    // Refresh users list
+    users.value = await fetchUsers();
+    $toast.success("User restored successfully!", {
+      position: "top-right",
+      duration: 3000,
+      dismissible: true,
+    });
+  } catch (error) {
+    $toast.error("Failed to restore user.", {
       position: "top-right",
       duration: 3000,
       dismissible: true,
@@ -377,5 +408,32 @@ tbody,
 tr,
 td {
   overflow: visible !important;
+}
+
+/* Responsive table */
+.table-scroll-area {
+  width: 100%;
+  /* Remove horizontal scroll */
+  overflow-x: unset;
+  padding-bottom: 0;
+}
+.table-scroll-area table {
+  /* Remove min-width */
+  min-width: unset;
+}
+@media (max-width: 768px) {
+  .table-scroll-area table {
+    font-size: 0.85rem;
+    min-width: unset;
+  }
+  th, td {
+    padding: 0.5rem !important;
+  }
+  .modal-overlay {
+    width: 100vw !important;
+    height: 100vh !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+  }
 }
 </style>

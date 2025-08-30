@@ -3,38 +3,40 @@
     class="min-h-screen bg-gradient-to-br from-gray-100 via-blue-50 to-purple-100 flex flex-col"
   >
     <Navbar />
-    <div class="flex flex-1">
-      <Sidebar />
-      <main class="flex-1 flex justify-center px-6 mt-5">
+    <div class="flex flex-1 flex-col md:flex-row">
+      <Sidebar class="w-full md:w-64" />
+      <main class="flex-1 flex flex-col px-2 md:px-6 mt-2 md:mt-5">
         <div
-          class="bg-white p-10 rounded-2xl shadow-xl w-full text-center border border-blue-100 mt-0"
+          class="bg-white p-4 md:p-10 rounded-2xl shadow-xl w-full text-center border border-blue-100 mt-0"
         >
-          <h2
-            class="float-left text-4xl font-extrabold mb-2 text-black-500 tracking-tight drop-shadow"
-          >
-            Stocks
-          </h2>
-          <!-- Create Stock & Category Buttons -->
-          <div class="flex justify-end mb-6 gap-4" v-if="!isStaff">
-            <button
-              class="px-6 py-2 bg-gradient-to-r from-blue-600 to-purple-500 text-white rounded-full shadow-lg hover:scale-105 hover:shadow-xl transition-all flex items-center gap-2 font-semibold"
-              @click="handleCreateStockClick"
+          <div class="flex flex-col md:flex-row items-start md:items-center justify-between mb-2">
+            <h2
+              class="text-2xl md:text-4xl font-extrabold text-black-500 tracking-tight drop-shadow text-left"
             >
-              <span class="material-icons text-lg">add_circle</span>
-              <span>Create Stock</span>
-            </button>
-            <button
-              class="px-6 py-2 bg-gradient-to-r from-green-600 to-blue-500 text-white rounded-full shadow-lg hover:scale-105 hover:shadow-xl transition-all flex items-center gap-2 font-semibold"
-              @click="handleCreateCategoryClick"
-            >
-              <span class="material-icons text-lg">category</span>
-              <span>Create Category</span>
-            </button>
+              Stocks
+            </h2>
+            <!-- Create Stock & Category Buttons -->
+            <div class="flex flex-col md:flex-row justify-end gap-2 md:gap-4 mb-4 md:mb-6" v-if="!isStaff">
+              <button
+                class="px-4 md:px-6 py-2 bg-gradient-to-r from-blue-600 to-purple-500 text-white rounded-full shadow-lg hover:scale-105 hover:shadow-xl transition-all flex items-center gap-2 font-semibold text-sm md:text-base"
+                @click="handleCreateStockClick"
+              >
+                <span class="material-icons text-lg">add_circle</span>
+                <span>Create Stock</span>
+              </button>
+              <button
+                class="px-4 md:px-6 py-2 bg-gradient-to-r from-green-600 to-blue-500 text-white rounded-full shadow-lg hover:scale-105 hover:shadow-xl transition-all flex items-center gap-2 font-semibold text-sm md:text-base"
+                @click="handleCreateCategoryClick"
+              >
+                <span class="material-icons text-lg">category</span>
+                <span>Create Category</span>
+              </button>
+            </div>
           </div>
           <!-- Stocks Table UI -->
-          <div class="mt-2">
+          <div class="mt-2 w-full overflow-x-auto">
             <table
-              class="min-w-full border border-gray-200 rounded-xl shadow-sm bg-white"
+              class="min-w-[600px] w-full border border-gray-200 rounded-xl shadow-sm bg-white text-xs md:text-base"
             >
               <thead class="bg-gradient-to-r from-blue-50 to-purple-50">
                 <tr>
@@ -752,4 +754,22 @@ onUnmounted(() => {
 
 <style scoped>
 @import url("https://fonts.googleapis.com/icon?family=Material+Icons");
+
+/* Responsive table */
+table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+@media (max-width: 768px) {
+  .min-w-[600px] {
+    min-width: 400px !important;
+  }
+  th, td {
+    padding: 0.5rem !important;
+    font-size: 0.85rem !important;
+  }
+  .bg-white {
+    padding: 1rem !important;
+  }
+}
 </style>
