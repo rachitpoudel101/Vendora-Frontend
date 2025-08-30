@@ -4,4 +4,5 @@ export const UserApi = {
   getUser: (id: number | string) => `${BASE_URL}users/${id}/`,
   updateUserRole: (user_id: number | string) =>
     `${BASE_URL}role-update/${user_id}/`,
+  restoreUser: (user_id: number | string) => `${BASE_URL}restore/${user_id}/`,
 };

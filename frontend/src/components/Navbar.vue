@@ -1,9 +1,9 @@
 <template>
   <nav
-    class="bg-[#6A89A7] shadow flex items-center justify-between px-8 py-4 sticky top-0 z-10"
+    class="bg-[#6A89A7] shadow flex flex-col md:flex-row items-center justify-between px-4 md:px-8 py-3 md:py-4 sticky top-0 z-10"
   >
-    <div class="flex items-center gap-2">
-      <span class="text-white font-bold text-2xl tracking-wide"
+    <div class="flex items-center gap-2 mb-2 md:mb-0">
+      <span class="text-white font-bold text-xl md:text-2xl tracking-wide"
         >Stationary App</span
       >
     </div>
