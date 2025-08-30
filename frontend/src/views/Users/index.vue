@@ -12,7 +12,9 @@
           >
             👥 Users
           </h2>
+          <!-- Hide button if user role is staff -->
           <button
+            v-if="auth.user?.role !== 'staff'"
             class="max-h-screen mb-8 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-500 text-white rounded-full shadow-xl hover:scale-105 transition-transform flex items-center justify-center gap-2"
             @click="onCreateUser"
           >
@@ -186,8 +188,9 @@ import UserEditRole from "@/components/UserEditRole.vue";
 import { fetchUsers, deleteUser } from "@/stores/usersAPI";
 import { useRouter } from "vue-router";
 import { useToast } from "vue-toast-notification";
-// import { useAuthStore } from '@/stores/auth'
-// const auth = useAuthStore()
+import { useAuthStore } from '@/stores/auth'
+const auth = useAuthStore()
+
 const $toast = useToast();
 const users = ref([]);
 const showModal = ref(false);
@@ -196,14 +199,30 @@ const showRoleEditModal = ref(false);
 const dropdownOpen = ref(null);
 const router = useRouter();
 
+// Redirect staff away from users page with toast error
+if (auth.user?.role === "staff") {
+  $toast.error("Staff users cannot view the users list.", {
+    position: "top-right",
+    duration: 3000,
+    dismissible: true,
+  });
+  router.replace("/dashboard");
+}
+
 onMounted(async () => {
   users.value = await fetchUsers();
-  // if (!auth.user) {
-  //   await auth.self()
-  //}
 });
 
 function onCreateUser() {
+  // Uncomment below if you have auth store available
+  if (auth.user?.role === "staff") {
+    $toast.error("Staff users cannot create new users.", {
+      position: "top-right",
+      duration: 3000,
+      dismissible: true,
+    });
+    return;
+  }
   router.push("/users/create");
 }
 

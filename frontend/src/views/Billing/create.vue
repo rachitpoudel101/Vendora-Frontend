@@ -355,7 +355,7 @@
         </button>
         <button
           class="px-4 py-2 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700"
-          @click="saveBill"
+          @click="onSubmit"
         >
           Save
         </button>
@@ -375,8 +375,6 @@ const customerName = ref("");
 const billDate = ref(new Date().toISOString().substr(0, 10)); // <-- default to today
 const paymentMethod = ref("cash");
 const remarks = ref("");
-
-const price = ref(0);
 
 // Products for dropdown
 const products = ref([]);
@@ -483,25 +481,16 @@ const grandTotal = computed(() =>
   items.value.reduce((sum, item) => sum + (item.totalPrice || 0), 0),
 );
 
-// Save bill
+// OnSubmit function for form submission
 const router = useRouter();
 
 const showToast = ref(false);
 let toastTimeout = null;
 
-const saveBill = async () => {
-  // Check for stock 0 before saving
-  const hasZeroStock = items.value.some(
-    (item) => getStock(item.product_id) === 0 && item.product_id,
-  );
-  if (hasZeroStock) {
-    showToast.value = true;
-    clearTimeout(toastTimeout);
-    toastTimeout = setTimeout(() => {
-      showToast.value = false;
-    }, 2000);
-    return; // Do not proceed to save, do not emit, do not redirect
-  }
+// Add defineEmits for event emission
+const emit = defineEmits(["close", "bill-created"]);
+
+const onSubmit = async () => {
   // Prepare items for API
   const billItems = items.value.map((item) => ({
     product_id: item.product_id,
@@ -516,26 +505,22 @@ const saveBill = async () => {
     date: billDate.value,
     payment_method: paymentMethod.value,
     vat_amount: totalTaxAmount.value,
-    tax_amount: 0, // If you have a separate tax
+    tax_amount: 0,
     bill_discount: totalDiscountAmount.value,
     actual_amount: totalAmount.value,
     recived_amount: grandTotal.value,
     grand_total: grandTotal.value,
     items: billItems,
-    // remarks: remarks.value // if backend supports
   };
   try {
     const res = await createBills(payload);
     if (res && res.id) {
-      // @ts-ignore
       emit("bill-created");
-      // @ts-ignore
       emit("close");
-      router.push("/billing");
+      $toast.success("Bill created successfully");
     }
-    // else show error or handle as needed
   } catch (e) {
-    // Handle error
+    $toast.error("Failed to create bill");
   }
 };
 </script>
