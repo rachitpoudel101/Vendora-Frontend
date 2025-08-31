@@ -4,105 +4,112 @@
     <div class="flex flex-1 h-0">
       <Sidebar />
 
-      <main class="flex-1 flex flex-col px-6 py-10">
-        <div class="flex justify-between items-center mb-6">
-          <h2 class="text-3xl font-bold text-blue-700">Billing</h2>
+      <main class="flex-1 flex flex-col px-2 md:px-6 py-4 md:py-10">
+        <div
+          class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 md:mb-6 gap-2"
+        >
+          <h2 class="text-2xl md:text-3xl font-bold text-blue-700">Billing</h2>
           <button
             @click="openModal = true"
-            class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+            class="bg-blue-600 text-white px-3 md:px-4 py-2 rounded hover:bg-blue-700 transition w-full md:w-auto"
           >
             Create Bill
           </button>
         </div>
 
         <!-- Bills Table -->
-        <div class="bg-white shadow rounded p-4 overflow-x-auto">
-          <table class="min-w-full divide-y divide-gray-200">
-            <thead class="bg-gray-100">
-              <tr>
-                <th
-                  class="px-4 py-2 text-left text-sm font-medium text-gray-700"
-                >
-                  SN
-                </th>
-                <th
-                  class="px-4 py-2 text-left text-sm font-medium text-gray-700"
-                >
-                  Products
-                </th>
-                <th
-                  class="px-4 py-2 text-left text-sm font-medium text-gray-700"
-                >
-                  Quantity
-                </th>
-                <th
-                  class="px-4 py-2 text-left text-sm font-medium text-gray-700"
-                >
-                  Customer
-                </th>
-                <th
-                  class="px-4 py-2 text-left text-sm font-medium text-gray-700"
-                >
-                  Date
-                </th>
-                <th
-                  class="px-4 py-2 text-left text-sm font-medium text-gray-700"
-                >
-                  Payment Method
-                </th>
-                <th
-                  class="px-4 py-2 text-left text-sm font-medium text-gray-700"
-                >
-                  Amount
-                </th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-200">
-              <tr v-for="(b, index) in paginatedBills" :key="b.id">
-                <td class="px-4 py-2 text-sm">
-                  {{ (currentPage - 1) * pageSize + index + 1 }}
-                </td>
-                <td class="px-4 py-2 text-sm">
-                  <!-- Show product names for this bill -->
-                  <span v-if="b.items && b.items.length">
-                    {{
-                      b.items
-                        .map(
-                          (item) =>
-                            productMap[item.product_id] || item.product_id,
-                        )
-                        .join(", ")
-                    }}
-                  </span>
-                  <span v-else>-</span>
-                </td>
-                <td class="px-4 py-2 text-sm">
-                  <span v-if="b.items && b.items.length">
-                    {{ b.items.map((item) => item.quantity).join(", ") }}
-                  </span>
-                  <span v-else>-</span>
-                </td>
-                <td class="px-4 py-2 text-sm">{{ b.customer_Name }}</td>
-                <td class="px-4 py-2 text-sm">{{ b.date }}</td>
-                <td class="px-4 py-2 text-sm capitalize">
-                  {{ b.payment_method }}
-                </td>
-                <td class="px-4 py-2 text-sm">{{ b.grand_total }}</td>
-              </tr>
-              <tr v-if="paginatedBills.length === 0">
-                <td colspan="7" class="text-center py-4 text-gray-500">
-                  No bills found.
-                </td>
-              </tr>
-            </tbody>
-          </table>
+        <div
+          class="bg-white shadow rounded p-1 md:p-2 overflow-x-auto max-w-full scrollbar-hide"
+        >
+          <div class="w-full">
+            <table
+              class="w-full min-w-[320px] md:min-w-[400px] divide-y divide-gray-200 text-[11px] md:text-xs"
+            >
+              <thead>
+                <tr>
+                  <th
+                    class="px-0.5 md:px-1 py-1 text-left font-semibold text-gray-800 bg-gray-200 border-b border-gray-300 border-r whitespace-nowrap"
+                  >
+                    SN
+                  </th>
+                  <th
+                    class="px-0.5 md:px-1 py-1 text-left font-semibold text-gray-800 bg-gray-200 border-b border-gray-300 border-r whitespace-nowrap"
+                  >
+                    Products
+                  </th>
+                  <th
+                    class="px-0.5 md:px-1 py-1 text-left font-semibold text-gray-800 bg-gray-200 border-b border-gray-300 border-r whitespace-nowrap"
+                  >
+                    Quantity
+                  </th>
+                  <th
+                    class="px-0.5 md:px-1 py-1 text-left font-semibold text-gray-800 bg-gray-200 border-b border-gray-300 border-r whitespace-nowrap"
+                  >
+                    Customer
+                  </th>
+                  <th
+                    class="px-0.5 md:px-1 py-1 text-left font-semibold text-gray-800 bg-gray-200 border-b border-gray-300 border-r whitespace-nowrap"
+                  >
+                    Date
+                  </th>
+                  <th
+                    class="px-0.5 md:px-1 py-1 text-left font-semibold text-gray-800 bg-gray-200 border-b border-gray-300 border-r whitespace-nowrap"
+                  >
+                    Payment Method
+                  </th>
+                  <th
+                    class="px-0.5 md:px-1 py-1 text-left font-semibold text-gray-800 bg-gray-200 border-b border-gray-300 whitespace-nowrap"
+                  >
+                    Amount
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-200">
+                <tr v-for="(b, index) in paginatedBills" :key="b.id">
+                  <td class="px-0.5 md:px-1 py-1 whitespace-nowrap">
+                    {{ (currentPage - 1) * pageSize + index + 1 }}
+                  </td>
+                  <td class="px-0.5 md:px-1 py-1 whitespace-nowrap">
+                    <span v-if="b.items && b.items.length">
+                      {{
+                        b.items
+                          .map(
+                            (item) =>
+                              productMap[item.product_id] || item.product_id,
+                          )
+                          .join(", ")
+                      }}
+                    </span>
+                    <span v-else>-</span>
+                  </td>
+                  <td class="px-0.5 md:px-1 py-1 whitespace-nowrap">
+                    <span v-if="b.items && b.items.length">
+                      {{ b.items.map((item) => item.quantity).join(", ") }}
+                    </span>
+                    <span v-else>-</span>
+                  </td>
+                  <td class="px-0.5 md:px-1 py-1 whitespace-nowrap">{{ b.customer_Name }}</td>
+                  <td class="px-0.5 md:px-1 py-1 whitespace-nowrap">{{ b.date }}</td>
+                  <td class="px-0.5 md:px-1 py-1 capitalize text-center whitespace-nowrap">
+                    {{ b.payment_method }}
+                  </td>
+                  <td class="px-0.5 md:px-1 py-1 whitespace-nowrap">{{ b.grand_total }}</td>
+                </tr>
+                <tr v-if="paginatedBills.length === 0">
+                  <td colspan="7" class="text-center py-2 text-gray-500">
+                    No bills found.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
           <!-- Pagination Controls -->
           <div
             v-if="totalPages > 1"
-            class="flex justify-end items-center mt-4 space-x-2"
+            class="flex flex-wrap justify-end items-center mt-4 space-x-2"
           >
             <button
-              class="px-3 py-1 rounded border bg-gray-100 text-gray-700"
+              class="px-2 md:px-3 py-1 rounded border bg-gray-100 text-gray-700"
               :disabled="currentPage === 1"
               @click="currentPage--"
             >
@@ -114,7 +121,7 @@
               </span>
               <button
                 v-else
-                class="px-3 py-1 rounded border"
+                class="px-2 md:px-3 py-1 rounded border"
                 :class="{
                   'bg-blue-600 text-white font-bold': currentPage === page,
                   'bg-gray-100 text-gray-700': currentPage !== page,
@@ -125,7 +132,7 @@
               </button>
             </template>
             <button
-              class="px-3 py-1 rounded border bg-gray-100 text-gray-700"
+              class="px-2 md:px-3 py-1 rounded border bg-gray-100 text-gray-700"
               :disabled="currentPage === totalPages"
               @click="nextPage"
             >
@@ -190,9 +197,25 @@ const paginationPages = computed(() => {
     if (currentPage.value <= 4) {
       pages.push(1, 2, 3, 4, 5, "...", totalPages.value);
     } else if (currentPage.value >= totalPages.value - 3) {
-      pages.push(1, "...", totalPages.value - 4, totalPages.value - 3, totalPages.value - 2, totalPages.value - 1, totalPages.value);
+      pages.push(
+        1,
+        "...",
+        totalPages.value - 4,
+        totalPages.value - 3,
+        totalPages.value - 2,
+        totalPages.value - 1,
+        totalPages.value,
+      );
     } else {
-      pages.push(1, "...", currentPage.value - 1, currentPage.value, currentPage.value + 1, "...", totalPages.value);
+      pages.push(
+        1,
+        "...",
+        currentPage.value - 1,
+        currentPage.value,
+        currentPage.value + 1,
+        "...",
+        totalPages.value,
+      );
     }
   }
   return pages;
@@ -239,5 +262,12 @@ function nextPage() {
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 </style>
