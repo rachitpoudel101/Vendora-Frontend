@@ -23,42 +23,42 @@
         >
           <div class="w-full">
             <table
-              class="w-full min-w-[320px] md:min-w-[400px] divide-y divide-gray-200 text-[11px] md:text-xs"
+              class="w-full min-w-[480px] md:min-w-[600px] divide-y divide-gray-200 text-base md:text-lg"
             >
               <thead>
                 <tr>
                   <th
-                    class="px-0.5 md:px-1 py-1 text-left font-semibold text-gray-800 bg-gray-200 border-b border-gray-300 border-r whitespace-nowrap"
+                    class="px-2 md:px-4 py-2 text-left font-semibold text-gray-800 bg-gray-200 border-b border-gray-300 border-r whitespace-nowrap"
                   >
                     SN
                   </th>
                   <th
-                    class="px-0.5 md:px-1 py-1 text-left font-semibold text-gray-800 bg-gray-200 border-b border-gray-300 border-r whitespace-nowrap"
+                    class="px-2 md:px-4 py-2 text-left font-semibold text-gray-800 bg-gray-200 border-b border-gray-300 border-r whitespace-nowrap"
                   >
                     Products
                   </th>
                   <th
-                    class="px-0.5 md:px-1 py-1 text-left font-semibold text-gray-800 bg-gray-200 border-b border-gray-300 border-r whitespace-nowrap"
+                    class="px-2 md:px-4 py-2 text-left font-semibold text-gray-800 bg-gray-200 border-b border-gray-300 border-r whitespace-nowrap"
                   >
                     Quantity
                   </th>
                   <th
-                    class="px-0.5 md:px-1 py-1 text-left font-semibold text-gray-800 bg-gray-200 border-b border-gray-300 border-r whitespace-nowrap"
+                    class="px-2 md:px-4 py-2 text-left font-semibold text-gray-800 bg-gray-200 border-b border-gray-300 border-r whitespace-nowrap"
                   >
                     Customer
                   </th>
                   <th
-                    class="px-0.5 md:px-1 py-1 text-left font-semibold text-gray-800 bg-gray-200 border-b border-gray-300 border-r whitespace-nowrap"
+                    class="px-2 md:px-4 py-2 text-left font-semibold text-gray-800 bg-gray-200 border-b border-gray-300 border-r whitespace-nowrap"
                   >
                     Date
                   </th>
                   <th
-                    class="px-0.5 md:px-1 py-1 text-left font-semibold text-gray-800 bg-gray-200 border-b border-gray-300 border-r whitespace-nowrap"
+                    class="px-2 md:px-4 py-2 text-left font-semibold text-gray-800 bg-gray-200 border-b border-gray-300 whitespace-nowrap"
                   >
                     Payment Method
                   </th>
                   <th
-                    class="px-0.5 md:px-1 py-1 text-left font-semibold text-gray-800 bg-gray-200 border-b border-gray-300 whitespace-nowrap"
+                    class="px-2 md:px-4 py-2 text-left font-semibold text-gray-800 bg-gray-200 border-b border-gray-300 whitespace-nowrap"
                   >
                     Amount
                   </th>
@@ -66,10 +66,10 @@
               </thead>
               <tbody class="divide-y divide-gray-200">
                 <tr v-for="(b, index) in paginatedBills" :key="b.id">
-                  <td class="px-0.5 md:px-1 py-1 whitespace-nowrap">
+                  <td class="px-2 md:px-4 py-2 whitespace-nowrap">
                     {{ (currentPage - 1) * pageSize + index + 1 }}
                   </td>
-                  <td class="px-0.5 md:px-1 py-1 whitespace-nowrap">
+                  <td class="px-2 md:px-4 py-2 whitespace-nowrap">
                     <span v-if="b.items && b.items.length">
                       {{
                         b.items
@@ -82,21 +82,21 @@
                     </span>
                     <span v-else>-</span>
                   </td>
-                  <td class="px-0.5 md:px-1 py-1 whitespace-nowrap">
+                  <td class="px-2 md:px-4 py-2 whitespace-nowrap">
                     <span v-if="b.items && b.items.length">
                       {{ b.items.map((item) => item.quantity).join(", ") }}
                     </span>
                     <span v-else>-</span>
                   </td>
-                  <td class="px-0.5 md:px-1 py-1 whitespace-nowrap">{{ b.customer_Name }}</td>
-                  <td class="px-0.5 md:px-1 py-1 whitespace-nowrap">{{ b.date }}</td>
-                  <td class="px-0.5 md:px-1 py-1 capitalize text-center whitespace-nowrap">
+                  <td class="px-2 md:px-4 py-2 whitespace-nowrap">{{ b.customer_Name }}</td>
+                  <td class="px-2 md:px-4 py-2 whitespace-nowrap">{{ b.date }}</td>
+                  <td class="px-2 md:px-4 py-2 capitalize text-left whitespace-nowrap">
                     {{ b.payment_method }}
                   </td>
-                  <td class="px-0.5 md:px-1 py-1 whitespace-nowrap">{{ b.grand_total }}</td>
+                  <td class="px-2 md:px-4 py-2 whitespace-nowrap">{{ b.grand_total }}</td>
                 </tr>
                 <tr v-if="paginatedBills.length === 0">
-                  <td colspan="7" class="text-center py-2 text-gray-500">
+                  <td colspan="7" class="text-center py-4 text-gray-500">
                     No bills found.
                   </td>
                 </tr>
