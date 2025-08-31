@@ -3,11 +3,15 @@
     class="min-h-screen bg-gradient-to-br from-blue-100 via-white to-purple-100 flex flex-col max-h-screen"
   >
     <Navbar />
-    <div class="flex flex-1 h-0 overflow-hidden max-h-screen flex-col md:flex-row">
+    <div
+      class="flex flex-1 h-0 overflow-hidden max-h-screen flex-col md:flex-row"
+    >
       <Sidebar class="w-full md:w-64" />
       <main class="flex-1 p-2 md:p-5 w-full">
         <!-- Header row with Users title and Create User button on opposite sides -->
-        <div class="flex flex-row items-center justify-between gap-2 mb-4 md:mb-8">
+        <div
+          class="flex flex-row items-center justify-between gap-2 mb-4 md:mb-8"
+        >
           <h2
             class="text-2xl md:text-4xl font-extrabold text-blue-700 tracking-wide drop-shadow-lg text-left"
           >
@@ -36,12 +40,24 @@
                   <tr
                     class="bg-gradient-to-r from-blue-200 via-purple-100 to-blue-100 text-blue-800"
                   >
-                    <th class="py-2 md:py-4 px-2 md:px-4 text-left font-bold">S.N.</th>
-                    <th class="py-2 md:py-4 px-2 md:px-4 text-left font-bold">Name</th>
-                    <th class="py-2 md:py-4 px-2 md:px-4 text-left font-bold">Username</th>
-                    <th class="py-2 md:py-4 px-2 md:px-4 text-left font-bold">Email</th>
-                    <th class="py-2 md:py-4 px-2 md:px-4 text-left font-bold">Role</th>
-                    <th class="py-2 md:py-4 px-2 md:px-4 text-center font-bold w-32 md:w-40">
+                    <th class="py-2 md:py-4 px-2 md:px-4 text-left font-bold">
+                      S.N.
+                    </th>
+                    <th class="py-2 md:py-4 px-2 md:px-4 text-left font-bold">
+                      Name
+                    </th>
+                    <th class="py-2 md:py-4 px-2 md:px-4 text-left font-bold">
+                      Username
+                    </th>
+                    <th class="py-2 md:py-4 px-2 md:px-4 text-left font-bold">
+                      Email
+                    </th>
+                    <th class="py-2 md:py-4 px-2 md:px-4 text-left font-bold">
+                      Role
+                    </th>
+                    <th
+                      class="py-2 md:py-4 px-2 md:px-4 text-center font-bold w-32 md:w-40"
+                    >
                       Actions
                     </th>
                   </tr>
@@ -52,18 +68,28 @@
                     :key="user.id"
                     class="even:bg-blue-50 odd:bg-white hover:bg-purple-50 transition-colors border-b border-blue-100"
                   >
-                    <td class="py-2 md:py-3 px-2 md:px-4 font-bold text-blue-600">
+                    <td
+                      class="py-2 md:py-3 px-2 md:px-4 font-bold text-blue-600"
+                    >
                       {{ (currentPage - 1) * pageSize + idx + 1 }}
                     </td>
                     <td class="py-2 md:py-3 px-2 md:px-4 text-gray-700">
                       {{ user.first_name }} {{ user.last_name }}
                     </td>
-                    <td class="py-2 md:py-3 px-2 md:px-4 text-gray-700">{{ user.username }}</td>
-                    <td class="py-2 md:py-3 px-2 md:px-4 text-gray-700">{{ user.email }}</td>
-                    <td class="py-2 md:py-3 px-2 md:px-4 text-purple-700 font-semibold">
+                    <td class="py-2 md:py-3 px-2 md:px-4 text-gray-700">
+                      {{ user.username }}
+                    </td>
+                    <td class="py-2 md:py-3 px-2 md:px-4 text-gray-700">
+                      {{ user.email }}
+                    </td>
+                    <td
+                      class="py-2 md:py-3 px-2 md:px-4 text-purple-700 font-semibold"
+                    >
                       {{ user.role }}
                     </td>
-                    <td class="py-2 md:py-3 px-2 md:px-4 flex justify-center relative">
+                    <td
+                      class="py-2 md:py-3 px-2 md:px-4 flex justify-center relative"
+                    >
                       <!-- Three-dot button -->
                       <div class="dropdown-container over">
                         <button
@@ -144,7 +170,9 @@
                 </tbody>
               </table>
             </div>
-            <div class="flex flex-col md:flex-row justify-center items-center gap-2 mt-4">
+            <div
+              class="flex flex-col md:flex-row justify-center items-center gap-2 mt-4"
+            >
               <button
                 class="px-2 md:px-3 py-1 rounded bg-blue-200 text-blue-700 hover:bg-blue-300 transition text-xs md:text-base"
                 :disabled="currentPage === 1"
@@ -200,8 +228,8 @@ import UserEditRole from "@/components/UserEditRole.vue";
 import { fetchUsers, deleteUser, restoreUser } from "@/stores/usersAPI";
 import { useRouter } from "vue-router";
 import { useToast } from "vue-toast-notification";
-import { useAuthStore } from '@/stores/auth'
-const auth = useAuthStore()
+import { useAuthStore } from "@/stores/auth";
+const auth = useAuthStore();
 
 const $toast = useToast();
 const users = ref([]);
@@ -426,7 +454,8 @@ td {
     font-size: 0.85rem;
     min-width: unset;
   }
-  th, td {
+  th,
+  td {
     padding: 0.5rem !important;
   }
   .modal-overlay {

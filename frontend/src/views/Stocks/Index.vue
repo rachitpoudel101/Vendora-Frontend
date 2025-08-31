@@ -7,16 +7,21 @@
       <Sidebar class="w-full md:w-64" />
       <main class="flex-1 flex flex-col px-2 md:px-6 mt-2 md:mt-5">
         <div
-          class="bg-white p-4 md:p-10 rounded-2xl shadow-xl w-full text-center border border-blue-100 mt-0"
+          class="bg-white p-2 md:p-10 rounded-2xl shadow-xl w-full text-center border border-blue-100 mt-0"
         >
-          <div class="flex flex-col md:flex-row items-start md:items-center justify-between mb-2">
+          <div
+            class="flex flex-col md:flex-row items-start md:items-center justify-between mb-2"
+          >
             <h2
               class="text-2xl md:text-4xl font-extrabold text-black-500 tracking-tight drop-shadow text-left"
             >
               Stocks
             </h2>
             <!-- Create Stock & Category Buttons -->
-            <div class="flex flex-col md:flex-row justify-end gap-2 md:gap-4 mb-4 md:mb-6" v-if="!isStaff">
+            <div
+              class="flex flex-col md:flex-row justify-end gap-2 md:gap-4 mb-4 md:mb-6"
+              v-if="!isStaff"
+            >
               <button
                 class="px-4 md:px-6 py-2 bg-gradient-to-r from-blue-600 to-purple-500 text-white rounded-full shadow-lg hover:scale-105 hover:shadow-xl transition-all flex items-center gap-2 font-semibold text-sm md:text-base"
                 @click="handleCreateStockClick"
@@ -33,185 +38,253 @@
               </button>
             </div>
           </div>
-          <!-- Stocks Table UI -->
-          <div class="mt-2 w-full overflow-x-auto">
-            <table
-              class="min-w-[600px] w-full border border-gray-200 rounded-xl shadow-sm bg-white text-xs md:text-base"
+          <!-- Tabs for Products and Categories -->
+          <div class="mb-4 md:mb-6 flex flex-col md:flex-row gap-2">
+            <button
+              class="px-4 py-2 rounded-t-md font-semibold transition-all w-full md:w-auto"
+              :class="tab === 'products' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700'"
+              @click="tab = 'products'"
             >
-              <thead class="bg-gradient-to-r from-blue-50 to-purple-50">
-                <tr>
-                  <th
-                    class="px-4 py-3 border-b text-center font-semibold text-black-100 text-lg"
+              Products
+            </button>
+            <button
+              class="px-4 py-2 rounded-t-md font-semibold transition-all w-full md:w-auto"
+              :class="tab === 'categories' ? 'bg-green-600 text-white' : 'bg-gray-200 text-gray-700'"
+              @click="tab = 'categories'"
+            >
+              Categories
+            </button>
+          </div>
+          <div>
+            <div v-if="tab === 'products'">
+              <!-- Products Table -->
+              <div>
+                <h3 class="text-lg md:text-xl font-bold text-blue-700 mb-2 text-left">Products</h3>
+                <div class="overflow-x-auto max-w-full scrollbar-hide">
+                  <table
+                    class="w-full min-w-[320px] md:min-w-[600px] border border-gray-200 rounded-xl shadow-sm bg-white text-[11px] md:text-base"
                   >
-                    SN
-                  </th>
-                  <th
-                    class="px-4 py-3 border-b text-center font-semibold text-black-100 text-lg"
-                  >
-                    Product Name
-                  </th>
-                  <th
-                    class="px-4 py-3 border-b text-center font-semibold text-black-100 text-lg"
-                  >
-                    Category Name
-                  </th>
-                  <th
-                    class="px-4 py-3 border-b text-center font-semibold text-black-100 text-lg"
-                  >
-                    Stocks
-                  </th>
-                  <th
-                    class="px-4 py-3 border-b text-center font-semibold text-black-100 text-lg"
-                  >
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr
-                  v-for="(item, idx) in paginatedStocks"
-                  :key="item.id"
-                  class="hover:bg-blue-50 transition-colors"
-                >
-                  <td class="px-4 py-3 text-center border-b">
-                    {{ (currentPage - 1) * itemsPerPage + idx + 1 }}
-                  </td>
-                  <td
-                    class="px-4 py-3 border-b text-center font-medium text-blue-900"
-                  >
-                    {{ item.name }}
-                  </td>
-                  <td
-                    class="px-4 py-3 border-b text-center font-medium text-green-700"
-                  >
-                    {{ item.category_name }}
-                  </td>
-                  <td
-                    class="px-4 py-3 text-center border-b font-semibold text-purple-700"
-                  >
-                    {{ item.stock }}
-                  </td>
-                  <td class="py-3 px-4 flex justify-center relative">
-                    <!-- Wrapper with relative -->
-                    <div class="relative">
-                      <!-- Three-dot button -->
-                      <button
-                        @click.stop="
-                          dropdownOpen === item.id
-                            ? (dropdownOpen = null)
-                            : (dropdownOpen = item.id)
-                        "
-                        class="text-gray-700 hover:text-gray-900 focus:outline-none text-xl font-bold px-2 py-1"
+                    <thead class="bg-gradient-to-r from-blue-50 to-purple-50">
+                      <tr>
+                        <th
+                          class="px-4 py-3 border-b text-center font-semibold text-black-100 text-lg"
+                        >
+                          SN
+                        </th>
+                        <th
+                          class="px-4 py-3 border-b text-center font-semibold text-black-100 text-lg"
+                        >
+                          Product Name
+                        </th>
+                        <th
+                          class="px-4 py-3 border-b text-center font-semibold text-black-100 text-lg"
+                        >
+                          Category Name
+                        </th>
+                        <th
+                          class="px-4 py-3 border-b text-center font-semibold text-black-100 text-lg"
+                        >
+                          Stocks
+                        </th>
+                        <th
+                          class="px-4 py-3 border-b text-center font-semibold text-black-100 text-lg"
+                        >
+                          Actions
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr
+                        v-for="(item, idx) in paginatedStocks"
+                        :key="item.id"
+                        class="hover:bg-blue-50 transition-colors"
                       >
-                        ⋮
-                      </button>
-                      <!-- Dropdown menu -->
-                      <div
-                        v-if="dropdownOpen === item.id"
-                        class="absolute right-0 mt-2 w-20 bg-white border rounded-md shadow-md z-50"
-                      >
-                        <ul class="flex flex-col text-sm text-gray-700">
-                          <li>
+                        <td class="px-4 py-3 text-center border-b">
+                          {{ (currentPage - 1) * itemsPerPage + idx + 1 }}
+                        </td>
+                        <td
+                          class="px-4 py-3 border-b text-center font-medium text-blue-900"
+                        >
+                          {{ item.name }}
+                        </td>
+                        <td
+                          class="px-4 py-3 border-b text-center font-medium text-green-700"
+                        >
+                          {{ categoryNameMap[item.category] || item.category_name }}
+                        </td>
+                        <td
+                          class="px-4 py-3 text-center border-b font-semibold text-purple-700"
+                        >
+                          {{ item.stock }}
+                        </td>
+                        <td class="py-3 px-4 flex justify-center relative">
+                          <!-- Wrapper with relative -->
+                          <div class="relative">
+                            <!-- Three-dot button -->
                             <button
-                              class="w-full text-left px-3 py-2 hover:bg-gray-100"
-                              @click="
-                                openViewModal(item.id);
-                                dropdownOpen = null;
+                              @click.stop="
+                                dropdownOpen === item.id
+                                  ? (dropdownOpen = null)
+                                  : (dropdownOpen = item.id)
                               "
+                              class="text-gray-700 hover:text-gray-900 focus:outline-none text-xl font-bold px-2 py-1"
                             >
-                              View
+                              ⋮
                             </button>
-                          </li>
-                          <template v-if="!isStaff">
-                            <li>
-                              <button
-                                class="w-full text-left px-3 py-2 hover:bg-gray-100"
-                                @click="
-                                  openEditModal(item.id);
-                                  dropdownOpen = null;
-                                "
-                              >
-                                Edit
-                              </button>
-                            </li>
-                            <li>
-                              <button
-                                class="w-full text-left px-3 py-2 hover:bg-gray-100 text-red-600"
-                                @click="deleteProducts(item.id)"
-                              >
-                                Delete
-                              </button>
-                            </li>
-                          </template>
-                        </ul>
-                      </div>
-                    </div>
-                  </td>
-                </tr>
-                <tr v-if="loading">
-                  <td
-                    colspan="5"
+                            <!-- Dropdown menu -->
+                            <div
+                              v-if="dropdownOpen === item.id"
+                              class="absolute right-0 mt-2 w-20 bg-white border rounded-md shadow-md z-50"
+                            >
+                              <ul class="flex flex-col text-sm text-gray-700">
+                                <li>
+                                  <button
+                                    class="w-full text-left px-3 py-2 hover:bg-gray-100"
+                                    @click="
+                                      openViewModal(item.id);
+                                      dropdownOpen = null;
+                                    "
+                                  >
+                                    View
+                                  </button>
+                                </li>
+                                <template v-if="!isStaff">
+                                  <li>
+                                    <button
+                                      class="w-full text-left px-3 py-2 hover:bg-gray-100"
+                                      @click="
+                                        openEditModal(item.id);
+                                        dropdownOpen = null;
+                                      "
+                                    >
+                                      Edit
+                                    </button>
+                                  </li>
+                                  <li>
+                                    <button
+                                      class="w-full text-left px-3 py-2 hover:bg-gray-100 text-red-600"
+                                      @click="deleteProducts(item.id)"
+                                    >
+                                      Delete
+                                    </button>
+                                  </li>
+                                </template>
+                              </ul>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr v-if="loading">
+                        <td
+                          colspan="5"
+                          class="text-center py-6 text-blue-600 font-semibold animate-pulse"
+                        >
+                          Loading...
+                        </td>
+                      </tr>
+                      <tr v-if="error">
+                        <td
+                          colspan="5"
+                          class="text-center py-6 text-red-500 font-semibold"
+                        >
+                          {{ error }}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <!-- Add loading/error notification below the table -->
+                  <div
+                    v-if="loading"
                     class="text-center py-6 text-blue-600 font-semibold animate-pulse"
                   >
                     Loading...
-                  </td>
-                </tr>
-                <tr v-if="error">
-                  <td
-                    colspan="5"
+                  </div>
+                  <div
+                    v-if="error"
                     class="text-center py-6 text-red-500 font-semibold"
                   >
                     {{ error }}
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            <!-- Add loading/error notification below the table -->
-            <div
-              v-if="loading"
-              class="text-center py-6 text-blue-600 font-semibold animate-pulse"
-            >
-              Loading...
-            </div>
-            <div
-              v-if="error"
-              class="text-center py-6 text-red-500 font-semibold"
-            >
-              {{ error }}
-            </div>
-            <!-- Pagination Controls -->
-            <div class="flex justify-between items-center mt-4">
-              <button
-                class="px-3 py-1 bg-gray-200 rounded shadow hover:bg-gray-300"
-                @click="prevPage"
-                :disabled="currentPage === 1"
-              >
-                Prev
-              </button>
+                  </div>
+                  <!-- Pagination Controls -->
+                  <div class="flex justify-between items-center mt-4">
+                    <button
+                      class="px-3 py-1 bg-gray-200 rounded shadow hover:bg-gray-300"
+                      @click="prevPage"
+                      :disabled="currentPage === 1"
+                    >
+                      Prev
+                    </button>
 
-              <div class="flex gap-2">
-                <button
-                  v-for="page in totalPages"
-                  :key="page"
-                  @click="goToPage(page)"
-                  :class="[
-                    'px-3 py-1 rounded shadow',
-                    currentPage === page
-                      ? 'bg-blue-500 text-white'
-                      : 'bg-gray-200 hover:bg-gray-300',
-                  ]"
-                >
-                  {{ page }}
-                </button>
+                    <div class="flex gap-2">
+                      <button
+                        v-for="page in totalPages"
+                        :key="page"
+                        @click="goToPage(page)"
+                        :class="[
+                          'px-3 py-1 rounded shadow',
+                          currentPage === page
+                            ? 'bg-blue-500 text-white'
+                            : 'bg-gray-200 hover:bg-gray-300',
+                        ]"
+                      >
+                        {{ page }}
+                      </button>
+                    </div>
+
+                    <button
+                      class="px-3 py-1 bg-gray-200 rounded shadow hover:bg-gray-300"
+                      @click="nextPage"
+                      :disabled="currentPage === totalPages"
+                    >
+                      Next
+                    </button>
+                  </div>
+                </div>
               </div>
-
-              <button
-                class="px-3 py-1 bg-gray-200 rounded shadow hover:bg-gray-300"
-                @click="nextPage"
-                :disabled="currentPage === totalPages"
-              >
-                Next
-              </button>
+            </div>
+            <div v-else>
+              <!-- Category Table -->
+              <div>
+                <h3 class="text-lg md:text-xl font-bold text-green-700 mb-2 text-left">Categories</h3>
+                <div class="overflow-x-auto max-w-full scrollbar-hide">
+                  <table class="w-full min-w-[240px] md:min-w-[400px] border border-gray-200 rounded-xl shadow-sm bg-white text-[11px] md:text-base">
+                    <thead class="bg-gradient-to-r from-green-50 to-blue-50">
+                      <tr>
+                        <th class="px-4 py-3 border-b text-center font-semibold text-black-100 text-lg">SN</th>
+                        <th class="px-4 py-3 border-b text-center font-semibold text-black-100 text-lg">Category Name</th>
+                        <th class="px-4 py-3 border-b text-center font-semibold text-black-100 text-lg">Description</th>
+                        <th class="px-4 py-3 border-b text-center font-semibold text-black-100 text-lg">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr v-for="(cat, idx) in categories" :key="cat.id" class="hover:bg-green-50 transition-colors">
+                        <td class="px-4 py-3 text-center border-b">{{ idx + 1 }}</td>
+                        <td class="px-4 py-3 border-b text-center font-medium text-green-700">{{ cat.name }}</td>
+                        <td class="px-4 py-3 border-b text-center text-gray-700">{{ cat.description }}</td>
+                        <td class="px-4 py-3 border-b text-center">
+                          <button
+                            class="text-blue-600 hover:text-blue-800 px-2"
+                            @click="openEditCategoryModal(cat)"
+                            title="Edit"
+                          >
+                            <span class="material-icons text-base">edit</span>
+                          </button>
+                          <button
+                            class="text-red-600 hover:text-red-800 px-2"
+                            @click="deleteCategory(cat.id)"
+                            title="Delete"
+                          >
+                            <span class="material-icons text-base">delete</span>
+                          </button>
+                        </td>
+                      </tr>
+                      <tr v-if="categories.length === 0">
+                        <td colspan="4" class="text-center py-6 text-gray-500">No categories found.</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -478,6 +551,55 @@
               </Modal>
             </div>
           </transition>
+          <transition name="modal-fade">
+            <div
+              v-if="showEditCategoryModal"
+              class="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50"
+              @click.self="showEditCategoryModal = false"
+            >
+              <Modal
+                :show="showEditCategoryModal"
+                customClass="stock-modal"
+                @close="showEditCategoryModal = false"
+              >
+                <h3 class="text-2xl font-bold mb-4 text-green-700">
+                  Edit Category
+                </h3>
+                <form
+                  @submit.prevent="handleEditCategory"
+                  class="flex flex-col gap-4"
+                >
+                  <input
+                    v-model="editCategoryForm.name"
+                    type="text"
+                    placeholder="Category Name"
+                    class="border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400"
+                  />
+                  <input
+                    v-model="editCategoryForm.description"
+                    type="text"
+                    placeholder="Description"
+                    class="border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400"
+                  />
+                  <div class="flex justify-end gap-2 mt-4">
+                    <button
+                      type="button"
+                      class="px-4 py-2 bg-gray-200 rounded-full shadow hover:bg-gray-300 transition-all"
+                      @click="showEditCategoryModal = false"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      class="px-4 py-2 bg-green-500 text-white rounded-full shadow hover:bg-green-600 transition-all"
+                    >
+                      Save
+                    </button>
+                  </div>
+                </form>
+              </Modal>
+            </div>
+          </transition>
         </div>
       </main>
     </div>
@@ -496,7 +618,9 @@ import {
   updateProduct,
   fetchCategory,
   createCatyregory,
+  updateCategory, // <-- add this
   deleteProduct,
+  deleteCategory, // <-- add this
 } from "@/stores/InventoryAPI";
 const currentPage = ref(1);
 const itemsPerPage = ref(10);
@@ -533,6 +657,7 @@ const showViewModal = ref(false);
 const showEditModal = ref(false);
 const showCreateModal = ref(false);
 const showCreateCategoryModal = ref(false);
+const showEditCategoryModal = ref(false);
 const selectedStockId = ref(null);
 const selectedStock = ref(null);
 const editForm = ref({
@@ -553,6 +678,11 @@ const createCategoryForm = ref({
   name: "",
   description: "",
 });
+const editCategoryForm = ref({
+  id: null,
+  name: "",
+  description: "",
+});
 const sellingPrice = computed(() => {
   const cp = Number(createForm.value.cost_price) || 0;
   const margin = Number(createForm.value.margin) || 0;
@@ -564,6 +694,15 @@ const viewSellingPrice = computed(() => {
   return cp + margin;
 });
 const isStaff = computed(() => auth.user?.role === "staff");
+const tab = ref('products');
+
+const categoryNameMap = computed(() => {
+  const map: Record<string, string> = {};
+  categories.value.forEach(cat => {
+    map[cat.id] = cat.name;
+  });
+  return map;
+});
 
 async function loadStocks() {
   loading.value = true;
@@ -633,6 +772,63 @@ function openEditModal(id) {
   editForm.value = { ...stock };
   showEditModal.value = true;
 }
+
+// Open edit modal for category
+function openEditCategoryModal(cat) {
+  editCategoryForm.value = { id: cat.id, name: cat.name, description: cat.description };
+  showEditCategoryModal.value = true;
+}
+
+// Edit category handler
+async function handleEditCategory() {
+  loading.value = true;
+  try {
+    await updateCategory(editCategoryForm.value.id, {
+      name: editCategoryForm.value.name,
+      description: editCategoryForm.value.description,
+    });
+    showEditCategoryModal.value = false;
+    await loadCategories();
+    $toast.success("Category updated successfully!", {
+      position: "top-right",
+      duration: 3000,
+      dismissible: true,
+    });
+  } catch (e) {
+    $toast.error("Failed to update category.", {
+      position: "top-right",
+      duration: 3000,
+      dismissible: true,
+    });
+  } finally {
+    loading.value = false;
+  }
+}
+
+// Delete category handler
+async function deleteCategory(id) {
+  const confirmed = confirm("Are you sure you want to delete this category?");
+  if (!confirmed) return;
+  loading.value = true;
+  try {
+    await deleteCategory(id);
+    await loadCategories();
+    $toast.success("Category deleted successfully!", {
+      position: "top-right",
+      duration: 3000,
+      dismissible: true,
+    });
+  } catch (e) {
+    $toast.error("Failed to delete category.", {
+      position: "top-right",
+      duration: 3000,
+      dismissible: true,
+    });
+  } finally {
+    loading.value = false;
+  }
+}
+
 async function handleEdit() {
   loading.value = true;
   try {
@@ -760,11 +956,22 @@ table {
   border-collapse: separate;
   border-spacing: 0;
 }
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
 @media (max-width: 768px) {
   .min-w-[600px] {
-    min-width: 400px !important;
+    min-width: 320px !important;
   }
-  th, td {
+  .min-w-[400px] {
+    min-width: 240px !important;
+  }
+  th,
+  td {
     padding: 0.5rem !important;
     font-size: 0.85rem !important;
   }

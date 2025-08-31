@@ -145,11 +145,15 @@ export async function deleteUser(id: number | string) {
 // ✅ Restore user by ID
 export async function restoreUser(id: number | string) {
   try {
-    const res = await axios.post(UserApi.restoreUser(id), {}, {
-      headers: {
-        Authorization: token ? `Bearer ${token}` : "",
+    const res = await axios.post(
+      UserApi.restoreUser(id),
+      {},
+      {
+        headers: {
+          Authorization: token ? `Bearer ${token}` : "",
+        },
       },
-    });
+    );
     return res.data;
   } catch (e) {
     console.error(`Error restoring user with id ${id}:`, e);
