@@ -1,44 +1,213 @@
 <template>
   <div class="min-h-screen flex flex-col bg-gray-100">
-    <Navbar />
-    <div class="flex flex-1 h-0">
-      <Sidebar />
-      <main class="flex-1 flex items-center justify-center px-6 py-12 overflow-auto">
+    <div class="fixed top-0 left-0 right-0 z-50">
+      <Navbar />
+    </div>
+    <div class="flex flex-1 h-screen pt-16">
+      <div class="fixed top-16 left-0 h-[calc(100vh-4rem)] w-64 z-40">
+        <Sidebar />
+      </div>
+      <main
+        class="flex-1 md:ml-64 px-2 md:px-6 py-4 md:py-12 overflow-auto"
+        style="height: calc(100vh - 4rem)"
+      >
         <div class="w-full max-w-4xl mx-auto">
+          <!-- Top-selling products switchable card (responsive) -->
+          <div class="w-full mb-6 md:mb-8">
+            <div
+              class="flex flex-col items-center bg-white rounded-xl border border-indigo-100 shadow-sm p-4 md:p-6 transition duration-200 hover:shadow-lg min-h-[140px] md:min-h-[180px] max-w-full md:max-w-md mx-auto"
+            >
+              <div class="flex gap-2 mb-4 flex-wrap justify-center">
+                <button
+                  v-for="period in topProductPeriods"
+                  :key="period.key"
+                  @click="
+                    selectedTopProductPeriod = period.key as
+                      | 'week'
+                      | 'month'
+                      | 'year'
+                  "
+                  :class="[
+                    'px-3 py-1 rounded font-semibold border text-sm md:text-base',
+                    selectedTopProductPeriod === period.key
+                      ? 'bg-indigo-600 text-white border-indigo-600'
+                      : 'bg-gray-100 text-gray-700 border-gray-300 hover:bg-indigo-50',
+                  ]"
+                >
+                  {{ period.label }}
+                </button>
+              </div>
+              <div
+                v-if="
+                  selectedTopProductPeriod === 'week' &&
+                  dashboardStats?.week_top_product
+                "
+                class="flex flex-col items-center"
+              >
+                <h4 class="font-bold text-base md:text-lg text-indigo-700 mb-2">
+                  Top Product This Week
+                </h4>
+                <div class="text-gray-700 text-sm md:text-base mb-1">
+                  {{ dashboardStats.week_top_product.product_name }}
+                </div>
+                <div class="text-green-600 text-xs md:text-sm">
+                  Sold: {{ dashboardStats.week_top_product.sold_quantity }}
+                </div>
+                <div class="text-purple-600 text-xs md:text-sm">
+                  Stock: {{ dashboardStats.week_top_product.stock }}
+                </div>
+              </div>
+              <div
+                v-if="
+                  selectedTopProductPeriod === 'month' &&
+                  dashboardStats?.month_top_product
+                "
+                class="flex flex-col items-center"
+              >
+                <h4 class="font-bold text-base md:text-lg text-indigo-700 mb-2">
+                  Top Product This Month
+                </h4>
+                <div class="text-gray-700 text-sm md:text-base mb-1">
+                  {{ dashboardStats.month_top_product.product_name }}
+                </div>
+                <div class="text-green-600 text-xs md:text-sm">
+                  Sold: {{ dashboardStats.month_top_product.sold_quantity }}
+                </div>
+                <div class="text-purple-600 text-xs md:text-sm">
+                  Stock: {{ dashboardStats.month_top_product.stock }}
+                </div>
+              </div>
+              <div
+                v-if="
+                  selectedTopProductPeriod === 'year' &&
+                  dashboardStats?.year_top_product
+                "
+                class="flex flex-col items-center"
+              >
+                <h4 class="font-bold text-base md:text-lg text-indigo-700 mb-2">
+                  Top Product This Year
+                </h4>
+                <div class="text-gray-700 text-sm md:text-base mb-1">
+                  {{ dashboardStats.year_top_product.product_name }}
+                </div>
+                <div class="text-green-600 text-xs md:text-sm">
+                  Sold: {{ dashboardStats.year_top_product.sold_quantity }}
+                </div>
+                <div class="text-purple-600 text-xs md:text-sm">
+                  Stock: {{ dashboardStats.year_top_product.stock }}
+                </div>
+              </div>
+              <div
+                v-if="!dashboardStats || !topProductAvailable"
+                class="text-gray-400 text-base mt-4"
+              >
+                No data available.
+              </div>
+            </div>
+          </div>
           <!-- Profit & Sales line chart (full width, above pie charts) -->
-          <div class="w-full mb-8">
-            <div class="flex flex-col items-center bg-white rounded-xl border border-indigo-100 shadow-sm p-6 transition duration-200 hover:shadow-lg min-h-[220px]">
+          <div v-if="auth.user?.role !== 'staff'" class="w-full mb-8">
+            <div
+              class="flex flex-col items-center bg-white rounded-xl border border-indigo-100 shadow-sm p-6 transition duration-200 hover:shadow-lg min-h-[220px]"
+            >
               <div class="flex items-center gap-3 mb-6 w-full justify-between">
                 <div class="flex items-center gap-3">
-                  <span class="inline-block w-5 h-5 rounded-full shadow bg-green-400"></span>
+                  <span
+                    class="inline-block w-5 h-5 rounded-full shadow bg-green-400"
+                  ></span>
                   <h3 class="font-bold mb-2 text-xl text-gray-700">
                     {{ profitChartTitle }}
                   </h3>
                 </div>
                 <div class="flex gap-4 items-center">
-                  <div v-if="selectedProfitPeriod === 'daily'" class="text-sm md:text-base font-semibold text-green-600">
-                    Profit: Rs. {{ dashboardStats?.profit_daily?.toLocaleString(undefined, {minimumFractionDigits:2}) ?? '0.00' }}
+                  <div
+                    v-if="selectedProfitPeriod === 'daily'"
+                    class="text-sm md:text-base font-semibold text-green-600"
+                  >
+                    Profit: Rs.
+                    {{
+                      dashboardStats?.profit_daily?.toLocaleString(undefined, {
+                        minimumFractionDigits: 2,
+                      }) ?? "0.00"
+                    }}
                   </div>
-                  <div v-if="selectedProfitPeriod === 'daily'" class="text-sm md:text-base font-semibold text-blue-600">
-                    Sales: {{ dashboardStats?.sales_daily?.toLocaleString(undefined, {minimumFractionDigits:2}) ?? '0.00' }}
+                  <div
+                    v-if="selectedProfitPeriod === 'daily'"
+                    class="text-sm md:text-base font-semibold text-blue-600"
+                  >
+                    Sales:
+                    {{
+                      dashboardStats?.sales_daily?.toLocaleString(undefined, {
+                        minimumFractionDigits: 2,
+                      }) ?? "0.00"
+                    }}
                   </div>
-                  <div v-if="selectedProfitPeriod === 'weekly'" class="text-sm md:text-base font-semibold text-green-600">
-                    Profit: Rs. {{ dashboardStats?.profit_weekly?.toLocaleString(undefined, {minimumFractionDigits:2}) ?? '0.00' }}
+                  <div
+                    v-if="selectedProfitPeriod === 'weekly'"
+                    class="text-sm md:text-base font-semibold text-green-600"
+                  >
+                    Profit: Rs.
+                    {{
+                      dashboardStats?.profit_weekly?.toLocaleString(undefined, {
+                        minimumFractionDigits: 2,
+                      }) ?? "0.00"
+                    }}
                   </div>
-                  <div v-if="selectedProfitPeriod === 'weekly'" class="text-sm md:text-base font-semibold text-blue-600">
-                    Sales: {{ dashboardStats?.sales_weekly?.toLocaleString(undefined, {minimumFractionDigits:2}) ?? '0.00' }}
+                  <div
+                    v-if="selectedProfitPeriod === 'weekly'"
+                    class="text-sm md:text-base font-semibold text-blue-600"
+                  >
+                    Sales:
+                    {{
+                      dashboardStats?.sales_weekly?.toLocaleString(undefined, {
+                        minimumFractionDigits: 2,
+                      }) ?? "0.00"
+                    }}
                   </div>
-                  <div v-if="selectedProfitPeriod === 'monthly'" class="text-sm md:text-base font-semibold text-green-600">
-                    Profit: Rs. {{ dashboardStats?.profit_monthly?.toLocaleString(undefined, {minimumFractionDigits:2}) ?? '0.00' }}
+                  <div
+                    v-if="selectedProfitPeriod === 'monthly'"
+                    class="text-sm md:text-base font-semibold text-green-600"
+                  >
+                    Profit: Rs.
+                    {{
+                      dashboardStats?.profit_monthly?.toLocaleString(
+                        undefined,
+                        { minimumFractionDigits: 2 },
+                      ) ?? "0.00"
+                    }}
                   </div>
-                  <div v-if="selectedProfitPeriod === 'monthly'" class="text-sm md:text-base font-semibold text-blue-600">
-                    Sales: {{ dashboardStats?.sales_monthly?.toLocaleString(undefined, {minimumFractionDigits:2}) ?? '0.00' }}
+                  <div
+                    v-if="selectedProfitPeriod === 'monthly'"
+                    class="text-sm md:text-base font-semibold text-blue-600"
+                  >
+                    Sales:
+                    {{
+                      dashboardStats?.sales_monthly?.toLocaleString(undefined, {
+                        minimumFractionDigits: 2,
+                      }) ?? "0.00"
+                    }}
                   </div>
-                  <div v-if="selectedProfitPeriod === 'yearly'" class="text-sm md:text-base font-semibold text-green-600">
-                    Profit: Rs. {{ dashboardStats?.profit_yearly?.toLocaleString(undefined, {minimumFractionDigits:2}) ?? '0.00' }}
+                  <div
+                    v-if="selectedProfitPeriod === 'yearly'"
+                    class="text-sm md:text-base font-semibold text-green-600"
+                  >
+                    Profit: Rs.
+                    {{
+                      dashboardStats?.profit_yearly?.toLocaleString(undefined, {
+                        minimumFractionDigits: 2,
+                      }) ?? "0.00"
+                    }}
                   </div>
-                  <div v-if="selectedProfitPeriod === 'yearly'" class="text-sm md:text-base font-semibold text-blue-600">
-                    Sales: {{ dashboardStats?.sales_yearly?.toLocaleString(undefined, {minimumFractionDigits:2}) ?? '0.00' }}
+                  <div
+                    v-if="selectedProfitPeriod === 'yearly'"
+                    class="text-sm md:text-base font-semibold text-blue-600"
+                  >
+                    Sales:
+                    {{
+                      dashboardStats?.sales_yearly?.toLocaleString(undefined, {
+                        minimumFractionDigits: 2,
+                      }) ?? "0.00"
+                    }}
                   </div>
                 </div>
               </div>
@@ -46,12 +215,18 @@
                 <button
                   v-for="period in profitPeriods"
                   :key="period.key"
-                  @click="selectedProfitPeriod = period.key"
+                  @click="
+                    selectedProfitPeriod = period.key as
+                      | 'daily'
+                      | 'weekly'
+                      | 'monthly'
+                      | 'yearly'
+                  "
                   :class="[
                     'px-4 py-1 rounded font-semibold border',
                     selectedProfitPeriod === period.key
                       ? 'bg-indigo-600 text-white border-indigo-600'
-                      : 'bg-gray-100 text-gray-700 border-gray-300 hover:bg-indigo-50'
+                      : 'bg-gray-100 text-gray-700 border-gray-300 hover:bg-indigo-50',
                   ]"
                 >
                   {{ period.label }}
@@ -137,20 +312,36 @@ export type DashboardStats = {
   total_profit: number;
   total_stocks: number;
   products: { product_name: string; stock: number; sold: number }[];
+  profit_daily?: number;
+  sales_daily?: number;
+  profit_weekly?: number;
+  sales_weekly?: number;
+  profit_monthly?: number;
+  sales_monthly?: number;
+  profit_yearly?: number;
+  sales_yearly?: number;
+  weekly_profit_by_day?: { weekday: string; profit: number }[];
+  monthly_profit_by_date?: { date: string; profit: number }[];
+  yearly_profit_by_month?: { month: string; profit: number }[];
+  weekly_sales_by_day?: { weekday: string; sales: number }[];
+  monthly_sales_by_date?: { date: string; sales: number }[];
+  yearly_sales_by_month?: { month: string; sales: number }[];
+  week_top_product?: {
+    product_name: string;
+    sold_quantity: number;
+    stock: number;
+  } | null;
+  month_top_product?: {
+    product_name: string;
+    sold_quantity: number;
+    stock: number;
+  } | null;
+  year_top_product?: {
+    product_name: string;
+    sold_quantity: number;
+    stock: number;
+  } | null;
 };
-
-// Add types for new arrays if your backend provides them
-type MonthlyProfitByMonth = { month: string; profit: number }[];
-type DailyProfitByDate = { date: string; profit: number }[];
-type YearlyProfitByYear = { year: string; profit: number }[];
-
-// Extend DashboardStats if backend provides these arrays
-// export type DashboardStats = {
-//   ...existing fields...,
-//   monthly_profit_by_month?: MonthlyProfitByMonth,
-//   daily_profit_by_date?: DailyProfitByDate,
-//   yearly_profit_by_year?: YearlyProfitByYear,
-// };
 
 const auth = useAuthStore();
 const router = useRouter();
@@ -208,14 +399,16 @@ const visibleChartCards = computed(() => {
   if (auth.user?.role === "staff") {
     // Show both product-wise stock and sold chart for staff
     return chartCards.value.filter(
-      (chart) => chart.key === "product-stock" || chart.key === "product-sold"
+      (chart) => chart.key === "product-stock" || chart.key === "product-sold",
     );
   }
   // Show all for admin/superuser
   return chartCards.value;
 });
 
-const selectedProfitPeriod = ref<"daily" | "weekly" | "monthly" | "yearly">("daily");
+const selectedProfitPeriod = ref<"daily" | "weekly" | "monthly" | "yearly">(
+  "daily",
+);
 const profitPeriods = [
   { key: "daily", label: "Daily" },
   { key: "weekly", label: "Weekly" },
@@ -224,7 +417,8 @@ const profitPeriods = [
 ];
 
 const profitChartTitle = computed(() => {
-  if (selectedProfitPeriod.value === "weekly") return "Weekly Profit & Sales by Day";
+  if (selectedProfitPeriod.value === "weekly")
+    return "Weekly Profit & Sales by Day";
   if (selectedProfitPeriod.value === "daily") return "Daily Profit & Sales";
   if (selectedProfitPeriod.value === "monthly") return "Monthly Profit & Sales";
   if (selectedProfitPeriod.value === "yearly") return "Yearly Profit & Sales";
@@ -243,34 +437,62 @@ function formatDateLabel(dateStr: string) {
 
 const profitChartLabels = computed(() => {
   if (selectedProfitPeriod.value === "weekly") {
-    return dashboardStats.value?.weekly_profit_by_day?.map(d => d.weekday) ?? [];
+    return (
+      dashboardStats.value?.weekly_profit_by_day?.map((d) => d.weekday) ?? []
+    );
   }
   if (selectedProfitPeriod.value === "monthly") {
     // Format date as "Aug 1"
-    return dashboardStats.value?.monthly_profit_by_date?.map(d => formatDateLabel(d.date)) ?? [];
+    return (
+      dashboardStats.value?.monthly_profit_by_date?.map((d) =>
+        formatDateLabel(d.date),
+      ) ?? []
+    );
   }
   if (selectedProfitPeriod.value === "daily") {
     // Format date as "Aug 1"
-    return dashboardStats.value?.monthly_profit_by_date?.map(d => formatDateLabel(d.date)) ?? [];
+    return (
+      dashboardStats.value?.monthly_profit_by_date?.map((d) =>
+        formatDateLabel(d.date),
+      ) ?? []
+    );
   }
   if (selectedProfitPeriod.value === "yearly") {
-    return dashboardStats.value?.yearly_profit_by_month?.map(d => d.month) ?? [];
+    return (
+      dashboardStats.value?.yearly_profit_by_month?.map((d) => d.month) ?? []
+    );
   }
   return [profitChartTitle.value];
 });
 
 const profitChartData = computed(() => {
   if (selectedProfitPeriod.value === "weekly") {
-    return dashboardStats.value?.weekly_profit_by_day?.map(d => Number(d.profit)) ?? [];
+    return (
+      dashboardStats.value?.weekly_profit_by_day?.map((d) =>
+        Number(d.profit),
+      ) ?? []
+    );
   }
   if (selectedProfitPeriod.value === "monthly") {
-    return dashboardStats.value?.monthly_profit_by_date?.map(d => Number(d.profit)) ?? [];
+    return (
+      dashboardStats.value?.monthly_profit_by_date?.map((d) =>
+        Number(d.profit),
+      ) ?? []
+    );
   }
   if (selectedProfitPeriod.value === "daily") {
-    return dashboardStats.value?.monthly_profit_by_date?.map(d => Number(d.profit)) ?? [];
+    return (
+      dashboardStats.value?.monthly_profit_by_date?.map((d) =>
+        Number(d.profit),
+      ) ?? []
+    );
   }
   if (selectedProfitPeriod.value === "yearly") {
-    return dashboardStats.value?.yearly_profit_by_month?.map(d => Number(d.profit)) ?? [];
+    return (
+      dashboardStats.value?.yearly_profit_by_month?.map((d) =>
+        Number(d.profit),
+      ) ?? []
+    );
   }
   return [];
 });
@@ -278,18 +500,50 @@ const profitChartData = computed(() => {
 // Add salesChartData for the second line
 const salesChartData = computed(() => {
   if (selectedProfitPeriod.value === "weekly") {
-    return dashboardStats.value?.weekly_sales_by_day?.map(d => Number(d.sales)) ?? [];
+    return (
+      dashboardStats.value?.weekly_sales_by_day?.map((d) => Number(d.sales)) ??
+      []
+    );
   }
   if (selectedProfitPeriod.value === "monthly") {
-    return dashboardStats.value?.monthly_sales_by_date?.map(d => Number(d.sales)) ?? [];
+    return (
+      dashboardStats.value?.monthly_sales_by_date?.map((d) =>
+        Number(d.sales),
+      ) ?? []
+    );
   }
   if (selectedProfitPeriod.value === "daily") {
-    return dashboardStats.value?.monthly_sales_by_date?.map(d => Number(d.sales)) ?? [];
+    return (
+      dashboardStats.value?.monthly_sales_by_date?.map((d) =>
+        Number(d.sales),
+      ) ?? []
+    );
   }
   if (selectedProfitPeriod.value === "yearly") {
-    return dashboardStats.value?.yearly_sales_by_month?.map(d => Number(d.sales)) ?? [];
+    return (
+      dashboardStats.value?.yearly_sales_by_month?.map((d) =>
+        Number(d.sales),
+      ) ?? []
+    );
   }
   return [];
+});
+
+const topProductPeriods = [
+  { key: "week", label: "Week" },
+  { key: "month", label: "Month" },
+  { key: "year", label: "Year" },
+];
+const selectedTopProductPeriod = ref<"week" | "month" | "year">("week");
+
+const topProductAvailable = computed(() => {
+  if (selectedTopProductPeriod.value === "week")
+    return !!dashboardStats.value?.week_top_product;
+  if (selectedTopProductPeriod.value === "month")
+    return !!dashboardStats.value?.month_top_product;
+  if (selectedTopProductPeriod.value === "year")
+    return !!dashboardStats.value?.year_top_product;
+  return false;
 });
 </script>
 
@@ -329,7 +583,7 @@ const salesChartData = computed(() => {
     transform 0.2s;
 }
 .summary-item:hover {
-  box-shadow: 0 4px 16px rgba(59, 130, 246, 0.10);
+  box-shadow: 0 4px 16px rgba(59, 130, 246, 0.1);
   transform: translateY(-2px) scale(1.02);
 }
 .summary-dot {
@@ -338,7 +592,7 @@ const salesChartData = computed(() => {
   height: 1rem;
   border-radius: 9999px;
   margin-right: 0.15rem;
-  box-shadow: 0 1px 4px rgba(59, 130, 246, 0.10);
+  box-shadow: 0 1px 4px rgba(59, 130, 246, 0.1);
 }
 .inline-block.bg-blue-400 {
   background: #2563eb;
@@ -379,6 +633,25 @@ const salesChartData = computed(() => {
   }
   50% {
     opacity: 0.5;
+  }
+}
+@media (max-width: 767px) {
+  .ml-64 {
+    margin-left: 0 !important;
+  }
+  .max-w-4xl {
+    max-width: 100vw !important;
+  }
+  .min-h-\[180px\] {
+    min-height: 140px !important;
+  }
+  .px-6 {
+    padding-left: 0.5rem !important;
+    padding-right: 0.5rem !important;
+  }
+  .py-12 {
+    padding-top: 1rem !important;
+    padding-bottom: 1rem !important;
   }
 }
 </style>
