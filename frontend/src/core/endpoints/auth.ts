@@ -6,4 +6,4 @@ export const authAPI = {
   self: `${BASE_URL}self/`,
   rolesConfig: `${BASE_URL}role-config/`,
 };
-console.log(authAPI.login)
+console.log(authAPI.login);

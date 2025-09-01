@@ -3,33 +3,66 @@
     <Navbar />
     <div class="flex flex-1 h-0">
       <Sidebar />
-      <main class="flex-1 flex items-center justify-center px-6 py-12">
-        <div class="w-full max-w-6xl mx-auto">
-          <div class="mb-12 text-center">
-            <h2 class="text-4xl md:text-5xl font-extrabold text-blue-800 mb-4 dashboard-title">
-              Dashboard
-            </h2>
-            <p class="text-gray-700 text-2xl md:text-3xl font-medium dashboard-welcome">
-              Welcome, <span class="font-semibold text-blue-600">{{ auth.user?.username }}</span>!
-            </p>
-          </div>
-          <!-- Summary grid: show only allowed cards for staff -->
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-10 mb-12 summary-grid">
-            <div
-              v-for="card in visibleSummaryCards"
-              :key="card.key"
-              class="flex flex-col items-center py-6 px-2 summary-item"
-            >
-              <div class="flex items-center gap-3 mb-4">
-                <span :class="['summary-dot', card.dotClass]"></span>
-                <h3 :class="['summary-title', card.titleClass]">{{ card.title }}</h3>
+      <main class="flex-1 flex items-center justify-center px-6 py-12 overflow-auto">
+        <div class="w-full max-w-4xl mx-auto">
+          <!-- Profit & Sales line chart (full width, above pie charts) -->
+          <div class="w-full mb-8">
+            <div class="flex flex-col items-center bg-white rounded-xl border border-indigo-100 shadow-sm p-6 transition duration-200 hover:shadow-lg min-h-[220px]">
+              <div class="flex items-center gap-3 mb-6 w-full justify-between">
+                <div class="flex items-center gap-3">
+                  <span class="inline-block w-5 h-5 rounded-full shadow bg-green-400"></span>
+                  <h3 class="font-bold mb-2 text-xl text-gray-700">
+                    {{ profitChartTitle }}
+                  </h3>
+                </div>
+                <div class="flex gap-4 items-center">
+                  <div v-if="selectedProfitPeriod === 'daily'" class="text-sm md:text-base font-semibold text-green-600">
+                    Profit: Rs. {{ dashboardStats?.profit_daily?.toLocaleString(undefined, {minimumFractionDigits:2}) ?? '0.00' }}
+                  </div>
+                  <div v-if="selectedProfitPeriod === 'daily'" class="text-sm md:text-base font-semibold text-blue-600">
+                    Sales: {{ dashboardStats?.sales_daily?.toLocaleString(undefined, {minimumFractionDigits:2}) ?? '0.00' }}
+                  </div>
+                  <div v-if="selectedProfitPeriod === 'weekly'" class="text-sm md:text-base font-semibold text-green-600">
+                    Profit: Rs. {{ dashboardStats?.profit_weekly?.toLocaleString(undefined, {minimumFractionDigits:2}) ?? '0.00' }}
+                  </div>
+                  <div v-if="selectedProfitPeriod === 'weekly'" class="text-sm md:text-base font-semibold text-blue-600">
+                    Sales: {{ dashboardStats?.sales_weekly?.toLocaleString(undefined, {minimumFractionDigits:2}) ?? '0.00' }}
+                  </div>
+                  <div v-if="selectedProfitPeriod === 'monthly'" class="text-sm md:text-base font-semibold text-green-600">
+                    Profit: Rs. {{ dashboardStats?.profit_monthly?.toLocaleString(undefined, {minimumFractionDigits:2}) ?? '0.00' }}
+                  </div>
+                  <div v-if="selectedProfitPeriod === 'monthly'" class="text-sm md:text-base font-semibold text-blue-600">
+                    Sales: {{ dashboardStats?.sales_monthly?.toLocaleString(undefined, {minimumFractionDigits:2}) ?? '0.00' }}
+                  </div>
+                  <div v-if="selectedProfitPeriod === 'yearly'" class="text-sm md:text-base font-semibold text-green-600">
+                    Profit: Rs. {{ dashboardStats?.profit_yearly?.toLocaleString(undefined, {minimumFractionDigits:2}) ?? '0.00' }}
+                  </div>
+                  <div v-if="selectedProfitPeriod === 'yearly'" class="text-sm md:text-base font-semibold text-blue-600">
+                    Sales: {{ dashboardStats?.sales_yearly?.toLocaleString(undefined, {minimumFractionDigits:2}) ?? '0.00' }}
+                  </div>
+                </div>
               </div>
-              <div :class="['summary-value', card.valueClass, { profit: card.key === 'profit', stocks: card.key === 'stocks' }]">
-                {{ card.prefix }}{{ card.value.toLocaleString() }}
+              <div class="flex gap-2 mb-4">
+                <button
+                  v-for="period in profitPeriods"
+                  :key="period.key"
+                  @click="selectedProfitPeriod = period.key"
+                  :class="[
+                    'px-4 py-1 rounded font-semibold border',
+                    selectedProfitPeriod === period.key
+                      ? 'bg-indigo-600 text-white border-indigo-600'
+                      : 'bg-gray-100 text-gray-700 border-gray-300 hover:bg-indigo-50'
+                  ]"
+                >
+                  {{ period.label }}
+                </button>
               </div>
-              <div v-if="card.extra" class="mt-3 text-lg text-gray-500">
-                {{ card.extra }}
-              </div>
+              <LineChart
+                :labels="profitChartLabels"
+                :data="profitChartData"
+                :data2="salesChartData"
+                :title="profitChartTitle"
+              />
             </div>
           </div>
           <template v-if="auth.user">
@@ -37,7 +70,7 @@
               :class="[
                 auth.user?.role === 'staff'
                   ? 'grid grid-cols-1 md:grid-cols-2 gap-8 w-full mb-8'
-                  : 'grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 w-full mb-8'
+                  : 'grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 w-full mb-8',
               ]"
             >
               <div
@@ -47,39 +80,40 @@
                   'flex flex-col items-center bg-white rounded-xl border border-indigo-100 shadow-sm p-6 transition duration-200 hover:shadow-lg',
                   chart.key === 'product-stock' && auth.user?.role === 'staff'
                     ? 'min-h-[220px] max-w-md mx-auto border-2 border-purple-300 bg-violet-50'
-                    : 'min-h-[220px] max-w-md mx-auto'
+                    : 'min-h-[220px] max-w-md mx-auto',
                 ]"
               >
                 <div class="flex items-center gap-3 mb-6">
                   <span
                     :class="[
                       'inline-block w-5 h-5 rounded-full shadow',
-                      chart.key === 'product-stock' && auth.user?.role === 'staff'
+                      chart.key === 'product-stock' &&
+                      auth.user?.role === 'staff'
                         ? 'bg-purple-400'
-                        : chart.dotClass
+                        : chart.dotClass,
                     ]"
                   ></span>
                   <h3
                     :class="[
                       'font-bold mb-2',
-                      chart.key === 'product-stock' && auth.user?.role === 'staff'
+                      chart.key === 'product-stock' &&
+                      auth.user?.role === 'staff'
                         ? 'text-2xl text-purple-700'
-                        : 'text-xl text-gray-700'
+                        : 'text-xl text-gray-700',
                     ]"
                   >
                     {{ chart.title }}
                   </h3>
                 </div>
-                <component
-                  :is="chart.component"
-                  v-bind="chart.props"
-                />
+                <component :is="chart.component" v-bind="chart.props" />
               </div>
             </div>
           </template>
           <template v-else>
             <div class="flex justify-center items-center h-64">
-              <p class="text-gray-700 text-2xl animate-pulse loading">Loading user info...</p>
+              <p class="text-gray-700 text-2xl animate-pulse loading">
+                Loading user info...
+              </p>
             </div>
           </template>
         </div>
@@ -94,9 +128,29 @@ import { useAuthStore } from "@/stores/auth";
 import { useRouter } from "vue-router";
 import Sidebar from "@/components/Sidebar.vue";
 import Navbar from "@/components/Navbar.vue";
-import {  DashboardStats,fetchDashboardStats } from "@/stores/dashbaordAPI";
-import BarChart from "@/components/BarChart.vue";
+import { fetchDashboardStats } from "@/stores/dashbaordAPI";
 import PieChart from "@/components/PieChart.vue";
+import LineChart from "@/components/LineChart.vue";
+
+export type DashboardStats = {
+  total_sales: number;
+  total_profit: number;
+  total_stocks: number;
+  products: { product_name: string; stock: number; sold: number }[];
+};
+
+// Add types for new arrays if your backend provides them
+type MonthlyProfitByMonth = { month: string; profit: number }[];
+type DailyProfitByDate = { date: string; profit: number }[];
+type YearlyProfitByYear = { year: string; profit: number }[];
+
+// Extend DashboardStats if backend provides these arrays
+// export type DashboardStats = {
+//   ...existing fields...,
+//   monthly_profit_by_month?: MonthlyProfitByMonth,
+//   daily_profit_by_date?: DailyProfitByDate,
+//   yearly_profit_by_year?: YearlyProfitByYear,
+// };
 
 const auth = useAuthStore();
 const router = useRouter();
@@ -123,86 +177,119 @@ onMounted(async () => {
   }
 });
 
-const summaryCards = computed(() => [
-  {
-    key: "sales",
-    title: "Total Sales",
-    value: dashboardStats.value?.total_sales ?? 0,
-    prefix: "Rs. ",
-    dotClass: "inline-block w-3 h-3 rounded-full bg-blue-400",
-    titleClass: "text-base font-semibold text-gray-700",
-    valueClass: "text-xl font-bold text-blue-700",
-    extra: "",
-  },
-  {
-    key: "profit",
-    title: "Total Profit",
-    value: dashboardStats.value?.total_profit ?? 0,
-    prefix: "Rs. ",
-    dotClass: "inline-block w-3 h-3 rounded-full bg-green-400",
-    titleClass: "text-base font-semibold text-gray-700",
-    valueClass: "text-xl font-bold text-green-700",
-    extra: "",
-  },
-  {
-    key: "stocks",
-    title: "Total Product Stocks",
-    value: dashboardStats.value?.total_stocks ?? 0,
-    prefix: "",
-    dotClass: "inline-block w-3 h-3 rounded-full bg-purple-400",
-    titleClass: "text-base font-semibold text-gray-700",
-    valueClass: "text-xl font-bold text-purple-700",
-    extra: "",
-  },
-]);
-
 const chartCards = computed(() => [
-  {
-    key: "summary",
-    title: "Summary",
-    dotClass: "inline-block w-3 h-3 rounded-full bg-blue-400",
-    titleClass: "text-lg font-bold text-gray-700",
-    component: BarChart,
-    props: {
-      labels: ["Total Sales", "Total Profit", "Total Stocks"],
-      data: [
-        dashboardStats.value?.total_sales ?? 0,
-        dashboardStats.value?.total_profit ?? 0,
-        dashboardStats.value?.total_stocks ?? 0,
-      ],
-    },
-  },
   {
     key: "product-stock",
     title: "Product-wise Stock",
     dotClass: "inline-block w-3 h-3 rounded-full bg-green-400",
     titleClass: "text-lg font-bold text-gray-700",
-    // Use BarChart for staff, PieChart for others
-    component: auth.user?.role === "staff" ? BarChart : PieChart,
+    component: PieChart,
     props: {
-      labels: dashboardStats.value?.products?.map(p => p.product_name) ?? [],
-      data: dashboardStats.value?.products?.map(p => p.stock) ?? [],
+      labels: dashboardStats.value?.products?.map((p) => p.product_name) ?? [],
+      data: dashboardStats.value?.products?.map((p) => p.stock) ?? [],
+      // title: "Product-wise Stock",
+    },
+  },
+  {
+    key: "product-sold",
+    title: "Product-wise Sold",
+    dotClass: "inline-block w-3 h-3 rounded-full bg-blue-400",
+    titleClass: "text-lg font-bold text-gray-700",
+    component: PieChart,
+    props: {
+      labels: dashboardStats.value?.products?.map((p) => p.product_name) ?? [],
+      data: dashboardStats.value?.products?.map((p) => p.sold ?? 0) ?? [],
+      // title: "Product-wise Sold",
     },
   },
 ]);
 
-// Only show allowed cards/charts for staff
-const visibleSummaryCards = computed(() => {
-  if (auth.user?.role === "staff") {
-    // Only show total product stocks
-    return summaryCards.value.filter(card => card.key === "stocks");
-  }
-  // Show all for admin/superuser
-  return summaryCards.value;
-});
-
 const visibleChartCards = computed(() => {
   if (auth.user?.role === "staff") {
-    // Only show product-wise stock chart
-    return chartCards.value.filter(chart => chart.key === "product-stock");
+    // Show both product-wise stock and sold chart for staff
+    return chartCards.value.filter(
+      (chart) => chart.key === "product-stock" || chart.key === "product-sold"
+    );
   }
   // Show all for admin/superuser
   return chartCards.value;
+});
+
+const selectedProfitPeriod = ref<"daily" | "weekly" | "monthly" | "yearly">("daily");
+const profitPeriods = [
+  { key: "daily", label: "Daily" },
+  { key: "weekly", label: "Weekly" },
+  { key: "monthly", label: "Monthly" },
+  { key: "yearly", label: "Yearly" },
+];
+
+const profitChartTitle = computed(() => {
+  if (selectedProfitPeriod.value === "weekly") return "Weekly Profit & Sales by Day";
+  if (selectedProfitPeriod.value === "daily") return "Daily Profit & Sales";
+  if (selectedProfitPeriod.value === "monthly") return "Monthly Profit & Sales";
+  if (selectedProfitPeriod.value === "yearly") return "Yearly Profit & Sales";
+  return "";
+});
+
+function formatDateLabel(dateStr: string) {
+  // Converts "2024-08-01" to "Aug 1"
+  const dateObj = new Date(dateStr);
+  if (isNaN(dateObj.getTime())) return dateStr;
+  return dateObj.toLocaleString("en-US", {
+    month: "short",
+    day: "numeric",
+  });
+}
+
+const profitChartLabels = computed(() => {
+  if (selectedProfitPeriod.value === "weekly") {
+    return dashboardStats.value?.weekly_profit_by_day?.map(d => d.weekday) ?? [];
+  }
+  if (selectedProfitPeriod.value === "monthly") {
+    // Format date as "Aug 1"
+    return dashboardStats.value?.monthly_profit_by_date?.map(d => formatDateLabel(d.date)) ?? [];
+  }
+  if (selectedProfitPeriod.value === "daily") {
+    // Format date as "Aug 1"
+    return dashboardStats.value?.monthly_profit_by_date?.map(d => formatDateLabel(d.date)) ?? [];
+  }
+  if (selectedProfitPeriod.value === "yearly") {
+    return dashboardStats.value?.yearly_profit_by_month?.map(d => d.month) ?? [];
+  }
+  return [profitChartTitle.value];
+});
+
+const profitChartData = computed(() => {
+  if (selectedProfitPeriod.value === "weekly") {
+    return dashboardStats.value?.weekly_profit_by_day?.map(d => Number(d.profit)) ?? [];
+  }
+  if (selectedProfitPeriod.value === "monthly") {
+    return dashboardStats.value?.monthly_profit_by_date?.map(d => Number(d.profit)) ?? [];
+  }
+  if (selectedProfitPeriod.value === "daily") {
+    return dashboardStats.value?.monthly_profit_by_date?.map(d => Number(d.profit)) ?? [];
+  }
+  if (selectedProfitPeriod.value === "yearly") {
+    return dashboardStats.value?.yearly_profit_by_month?.map(d => Number(d.profit)) ?? [];
+  }
+  return [];
+});
+
+// Add salesChartData for the second line
+const salesChartData = computed(() => {
+  if (selectedProfitPeriod.value === "weekly") {
+    return dashboardStats.value?.weekly_sales_by_day?.map(d => Number(d.sales)) ?? [];
+  }
+  if (selectedProfitPeriod.value === "monthly") {
+    return dashboardStats.value?.monthly_sales_by_date?.map(d => Number(d.sales)) ?? [];
+  }
+  if (selectedProfitPeriod.value === "daily") {
+    return dashboardStats.value?.monthly_sales_by_date?.map(d => Number(d.sales)) ?? [];
+  }
+  if (selectedProfitPeriod.value === "yearly") {
+    return dashboardStats.value?.yearly_sales_by_month?.map(d => Number(d.sales)) ?? [];
+  }
+  return [];
 });
 </script>
 
@@ -220,8 +307,8 @@ const visibleChartCards = computed(() => {
 .summary-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 2.5rem;
-  margin-bottom: 3rem;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
 }
 @media (min-width: 768px) {
   .summary-grid {
@@ -232,39 +319,47 @@ const visibleChartCards = computed(() => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 1.5rem 0.5rem;
+  padding: 1rem 0.25rem;
   background: #fff;
-  border-radius: 1rem;
-  border: 1.5px solid #dbeafe;
-  box-shadow: 0 4px 24px rgba(59, 130, 246, 0.08);
-  transition: box-shadow 0.2s, transform 0.2s;
+  border-radius: 0.75rem;
+  border: 1px solid #dbeafe;
+  box-shadow: 0 2px 12px rgba(59, 130, 246, 0.06);
+  transition:
+    box-shadow 0.2s,
+    transform 0.2s;
 }
 .summary-item:hover {
-  box-shadow: 0 8px 32px rgba(59, 130, 246, 0.15);
-  transform: translateY(-4px) scale(1.03);
+  box-shadow: 0 4px 16px rgba(59, 130, 246, 0.10);
+  transform: translateY(-2px) scale(1.02);
 }
 .summary-dot {
   display: inline-block;
-  width: 1.25rem;
-  height: 1.25rem;
+  width: 1rem;
+  height: 1rem;
   border-radius: 9999px;
-  margin-right: 0.25rem;
-  box-shadow: 0 2px 8px rgba(59,130,246,0.12);
+  margin-right: 0.15rem;
+  box-shadow: 0 1px 4px rgba(59, 130, 246, 0.10);
 }
-.inline-block.bg-blue-400 { background: #2563eb; }
-.inline-block.bg-green-400 { background: #22c55e; }
-.inline-block.bg-purple-400 { background: #a78bfa; }
+.inline-block.bg-blue-400 {
+  background: #2563eb;
+}
+.inline-block.bg-green-400 {
+  background: #22c55e;
+}
+.inline-block.bg-purple-400 {
+  background: #a78bfa;
+}
 .summary-title {
-  font-size: 1.5rem;
-  font-weight: 700;
+  font-size: 1rem;
+  font-weight: 600;
   color: #334155;
 }
 .summary-value {
-  font-size: 2.5rem;
-  font-weight: 800;
-  margin-top: 0.5rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-top: 0.25rem;
   color: #2563eb;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
 }
 .summary-value.profit {
   color: #16a34a;
@@ -278,7 +373,12 @@ const visibleChartCards = computed(() => {
   animation: pulse 1s infinite;
 }
 @keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
 }
 </style>

@@ -42,14 +42,22 @@
           <div class="mb-4 md:mb-6 flex flex-col md:flex-row gap-2">
             <button
               class="px-4 py-2 rounded-t-md font-semibold transition-all w-full md:w-auto"
-              :class="tab === 'products' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700'"
+              :class="
+                tab === 'products'
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-gray-200 text-gray-700'
+              "
               @click="tab = 'products'"
             >
               Products
             </button>
             <button
               class="px-4 py-2 rounded-t-md font-semibold transition-all w-full md:w-auto"
-              :class="tab === 'categories' ? 'bg-green-600 text-white' : 'bg-gray-200 text-gray-700'"
+              :class="
+                tab === 'categories'
+                  ? 'bg-green-600 text-white'
+                  : 'bg-gray-200 text-gray-700'
+              "
               @click="tab = 'categories'"
             >
               Categories
@@ -59,7 +67,11 @@
             <div v-if="tab === 'products'">
               <!-- Products Table -->
               <div>
-                <h3 class="text-lg md:text-xl font-bold text-blue-700 mb-2 text-left">Products</h3>
+                <h3
+                  class="text-lg md:text-xl font-bold text-blue-700 mb-2 text-left"
+                >
+                  Products
+                </h3>
                 <div class="overflow-x-auto max-w-full scrollbar-hide">
                   <table
                     class="w-full min-w-[320px] md:min-w-[600px] border border-gray-200 rounded-xl shadow-sm bg-white text-[11px] md:text-base"
@@ -110,7 +122,9 @@
                         <td
                           class="px-4 py-3 border-b text-center font-medium text-green-700"
                         >
-                          {{ categoryNameMap[item.category] || item.category_name }}
+                          {{
+                            categoryNameMap[item.category] || item.category_name
+                          }}
                         </td>
                         <td
                           class="px-4 py-3 text-center border-b font-semibold text-purple-700"
@@ -245,22 +259,58 @@
             <div v-else>
               <!-- Category Table -->
               <div>
-                <h3 class="text-lg md:text-xl font-bold text-green-700 mb-2 text-left">Categories</h3>
+                <h3
+                  class="text-lg md:text-xl font-bold text-green-700 mb-2 text-left"
+                >
+                  Categories
+                </h3>
                 <div class="overflow-x-auto max-w-full scrollbar-hide">
-                  <table class="w-full min-w-[240px] md:min-w-[400px] border border-gray-200 rounded-xl shadow-sm bg-white text-[11px] md:text-base">
+                  <table
+                    class="w-full min-w-[240px] md:min-w-[400px] border border-gray-200 rounded-xl shadow-sm bg-white text-[11px] md:text-base"
+                  >
                     <thead class="bg-gradient-to-r from-green-50 to-blue-50">
                       <tr>
-                        <th class="px-4 py-3 border-b text-center font-semibold text-black-100 text-lg">SN</th>
-                        <th class="px-4 py-3 border-b text-center font-semibold text-black-100 text-lg">Category Name</th>
-                        <th class="px-4 py-3 border-b text-center font-semibold text-black-100 text-lg">Description</th>
-                        <th class="px-4 py-3 border-b text-center font-semibold text-black-100 text-lg">Actions</th>
+                        <th
+                          class="px-4 py-3 border-b text-center font-semibold text-black-100 text-lg"
+                        >
+                          SN
+                        </th>
+                        <th
+                          class="px-4 py-3 border-b text-center font-semibold text-black-100 text-lg"
+                        >
+                          Category Name
+                        </th>
+                        <th
+                          class="px-4 py-3 border-b text-center font-semibold text-black-100 text-lg"
+                        >
+                          Description
+                        </th>
+                        <th
+                          class="px-4 py-3 border-b text-center font-semibold text-black-100 text-lg"
+                        >
+                          Actions
+                        </th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr v-for="(cat, idx) in categories" :key="cat.id" class="hover:bg-green-50 transition-colors">
-                        <td class="px-4 py-3 text-center border-b">{{ idx + 1 }}</td>
-                        <td class="px-4 py-3 border-b text-center font-medium text-green-700">{{ cat.name }}</td>
-                        <td class="px-4 py-3 border-b text-center text-gray-700">{{ cat.description }}</td>
+                      <tr
+                        v-for="(cat, idx) in categories"
+                        :key="cat.id"
+                        class="hover:bg-green-50 transition-colors"
+                      >
+                        <td class="px-4 py-3 text-center border-b">
+                          {{ idx + 1 }}
+                        </td>
+                        <td
+                          class="px-4 py-3 border-b text-center font-medium text-green-700"
+                        >
+                          {{ cat.name }}
+                        </td>
+                        <td
+                          class="px-4 py-3 border-b text-center text-gray-700"
+                        >
+                          {{ cat.description }}
+                        </td>
                         <td class="px-4 py-3 border-b text-center">
                           <button
                             class="text-blue-600 hover:text-blue-800 px-2"
@@ -279,7 +329,9 @@
                         </td>
                       </tr>
                       <tr v-if="categories.length === 0">
-                        <td colspan="4" class="text-center py-6 text-gray-500">No categories found.</td>
+                        <td colspan="4" class="text-center py-6 text-gray-500">
+                          No categories found.
+                        </td>
                       </tr>
                     </tbody>
                   </table>
@@ -618,9 +670,8 @@ import {
   updateProduct,
   fetchCategory,
   createCatyregory,
-  updateCategory, // <-- add this
+  updateCategory,
   deleteProduct,
-  deleteCategory, // <-- add this
 } from "@/stores/InventoryAPI";
 const currentPage = ref(1);
 const itemsPerPage = ref(10);
@@ -694,11 +745,11 @@ const viewSellingPrice = computed(() => {
   return cp + margin;
 });
 const isStaff = computed(() => auth.user?.role === "staff");
-const tab = ref('products');
+const tab = ref("products");
 
 const categoryNameMap = computed(() => {
   const map: Record<string, string> = {};
-  categories.value.forEach(cat => {
+  categories.value.forEach((cat) => {
     map[cat.id] = cat.name;
   });
   return map;
@@ -775,7 +826,11 @@ function openEditModal(id) {
 
 // Open edit modal for category
 function openEditCategoryModal(cat) {
-  editCategoryForm.value = { id: cat.id, name: cat.name, description: cat.description };
+  editCategoryForm.value = {
+    id: cat.id,
+    name: cat.name,
+    description: cat.description,
+  };
   showEditCategoryModal.value = true;
 }
 
@@ -964,10 +1019,10 @@ table {
   scrollbar-width: none;
 }
 @media (max-width: 768px) {
-  .min-w-[600px] {
+  [class*="min-w-[600px]"] {
     min-width: 320px !important;
   }
-  .min-w-[400px] {
+  [class*="min-w-[400px]"] {
     min-width: 240px !important;
   }
   th,

@@ -88,12 +88,20 @@
                     </span>
                     <span v-else>-</span>
                   </td>
-                  <td class="px-2 md:px-4 py-2 whitespace-nowrap">{{ b.customer_Name }}</td>
-                  <td class="px-2 md:px-4 py-2 whitespace-nowrap">{{ b.date }}</td>
-                  <td class="px-2 md:px-4 py-2 capitalize text-left whitespace-nowrap">
+                  <td class="px-2 md:px-4 py-2 whitespace-nowrap">
+                    {{ b.customer_Name }}
+                  </td>
+                  <td class="px-2 md:px-4 py-2 whitespace-nowrap">
+                    {{ b.date }}
+                  </td>
+                  <td
+                    class="px-2 md:px-4 py-2 capitalize text-left whitespace-nowrap"
+                  >
                     {{ b.payment_method }}
                   </td>
-                  <td class="px-2 md:px-4 py-2 whitespace-nowrap">{{ b.grand_total }}</td>
+                  <td class="px-2 md:px-4 py-2 whitespace-nowrap">
+                    {{ b.grand_total }}
+                  </td>
                 </tr>
                 <tr v-if="paginatedBills.length === 0">
                   <td colspan="7" class="text-center py-4 text-gray-500">

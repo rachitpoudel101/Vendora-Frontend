@@ -1,6 +1,8 @@
 <template>
   <div class="w-full">
-    <h3 class="text-base md:text-lg font-semibold mb-2 text-gray-700">{{ title }}</h3>
+    <h3 class="text-base md:text-lg font-semibold mb-2 text-gray-700">
+      {{ title }}
+    </h3>
     <div class="relative w-full h-48 md:h-64">
       <canvas ref="canvas" class="w-full h-full"></canvas>
     </div>
@@ -32,7 +34,12 @@ function renderChart() {
         {
           data: props.data,
           backgroundColor: [
-            "#3b82f6", "#10b981", "#f59e42", "#ef4444", "#6366f1", "#f43f5e",
+            "#3b82f6",
+            "#10b981",
+            "#f59e42",
+            "#ef4444",
+            "#6366f1",
+            "#f43f5e",
           ],
         },
       ],
@@ -49,10 +56,3 @@ function renderChart() {
 onMounted(renderChart);
 watch(() => [props.labels, props.data], renderChart);
 </script>
-
-<style scoped>
-canvas {
-  max-width: 100% !important;
-  height: auto !important;
-}
-</style>
