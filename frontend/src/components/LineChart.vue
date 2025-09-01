@@ -21,7 +21,15 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-Chart.register(LineController, LineElement, PointElement, LinearScale, CategoryScale, Tooltip, Legend);
+Chart.register(
+  LineController,
+  LineElement,
+  PointElement,
+  LinearScale,
+  CategoryScale,
+  Tooltip,
+  Legend,
+);
 
 const props = defineProps<{
   labels: string[];

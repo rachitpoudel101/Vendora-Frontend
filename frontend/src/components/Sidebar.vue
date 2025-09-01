@@ -29,11 +29,10 @@
 
   <!-- Sidebar -->
   <div
+    class="sidebar"
     :class="[
-      'bg-[#6A89A7] text-white w-64 flex flex-col py-4 px-4 shadow-lg z-40',
-      'fixed top-0 left-0 h-full transition-transform duration-300',
       showSidebar ? 'translate-x-0' : '-translate-x-full',
-      'md:static md:translate-x-0 md:h-auto md:w-64 md:flex',
+      'md:static md:translate-x-0 md:flex',
     ]"
   >
     <nav class="flex flex-col gap-2 mt-12 md:mt-0">
@@ -52,9 +51,6 @@
         {{ item.label }}
       </router-link>
     </nav>
-    <div class="mt-auto pt-8 text-xs text-blue-200 text-center">
-      &copy; {{ new Date().getFullYear() }} Stationary App
-    </div>
   </div>
 </template>
 
@@ -74,17 +70,28 @@ const navItems = [
 </script>
 
 <style scoped>
-/* Hide sidebar on mobile by default, show with slide-in */
-@media (max-width: 767px) {
+.sidebar {
+  background: #6a89a7;
+  color: white;
+  width: 16rem;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  box-shadow: 0 2px 12px rgba(59, 130, 246, 0.06);
+  z-index: 40;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  transition: transform 0.3s;
+}
+@media (min-width: 768px) {
   .sidebar {
-    position: fixed;
-    top: 0;
-    left: 0;
+    position: static;
     height: 100vh;
     width: 16rem;
-    z-index: 40;
-    background: #6a89a7;
-    transition: transform 0.3s;
+    box-shadow: none;
+    transform: none !important;
   }
 }
 </style>
