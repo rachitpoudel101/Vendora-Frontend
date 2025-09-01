@@ -89,18 +89,56 @@
 
           <!-- Items Table -->
           <div class="overflow-x-auto max-w-full scrollbar-hide">
-            <table class="w-full min-w-[480px] md:min-w-full border border-gray-300 text-xs md:text-sm">
+            <table
+              class="w-full min-w-[480px] md:min-w-full border border-gray-300 text-xs md:text-sm"
+            >
               <thead class="bg-gray-50">
                 <tr>
-                  <th class="border border-gray-300 px-1 md:px-2 py-1 md:py-2 text-left font-medium text-gray-700">SN</th>
-                  <th class="border border-gray-300 px-1 md:px-2 py-1 md:py-2 text-left font-medium text-gray-700">Item</th>
-                  <th class="border border-gray-300 px-1 md:px-2 py-1 md:py-2 text-left font-medium text-gray-700">Qty</th>
-                  <th class="border border-gray-300 px-1 md:px-2 py-1 md:py-2 text-left font-medium text-gray-700">Price</th>
-                  <th class="border border-gray-300 px-1 md:px-2 py-1 md:py-2 text-left font-medium text-gray-700">Dis Amt.</th>
-                  <th class="border border-gray-300 px-1 md:px-2 py-1 md:py-2 text-left font-medium text-gray-700">Vat Amount</th>
-                  <th class="border border-gray-300 px-1 md:px-2 py-1 md:py-2 text-left font-medium text-gray-700">Total Price</th>
-                  <th class="border border-gray-300 px-1 md:px-2 py-1 md:py-2 text-left font-medium text-gray-700">Description</th>
-                  <th class="border border-gray-300 px-1 md:px-2 py-1 md:py-2 text-center font-medium text-gray-700">Remove</th>
+                  <th
+                    class="border border-gray-300 px-1 md:px-2 py-1 md:py-2 text-left font-medium text-gray-700"
+                  >
+                    SN
+                  </th>
+                  <th
+                    class="border border-gray-300 px-1 md:px-2 py-1 md:py-2 text-left font-medium text-gray-700"
+                  >
+                    Item
+                  </th>
+                  <th
+                    class="border border-gray-300 px-1 md:px-2 py-1 md:py-2 text-left font-medium text-gray-700"
+                  >
+                    Qty
+                  </th>
+                  <th
+                    class="border border-gray-300 px-1 md:px-2 py-1 md:py-2 text-left font-medium text-gray-700"
+                  >
+                    Price
+                  </th>
+                  <th
+                    class="border border-gray-300 px-1 md:px-2 py-1 md:py-2 text-left font-medium text-gray-700"
+                  >
+                    Dis Amt.
+                  </th>
+                  <th
+                    class="border border-gray-300 px-1 md:px-2 py-1 md:py-2 text-left font-medium text-gray-700"
+                  >
+                    Vat Amount
+                  </th>
+                  <th
+                    class="border border-gray-300 px-1 md:px-2 py-1 md:py-2 text-left font-medium text-gray-700"
+                  >
+                    Total Price
+                  </th>
+                  <th
+                    class="border border-gray-300 px-1 md:px-2 py-1 md:py-2 text-left font-medium text-gray-700"
+                  >
+                    Description
+                  </th>
+                  <th
+                    class="border border-gray-300 px-1 md:px-2 py-1 md:py-2 text-center font-medium text-gray-700"
+                  >
+                    Remove
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -235,10 +273,14 @@
 
         <!-- Bill Summary Section -->
         <div class="lg:col-span-1 mt-4 md:mt-0 w-full">
-          <div class="bg-blue-600 text-white px-2 md:px-4 py-2 md:py-3 rounded-t-md">
+          <div
+            class="bg-blue-600 text-white px-2 md:px-4 py-2 md:py-3 rounded-t-md"
+          >
             <h3 class="font-medium">Bill Summary</h3>
           </div>
-          <div class="border border-t-0 border-gray-300 rounded-b-md p-2 md:p-4 space-y-2 md:space-y-4">
+          <div
+            class="border border-t-0 border-gray-300 rounded-b-md p-2 md:p-4 space-y-2 md:space-y-4"
+          >
             <!-- Total Quantity -->
             <div class="flex justify-between items-center">
               <label class="text-sm text-gray-700">Total Quantity:</label>
@@ -306,7 +348,9 @@
       </div>
 
       <!-- Action Buttons -->
-      <div class="flex flex-col md:flex-row justify-end space-y-2 md:space-y-0 md:space-x-3 mt-4 md:mt-6 pt-2 md:pt-4 border-t border-gray-200">
+      <div
+        class="flex flex-col md:flex-row justify-end space-y-2 md:space-y-0 md:space-x-3 mt-4 md:mt-6 pt-2 md:pt-4 border-t border-gray-200"
+      >
         <button
           class="px-4 py-2 text-sm text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50"
           @click="$emit('close')"
