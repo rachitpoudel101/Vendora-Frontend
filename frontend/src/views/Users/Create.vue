@@ -106,6 +106,5 @@ async function onSubmit() {
 
 onMounted(async () => {
   await authStore.self();
-  console.log(authStore.user);
 });
 </script>

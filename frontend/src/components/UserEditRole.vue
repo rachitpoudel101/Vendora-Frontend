@@ -75,7 +75,6 @@ async function handleUpdateRole() {
 watch(
   () => props.userId,
   async (newId) => {
-    console.log(newId);
     if (props.show && newId) {
       try {
         const response = await getUser(newId);
