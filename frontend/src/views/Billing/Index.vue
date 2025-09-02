@@ -53,7 +53,7 @@
                     Date
                   </th>
                   <th
-                    class="px-2 md:px-4 py-2 text-left font-semibold text-gray-800 bg-gray-200 border-b border-gray-300 whitespace-nowrap"
+                    class="px-2 md:px-4 py-2 text-left font-semibold text-gray-800 bg-gray-200 border-b border-gray-300 border-r whitespace-nowrap"
                   >
                     Payment Method
                   </th>
@@ -61,6 +61,11 @@
                     class="px-2 md:px-4 py-2 text-left font-semibold text-gray-800 bg-gray-200 border-b border-gray-300 whitespace-nowrap"
                   >
                     Amount
+                  </th>
+                  <th
+                    class="px-2 md:px-4 py-2 text-left font-semibold text-gray-800 bg-gray-200 border-b border-gray-300 whitespace-nowrap"
+                  >
+                    Actions
                   </th>
                 </tr>
               </thead>
@@ -102,9 +107,18 @@
                   <td class="px-2 md:px-4 py-2 whitespace-nowrap">
                     {{ b.grand_total }}
                   </td>
+                  <td class="px-2 md:px-4 py-2 whitespace-nowrap">
+                    <button
+                      @click="openPrintModal(b)"
+                      class="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700 transition"
+                      title="Print Bill"
+                    >
+                      Print
+                    </button>
+                  </td>
                 </tr>
                 <tr v-if="paginatedBills.length === 0">
-                  <td colspan="7" class="text-center py-4 text-gray-500">
+                  <td colspan="8" class="text-center py-4 text-gray-500">
                     No bills found.
                   </td>
                 </tr>
@@ -155,6 +169,13 @@
       @close="openModal = false"
       @bill-created="onBillCreated"
     />
+    <print-bill
+      v-if="showPrintModal"
+      :bill="selectedBill"
+      :products="products"
+      :user-map="userMap"
+      @close="showPrintModal = false"
+    />
   </div>
 </template>
 
@@ -164,6 +185,7 @@ import Sidebar from "@/components/Sidebar.vue";
 import Navbar from "@/components/Navbar.vue";
 import { useAuthStore } from "@/stores/auth";
 import create from "@/views/Billing/create.vue";
+import printBill from "@/views/Billing/printBill.vue";
 import { fetchBill } from "@/stores/billsAPI";
 import { fetchProduct } from "@/stores/InventoryAPI";
 import { useToast } from "vue-toast-notification";
@@ -179,12 +201,61 @@ onMounted(async () => {
   productMap.value = Object.fromEntries(
     products.value.map((p: any) => [String(p.id), p.name]),
   );
+  
+  // Create user map for username lookup
+  createUserMap();
 });
 
 const openModal = ref(false);
 const bills = ref<any[]>([]);
 const products = ref<any[]>([]);
 const productMap = ref<Record<string, string>>({});
+const userMap = ref<Record<string, string>>({});
+
+// Create user map for username lookup
+const createUserMap = () => {
+  // Get current user info from localStorage
+  try {
+    const userData = localStorage.getItem("user");
+    if (userData) {
+      const user = JSON.parse(userData);
+      if (user.id) {
+        const username = user.username || user.name || user.email || user.first_name || `User ${user.id}`;
+        userMap.value[String(user.id)] = username;
+      }
+    }
+  } catch (error) {
+    console.error("Error parsing user data:", error);
+  }
+
+  // Get from auth store if available
+  try {
+    if (auth.user) {
+      const userId = auth.user.id;
+      const username = auth.user.username || auth.user.name || auth.user.email || auth.user.first_name || `User ${userId}`;
+      if (userId) {
+        userMap.value[String(userId)] = username;
+      }
+    }
+  } catch (error) {
+    console.error("Error accessing auth store:", error);
+  }
+
+  // Get from auth token
+  try {
+    const token = localStorage.getItem("token");
+    if (token) {
+      const payload = JSON.parse(atob(token.split(".")[1]));
+      const userId = payload.user_id || payload.id;
+      const username = payload.username || payload.name || payload.email || payload.first_name;
+      if (userId && username) {
+        userMap.value[String(userId)] = username;
+      }
+    }
+  } catch (error) {
+    console.error("Error decoding token:", error);
+  }
+};
 
 // Pagination state
 const pageSize = 10;
@@ -259,6 +330,14 @@ function nextPage() {
   if (currentPage.value < totalPages.value) {
     currentPage.value++;
   }
+}
+
+const showPrintModal = ref(false);
+const selectedBill = ref(null);
+
+function openPrintModal(bill: any) {
+  selectedBill.value = bill;
+  showPrintModal.value = true;
 }
 </script>
 
