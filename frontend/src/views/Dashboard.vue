@@ -103,7 +103,7 @@
             </div>
           </div>
           <div class="grid grid-cols-1 xl:grid-cols-4 gap-8">
-            <div class="xl:col-span-3">
+            <div v-if="canViewPerformanceAnalytics" class="xl:col-span-3">
               <div
                 class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm"
               >
@@ -217,7 +217,7 @@
               </div>
             </div>
 
-            <div class="space-y-6">
+            <div class="space-y-6" :class="{ 'xl:col-span-4': !canViewPerformanceAnalytics }">
               <div
                 class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm"
               >
@@ -589,4 +589,9 @@ const yearlySalesTotal = computed(() =>
       )
     : 0,
 );
+
+// Add role checking computed property
+const canViewPerformanceAnalytics = computed(() => {
+  return auth.user?.role === 'admin' || auth.user?.role === 'superadmin';
+});
 </script>
