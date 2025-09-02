@@ -187,7 +187,8 @@
                     ref="billedByInput"
                     v-model="billedBy"
                     type="text"
-                    class="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                    :disabled="isDisabled"
+                    class="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all bg-gray-100 text-gray-500 cursor-not-allowed"
                     placeholder="Enter billed by name"
                     @keydown.enter="focusNext"
                   />
@@ -578,13 +579,16 @@ import { ref, computed, onMounted, nextTick } from "vue";
 import { useRouter } from "vue-router";
 import { createBills } from "@/stores/billsAPI";
 import { fetchProduct } from "@/stores/InventoryAPI";
+import { useAuthStore } from "@/stores/auth";
 
 // Form data
 const customerName = ref("");
 const billDate = ref(new Date().toISOString().substr(0, 10));
 const paymentMethod = ref("cash");
 const billedBy = ref("");
+const billedById = ref(""); // Store user ID separately
 const remarks = ref("");
+const isDisabled = ref(true); // Add this missing property
 
 // Products for dropdown
 const products = ref([]);
@@ -596,10 +600,26 @@ const getCurrentUser = () => {
   if (userData) {
     try {
       const user = JSON.parse(userData);
-      return user.username || user.name || user.email || "";
+      return {
+        username: user.username || user.name || user.email || "",
+        id: user.id || ""
+      };
     } catch (error) {
       console.error("Error parsing user data:", error);
     }
+  }
+
+  // Try to get from auth store if available
+  try {
+    const authStore = useAuthStore();
+    if (authStore?.user) {
+      return {
+        username: authStore.user.username || authStore.user.name || authStore.user.email || "",
+        id: authStore.user.id || ""
+      };
+    }
+  } catch (error) {
+    console.error("Error accessing auth store:", error);
   }
 
   // Try to get from auth token
@@ -608,13 +628,16 @@ const getCurrentUser = () => {
     try {
       // Decode JWT token to get user info
       const payload = JSON.parse(atob(token.split(".")[1]));
-      return payload.username || payload.name || payload.email || "";
+      return {
+        username: payload.username || payload.name || payload.email || "",
+        id: payload.user_id || payload.id || ""
+      };
     } catch (error) {
       console.error("Error decoding token:", error);
     }
   }
 
-  return "";
+  return { username: "", id: "" };
 };
 
 // Fetch products on mount using inventory store
@@ -623,8 +646,9 @@ onMounted(async () => {
 
   // Auto-populate billed by field with current user
   const currentUser = getCurrentUser();
-  if (currentUser) {
-    billedBy.value = currentUser;
+  if (currentUser.username) {
+    billedBy.value = currentUser.username;
+    billedById.value = currentUser.id;
   }
 });
 
@@ -832,7 +856,7 @@ const onSubmit = async () => {
       customer_Name: customerName.value,
       date: billDate.value,
       payment_method: paymentMethod.value,
-      billed_by: billedBy.value,
+      billed_by: billedById.value || billedBy.value, // Use ID if available, fallback to username
       vat_amount: totalTaxAmount.value,
       tax_amount: 0,
       bill_discount: totalDiscountAmount.value,
