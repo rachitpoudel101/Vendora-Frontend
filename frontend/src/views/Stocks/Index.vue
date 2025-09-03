@@ -3,38 +3,51 @@
     <Navbar />
     <div class="flex">
       <Sidebar />
-      
+
       <!-- Main Content -->
       <main class="flex-1 ml-0 md:ml-64 h-[calc(100vh-4rem)] flex flex-col">
-        <div class="p-4 md:p-8 flex flex-col h-full">
+        <div class="p-2 sm:p-4 md:p-8 flex flex-col h-full">
           <!-- Header Section -->
-          <div class="bg-white rounded-2xl shadow-sm border border-gray-200 mb-6 flex-shrink-0">
-            <div class="p-6 lg:p-8">
-              <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+          <div
+            class="bg-white rounded-xl md:rounded-2xl shadow-sm border border-gray-200 mb-4 md:mb-6 flex-shrink-0"
+          >
+            <div class="p-4 sm:p-6 lg:p-8">
+              <div
+                class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4"
+              >
                 <div>
-                  <h1 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-2 bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
+                  <h1
+                    class="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-2 bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent"
+                  >
                     Stocks Management
                   </h1>
-                  <p class="text-gray-600 text-lg">
+                  <p class="text-gray-600 text-sm sm:text-base lg:text-lg">
                     Manage your products and categories efficiently
                   </p>
                 </div>
-                
+
                 <!-- Action Buttons -->
-                <div class="flex flex-col sm:flex-row gap-3" v-if="!isStaff">
+                <div
+                  class="flex flex-col sm:flex-row gap-2 sm:gap-3"
+                  v-if="!isStaff"
+                >
                   <button
-                    class="inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-medium rounded-xl shadow-sm hover:shadow-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                    class="w-full sm:w-auto inline-flex items-center justify-center px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-medium rounded-lg sm:rounded-xl shadow-sm hover:shadow-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                     @click="handleCreateStockClick"
                   >
-                    <span class="material-icons text-20 mr-2">add_box</span>
-                    Add Product
+                    <span class="material-icons text-18 sm:text-20 mr-2"
+                      >add_box</span
+                    >
+                    <span class="text-sm sm:text-base">Add Product</span>
                   </button>
                   <button
-                    class="inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-emerald-600 to-emerald-700 text-white font-medium rounded-xl shadow-sm hover:shadow-lg hover:from-emerald-700 hover:to-emerald-800 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
+                    class="w-full sm:w-auto inline-flex items-center justify-center px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-emerald-600 to-emerald-700 text-white font-medium rounded-lg sm:rounded-xl shadow-sm hover:shadow-lg hover:from-emerald-700 hover:to-emerald-800 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
                     @click="handleCreateCategoryClick"
                   >
-                    <span class="material-icons text-20 mr-2">category</span>
-                    Add Category
+                    <span class="material-icons text-18 sm:text-20 mr-2"
+                      >category</span
+                    >
+                    <span class="text-sm sm:text-base">Add Category</span>
                   </button>
                 </div>
               </div>
@@ -42,35 +55,54 @@
           </div>
 
           <!-- Tabs Section -->
-          <div class="bg-white rounded-2xl shadow-sm border border-gray-200 flex-1 flex flex-col overflow-hidden min-h-0">
+          <div
+            class="bg-white rounded-xl md:rounded-2xl shadow-sm border border-gray-200 flex-1 flex flex-col overflow-hidden min-h-0"
+          >
             <div class="border-b border-gray-200 flex-shrink-0">
-              <nav class="flex space-x-8 px-6 lg:px-8" aria-label="Tabs">
+              <nav
+                class="flex space-x-4 sm:space-x-8 px-4 sm:px-6 lg:px-8"
+                aria-label="Tabs"
+              >
                 <button
-                  class="relative py-4 px-1 font-medium text-sm transition-colors duration-200 border-b-2 focus:outline-none"
-                  :class="tab === 'products' 
-                    ? 'text-blue-600 border-blue-600' 
-                    : 'text-gray-500 border-transparent hover:text-gray-700 hover:border-gray-300'"
+                  class="relative py-3 sm:py-4 px-1 font-medium text-xs sm:text-sm transition-colors duration-200 border-b-2 focus:outline-none"
+                  :class="
+                    tab === 'products'
+                      ? 'text-blue-600 border-blue-600'
+                      : 'text-gray-500 border-transparent hover:text-gray-700 hover:border-gray-300'
+                  "
                   @click="tab = 'products'"
                 >
                   <span class="flex items-center">
-                    <span class="material-icons text-18 mr-2">inventory_2</span>
-                    Products
-                    <span class="ml-2 bg-blue-100 text-blue-600 py-1 px-2 rounded-full text-xs font-medium">
+                    <span class="material-icons text-16 sm:text-18 mr-1 sm:mr-2"
+                      >inventory_2</span
+                    >
+                    <span class="hidden sm:inline">Products</span>
+                    <span class="sm:hidden">Items</span>
+                    <span
+                      class="ml-1 sm:ml-2 bg-blue-100 text-blue-600 py-0.5 px-1.5 sm:py-1 sm:px-2 rounded-full text-xs font-medium"
+                    >
                       {{ stocks.length }}
                     </span>
                   </span>
                 </button>
                 <button
-                  class="relative py-4 px-1 font-medium text-sm transition-colors duration-200 border-b-2 focus:outline-none"
-                  :class="tab === 'categories' 
-                    ? 'text-emerald-600 border-emerald-600' 
-                    : 'text-gray-500 border-transparent hover:text-gray-700 hover:border-gray-300'"
+                  class="relative py-3 sm:py-4 px-1 font-medium text-xs sm:text-sm transition-colors duration-200 border-b-2 focus:outline-none"
+                  :class="
+                    tab === 'categories'
+                      ? 'text-emerald-600 border-emerald-600'
+                      : 'text-gray-500 border-transparent hover:text-gray-700 hover:border-gray-300'
+                  "
                   @click="tab = 'categories'"
                 >
                   <span class="flex items-center">
-                    <span class="material-icons text-18 mr-2">category</span>
-                    Categories
-                    <span class="ml-2 bg-emerald-100 text-emerald-600 py-1 px-2 rounded-full text-xs font-medium">
+                    <span class="material-icons text-16 sm:text-18 mr-1 sm:mr-2"
+                      >category</span
+                    >
+                    <span class="hidden sm:inline">Categories</span>
+                    <span class="sm:hidden">Cats</span>
+                    <span
+                      class="ml-1 sm:ml-2 bg-emerald-100 text-emerald-600 py-0.5 px-1.5 sm:py-1 sm:px-2 rounded-full text-xs font-medium"
+                    >
                       {{ categories.length }}
                     </span>
                   </span>
@@ -79,202 +111,478 @@
             </div>
 
             <!-- Content Area -->
-            <div class=" flex-1 overflow-hidden">
+            <div class="flex-1 overflow-hidden">
               <!-- Products Tab -->
               <div v-if="tab === 'products'" class="h-full flex flex-col">
                 <!-- Loading State -->
-                <div v-if="loading" class="flex items-center justify-center flex-1">
+                <div
+                  v-if="loading"
+                  class="flex items-center justify-center flex-1"
+                >
                   <div class="flex items-center space-x-3">
-                    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-                    <span class="text-gray-600 font-medium text-lg">Loading products...</span>
+                    <div
+                      class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"
+                    ></div>
+                    <span class="text-gray-600 font-medium text-lg"
+                      >Loading products...</span
+                    >
                   </div>
                 </div>
 
-                <!-- Products Table -->
-                <div v-else class="bg-gradient-to-br from-gray-50 to-white rounded-xl border border-gray-200 flex-1 flex flex-col overflow-hidden">
-                  <div class="flex-1 overflow-auto">
-                    <table class="min-w-full divide-y divide-gray-200">
-                      <thead class="bg-gradient-to-r from-gray-100 to-gray-50 sticky top-0">
-                        <tr>
-                          <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                            #
-                          </th>
-                          <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                            Product Name
-                          </th>
-                          <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                            Category
-                          </th>
-                          <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                            Stock Level
-                          </th>
-                          <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                            Actions
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody class="bg-white divide-y divide-gray-100">
-                        <tr 
-                          v-for="(item, idx) in paginatedStocks"
-                          :key="item.id"
-                          class="hover:bg-gray-50 transition-colors duration-150"
-                        >
-                          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {{ (currentPage - 1) * itemsPerPage + idx + 1 }}
-                          </td>
-                          <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm font-medium text-gray-900">{{ item.name }}</div>
-                          </td>
-                          <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">
-                              {{ categoryNameMap[item.category] || item.category_name }}
-                            </span>
-                          </td>
-                          <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="flex items-center">
-                              <span class="text-sm font-semibold text-gray-900 mr-2">{{ item.stock }}</span>
-                              <span 
-                                class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium"
-                                :class="item.stock > 10 
-                                  ? 'bg-green-100 text-green-800' 
-                                  : item.stock > 5 
-                                    ? 'bg-yellow-100 text-yellow-800' 
-                                    : 'bg-red-100 text-red-800'"
-                              >
-                                {{ item.stock > 10 ? 'In Stock' : item.stock > 5 ? 'Low Stock' : 'Critical' }}
-                              </span>
-                            </div>
-                          </td>
-                          <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                            <div class="relative dropdown-container">
+                <!-- Products Content when not loading -->
+                <div v-else class="h-full flex flex-col">
+                  <!-- Mobile Cards View for Products -->
+                  <div
+                    class="block md:hidden p-4 flex-1 overflow-y-auto space-y-4"
+                  >
+                    <div
+                      v-for="item in paginatedStocks"
+                      :key="item.id"
+                      class="bg-white border border-gray-200 rounded-lg p-4 shadow-sm"
+                    >
+                      <div class="flex justify-between items-start mb-3">
+                        <div class="flex-1">
+                          <h3 class="font-semibold text-gray-900 text-lg">
+                            {{ item.name }}
+                          </h3>
+                          <span
+                            class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800"
+                          >
+                            {{
+                              categoryNameMap[item.category] ||
+                              item.category_name
+                            }}
+                          </span>
+                        </div>
+                        <div class="relative dropdown-container">
+                          <button
+                            @click.stop="
+                              dropdownOpen === item.id
+                                ? (dropdownOpen = null)
+                                : (dropdownOpen = item.id)
+                            "
+                            class="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full"
+                          >
+                            <span class="material-icons text-20"
+                              >more_vert</span
+                            >
+                          </button>
+                          <div
+                            v-if="dropdownOpen === item.id"
+                            class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-50"
+                          >
+                            <div class="py-1">
                               <button
-                                @click.stop="dropdownOpen === item.id ? (dropdownOpen = null) : (dropdownOpen = item.id)"
-                                class="text-gray-400 hover:text-gray-600 focus:outline-none focus:text-gray-600 transition-colors duration-150"
+                                class="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-150"
+                                @click="
+                                  openViewModal(item.id);
+                                  dropdownOpen = null;
+                                "
                               >
-                                <span class="material-icons">more_vert</span>
+                                <span class="material-icons text-18 mr-3"
+                                  >visibility</span
+                                >
+                                View Details
                               </button>
-                              <div
-                                v-if="dropdownOpen === item.id"
-                                class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-50"
-                              >
-                                <div class="py-1">
-                                  <button
-                                    class="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-150"
-                                    @click="openViewModal(item.id); dropdownOpen = null;"
+                              <template v-if="!isStaff">
+                                <button
+                                  class="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-150"
+                                  @click="
+                                    openEditModal(item.id);
+                                    dropdownOpen = null;
+                                  "
+                                >
+                                  <span class="material-icons text-18 mr-3"
+                                    >edit</span
                                   >
-                                    <span class="material-icons text-18 mr-3">visibility</span>
-                                    View Details
-                                  </button>
-                                  <template v-if="!isStaff">
-                                    <button
-                                      class="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-150"
-                                      @click="openEditModal(item.id); dropdownOpen = null;"
-                                    >
-                                      <span class="material-icons text-18 mr-3">edit</span>
-                                      Edit Product
-                                    </button>
-                                    <button
-                                      class="flex items-center w-full px-4 py-2 text-sm text-red-700 hover:bg-red-50 transition-colors duration-150"
-                                      @click="deleteProducts(item.id); dropdownOpen = null;"
-                                    >
-                                      <span class="material-icons text-18 mr-3">delete</span>
-                                      Delete Product
-                                    </button>
-                                  </template>
-                                </div>
-                              </div>
+                                  Edit Product
+                                </button>
+                                <button
+                                  class="flex items-center w-full px-4 py-2 text-sm text-red-700 hover:bg-red-50 transition-colors duration-150"
+                                  @click="
+                                    deleteProducts(item.id);
+                                    dropdownOpen = null;
+                                  "
+                                >
+                                  <span class="material-icons text-18 mr-3"
+                                    >delete</span
+                                  >
+                                  Delete Product
+                                </button>
+                              </template>
                             </div>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="grid grid-cols-2 gap-4 text-sm">
+                        <div>
+                          <span class="text-gray-500 block">Stock Level</span>
+                          <div class="flex items-center mt-1">
+                            <span class="font-semibold text-gray-900 mr-2">{{
+                              item.stock
+                            }}</span>
+                            <span
+                              class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium"
+                              :class="
+                                item.stock > 10
+                                  ? 'bg-green-100 text-green-800'
+                                  : item.stock > 5
+                                    ? 'bg-yellow-100 text-yellow-800'
+                                    : 'bg-red-100 text-red-800'
+                              "
+                            >
+                              {{
+                                item.stock > 10
+                                  ? "In Stock"
+                                  : item.stock > 5
+                                    ? "Low"
+                                    : "Critical"
+                              }}
+                            </span>
+                          </div>
+                        </div>
+                        <div>
+                          <span class="text-gray-500 block">Selling Price</span>
+                          <span class="font-semibold text-blue-600 mt-1 block">
+                            Rs.
+                            {{ (item.cost_price || 0) + (item.margin || 0) }}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
                   </div>
 
-                  <!-- Fixed Pagination -->
-                  <div class="bg-gradient-to-r from-gray-50 to-white px-6 py-4 border-t border-gray-200 flex-shrink-0">
-                    <div class="flex items-center justify-between">
-                      <div class="flex items-center text-sm text-gray-500">
-                        Showing {{ (currentPage - 1) * itemsPerPage + 1 }} to 
-                        {{ Math.min(currentPage * itemsPerPage, stocks.length) }} of 
-                        {{ stocks.length }} results
-                      </div>
-                      <div class="flex items-center space-x-2">
-                        <button
-                          @click="prevPage"
-                          :disabled="currentPage === 1"
-                          class="px-3 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-150"
+                  <!-- Desktop Table View for Products -->
+                  <div
+                    class="hidden md:flex flex-1 flex-col bg-gradient-to-br from-gray-50 to-white rounded-xl border border-gray-200 overflow-hidden"
+                  >
+                    <div class="flex-1 overflow-auto">
+                      <table class="min-w-full divide-y divide-gray-200">
+                        <thead
+                          class="bg-gradient-to-r from-gray-100 to-gray-50 sticky top-0"
                         >
-                          Previous
-                        </button>
-                        <div class="flex space-x-1">
-                          <button
-                            v-for="page in Math.min(totalPages, 5)"
-                            :key="page"
-                            @click="goToPage(page)"
-                            :class="[
-                              'px-3 py-2 text-sm font-medium rounded-lg transition-colors duration-150',
-                              currentPage === page
-                                ? 'bg-blue-600 text-white'
-                                : 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-50'
-                            ]"
+                          <tr>
+                            <th
+                              class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
+                            >
+                              #
+                            </th>
+                            <th
+                              class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
+                            >
+                              Product Name
+                            </th>
+                            <th
+                              class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
+                            >
+                              Category
+                            </th>
+                            <th
+                              class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
+                            >
+                              Stock Level
+                            </th>
+                            <th
+                              class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
+                            >
+                              Actions
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-100">
+                          <tr
+                            v-for="(item, idx) in paginatedStocks"
+                            :key="item.id"
+                            class="hover:bg-gray-50 transition-colors duration-150"
                           >
-                            {{ page }}
+                            <td
+                              class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"
+                            >
+                              {{ (currentPage - 1) * itemsPerPage + idx + 1 }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                              <div class="text-sm font-medium text-gray-900">
+                                {{ item.name }}
+                              </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                              <span
+                                class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800"
+                              >
+                                {{
+                                  categoryNameMap[item.category] ||
+                                  item.category_name
+                                }}
+                              </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                              <div class="flex items-center">
+                                <span
+                                  class="text-sm font-semibold text-gray-900 mr-2"
+                                  >{{ item.stock }}</span
+                                >
+                                <span
+                                  class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium"
+                                  :class="
+                                    item.stock > 10
+                                      ? 'bg-green-100 text-green-800'
+                                      : item.stock > 5
+                                        ? 'bg-yellow-100 text-yellow-800'
+                                        : 'bg-red-100 text-red-800'
+                                  "
+                                >
+                                  {{
+                                    item.stock > 10
+                                      ? "In Stock"
+                                      : item.stock > 5
+                                        ? "Low Stock"
+                                        : "Critical"
+                                  }}
+                                </span>
+                              </div>
+                            </td>
+                            <td
+                              class="px-6 py-4 whitespace-nowrap text-sm font-medium"
+                            >
+                              <div class="relative dropdown-container">
+                                <button
+                                  @click.stop="
+                                    dropdownOpen === item.id
+                                      ? (dropdownOpen = null)
+                                      : (dropdownOpen = item.id)
+                                  "
+                                  class="text-gray-400 hover:text-gray-600 focus:outline-none focus:text-gray-600 transition-colors duration-150"
+                                >
+                                  <span class="material-icons">more_vert</span>
+                                </button>
+                                <div
+                                  v-if="dropdownOpen === item.id"
+                                  class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-50"
+                                >
+                                  <div class="py-1">
+                                    <button
+                                      class="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-150"
+                                      @click="
+                                        openViewModal(item.id);
+                                        dropdownOpen = null;
+                                      "
+                                    >
+                                      <span class="material-icons text-18 mr-3"
+                                        >visibility</span
+                                      >
+                                      View Details
+                                    </button>
+                                    <template v-if="!isStaff">
+                                      <button
+                                        class="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-150"
+                                        @click="
+                                          openEditModal(item.id);
+                                          dropdownOpen = null;
+                                        "
+                                      >
+                                        <span
+                                          class="material-icons text-18 mr-3"
+                                          >edit</span
+                                        >
+                                        Edit Product
+                                      </button>
+                                      <button
+                                        class="flex items-center w-full px-4 py-2 text-sm text-red-700 hover:bg-red-50 transition-colors duration-150"
+                                        @click="
+                                          deleteProducts(item.id);
+                                          dropdownOpen = null;
+                                        "
+                                      >
+                                        <span
+                                          class="material-icons text-18 mr-3"
+                                          >delete</span
+                                        >
+                                        Delete Product
+                                      </button>
+                                    </template>
+                                  </div>
+                                </div>
+                              </div>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+
+                    <!-- Fixed Pagination -->
+                    <div
+                      class="bg-gradient-to-r from-gray-50 to-white px-6 py-4 border-t border-gray-200 flex-shrink-0"
+                    >
+                      <div class="flex items-center justify-between">
+                        <div class="flex items-center text-sm text-gray-500">
+                          Showing {{ (currentPage - 1) * itemsPerPage + 1 }} to
+                          {{
+                            Math.min(currentPage * itemsPerPage, stocks.length)
+                          }}
+                          of {{ stocks.length }} results
+                        </div>
+                        <div class="flex items-center space-x-2">
+                          <button
+                            @click="prevPage"
+                            :disabled="currentPage === 1"
+                            class="px-3 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-150"
+                          >
+                            Previous
+                          </button>
+                          <div class="flex space-x-1">
+                            <button
+                              v-for="page in Math.min(totalPages, 5)"
+                              :key="page"
+                              @click="goToPage(page)"
+                              :class="[
+                                'px-3 py-2 text-sm font-medium rounded-lg transition-colors duration-150',
+                                currentPage === page
+                                  ? 'bg-blue-600 text-white'
+                                  : 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-50',
+                              ]"
+                            >
+                              {{ page }}
+                            </button>
+                          </div>
+                          <button
+                            @click="nextPage"
+                            :disabled="currentPage === totalPages"
+                            class="px-3 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-150"
+                          >
+                            Next
                           </button>
                         </div>
-                        <button
-                          @click="nextPage"
-                          :disabled="currentPage === totalPages"
-                          class="px-3 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-150"
-                        >
-                          Next
-                        </button>
                       </div>
+                    </div>
+                  </div>
+
+                  <!-- Mobile Pagination for Products -->
+                  <div
+                    class="block md:hidden bg-gradient-to-r from-gray-50 to-white px-4 py-3 border-t border-gray-200"
+                  >
+                    <div class="flex justify-between items-center">
+                      <button
+                        @click="prevPage"
+                        :disabled="currentPage === 1"
+                        class="px-3 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50"
+                      >
+                        Previous
+                      </button>
+                      <span class="text-sm text-gray-700">
+                        {{ currentPage }} / {{ totalPages }}
+                      </span>
+                      <button
+                        @click="nextPage"
+                        :disabled="currentPage === totalPages"
+                        class="px-3 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50"
+                      >
+                        Next
+                      </button>
                     </div>
                   </div>
                 </div>
               </div>
 
               <!-- Categories Tab -->
-              <div v-else class="h-full flex flex-col">
-                <div class="mb-6 flex-shrink-0">
-                  <h2 class="text-2xl font-semibold text-gray-900 mb-2">Categories</h2>
-                  <p class="text-gray-600">Organize your products with custom categories</p>
+              <div v-else class="h-full flex flex-col p-4 sm:p-6">
+                <div class="mb-4 sm:mb-6 flex-shrink-0">
+                  <h2
+                    class="text-xl sm:text-2xl font-semibold text-gray-900 mb-2"
+                  >
+                    Categories
+                  </h2>
+                  <p class="text-gray-600 text-sm sm:text-base">
+                    Organize your products with custom categories
+                  </p>
                 </div>
 
-                <div class="bg-gray-50 rounded-xl border border-gray-200 flex-1 overflow-auto">
+                <!-- Mobile Cards View for Categories -->
+                <div class="block md:hidden space-y-4 flex-1 overflow-y-auto">
+                  <div
+                    v-for="cat in categories"
+                    :key="cat.id"
+                    class="bg-white border border-gray-200 rounded-lg p-4 shadow-sm"
+                  >
+                    <div class="flex justify-between items-start">
+                      <div class="flex-1">
+                        <h3 class="font-semibold text-gray-900 text-lg">
+                          {{ cat.name }}
+                        </h3>
+                        <p class="text-gray-600 text-sm mt-1">
+                          {{ cat.description || "No description" }}
+                        </p>
+                      </div>
+                      <div class="flex space-x-2 ml-4">
+                        <button
+                          @click="openEditCategoryModal(cat)"
+                          class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                        >
+                          <span class="material-icons text-18">edit</span>
+                        </button>
+                        <button
+                          @click="deleteCategory(cat.id)"
+                          class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                        >
+                          <span class="material-icons text-18">delete</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Desktop Table for Categories -->
+                <div
+                  class="hidden md:block bg-gray-50 rounded-xl border border-gray-200 flex-1 overflow-auto"
+                >
                   <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-100">
                       <tr>
-                        <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                        <th
+                          class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
+                        >
                           #
                         </th>
-                        <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                        <th
+                          class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
+                        >
                           Category Name
                         </th>
-                        <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                        <th
+                          class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
+                        >
                           Description
                         </th>
-                        <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                        <th
+                          class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
+                        >
                           Actions
                         </th>
                       </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
-                      <tr 
+                      <tr
                         v-for="(cat, idx) in categories"
                         :key="cat.id"
                         class="hover:bg-gray-50 transition-colors duration-150"
                       >
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        <td
+                          class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"
+                        >
                           {{ idx + 1 }}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                          <div class="text-sm font-medium text-gray-900">{{ cat.name }}</div>
+                          <div class="text-sm font-medium text-gray-900">
+                            {{ cat.name }}
+                          </div>
                         </td>
                         <td class="px-6 py-4">
-                          <div class="text-sm text-gray-600">{{ cat.description || 'No description' }}</div>
+                          <div class="text-sm text-gray-600">
+                            {{ cat.description || "No description" }}
+                          </div>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                        <td
+                          class="px-6 py-4 whitespace-nowrap text-sm font-medium"
+                        >
                           <div class="flex space-x-3">
                             <button
                               @click="openEditCategoryModal(cat)"
@@ -294,11 +602,21 @@
                         </td>
                       </tr>
                       <tr v-if="categories.length === 0">
-                        <td colspan="4" class="px-6 py-12 text-center text-gray-500">
+                        <td
+                          colspan="4"
+                          class="px-6 py-12 text-center text-gray-500"
+                        >
                           <div class="flex flex-col items-center">
-                            <span class="material-icons text-48 text-gray-300 mb-4">category</span>
-                            <p class="text-lg font-medium">No categories found</p>
-                            <p class="text-sm">Create your first category to get started</p>
+                            <span
+                              class="material-icons text-48 text-gray-300 mb-4"
+                              >category</span
+                            >
+                            <p class="text-lg font-medium">
+                              No categories found
+                            </p>
+                            <p class="text-sm">
+                              Create your first category to get started
+                            </p>
                           </div>
                         </td>
                       </tr>
@@ -312,15 +630,17 @@
       </main>
     </div>
 
-    <!-- Modals -->
+    <!-- Responsive Modals -->
     <!-- View Modal -->
     <transition name="modal-fade">
       <div
         v-if="showViewModal"
-        class="fixed inset-0  bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+        class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
         @click.self="showViewModal = false"
       >
-        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full max-h-90vh overflow-y-auto border border-gray-200">
+        <div
+          class="bg-white rounded-xl sm:rounded-2xl shadow-2xl w-full max-w-sm sm:max-w-md max-h-90vh overflow-y-auto border border-gray-200"
+        >
           <div class="p-6">
             <div class="flex items-center justify-between mb-6">
               <h3 class="text-2xl font-bold text-gray-900">Product Details</h3>
@@ -332,31 +652,53 @@
               </button>
             </div>
             <div class="space-y-4">
-              <div class="flex justify-between items-center py-3 border-b border-gray-100">
+              <div
+                class="flex justify-between items-center py-3 border-b border-gray-100"
+              >
                 <span class="font-medium text-gray-600">Product Name</span>
-                <span class="text-gray-900 font-semibold">{{ selectedStock?.name }}</span>
+                <span class="text-gray-900 font-semibold">{{
+                  selectedStock?.name
+                }}</span>
               </div>
-              <div class="flex justify-between items-center py-3 border-b border-gray-100">
+              <div
+                class="flex justify-between items-center py-3 border-b border-gray-100"
+              >
                 <span class="font-medium text-gray-600">Category</span>
-                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">
+                <span
+                  class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800"
+                >
                   {{ selectedStock?.category_name }}
                 </span>
               </div>
-              <div class="flex justify-between items-center py-3 border-b border-gray-100">
+              <div
+                class="flex justify-between items-center py-3 border-b border-gray-100"
+              >
                 <span class="font-medium text-gray-600">Stock Quantity</span>
-                <span class="text-gray-900 font-semibold">{{ selectedStock?.stock }}</span>
+                <span class="text-gray-900 font-semibold">{{
+                  selectedStock?.stock
+                }}</span>
               </div>
-              <div class="flex justify-between items-center py-3 border-b border-gray-100">
+              <div
+                class="flex justify-between items-center py-3 border-b border-gray-100"
+              >
                 <span class="font-medium text-gray-600">Cost Price</span>
-                <span class="text-gray-900 font-semibold">Rs. {{ selectedStock?.cost_price }}</span>
+                <span class="text-gray-900 font-semibold"
+                  >Rs. {{ selectedStock?.cost_price }}</span
+                >
               </div>
-              <div class="flex justify-between items-center py-3 border-b border-gray-100">
+              <div
+                class="flex justify-between items-center py-3 border-b border-gray-100"
+              >
                 <span class="font-medium text-gray-600">Margin</span>
-                <span class="text-gray-900 font-semibold">Rs. {{ selectedStock?.margin }}</span>
+                <span class="text-gray-900 font-semibold"
+                  >Rs. {{ selectedStock?.margin }}</span
+                >
               </div>
               <div class="flex justify-between items-center py-3">
                 <span class="font-medium text-gray-600">Selling Price</span>
-                <span class="text-blue-600 font-bold text-lg">Rs. {{ viewSellingPrice }}</span>
+                <span class="text-blue-600 font-bold text-lg"
+                  >Rs. {{ viewSellingPrice }}</span
+                >
               </div>
             </div>
             <div class="mt-6 pt-6 border-t border-gray-200">
@@ -376,10 +718,12 @@
     <transition name="modal-fade">
       <div
         v-if="showEditModal"
-        class="fixed inset-0  bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+        class="fixed inset-0 bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
         @click.self="showEditModal = false"
       >
-        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full max-h-90vh overflow-y-auto border border-gray-200">
+        <div
+          class="bg-white rounded-2xl shadow-2xl max-w-md w-full max-h-90vh overflow-y-auto border border-gray-200"
+        >
           <div class="p-6">
             <div class="flex items-center justify-between mb-6">
               <h3 class="text-2xl font-bold text-gray-900">Edit Product</h3>
@@ -392,7 +736,9 @@
             </div>
             <form @submit.prevent="handleEdit" class="space-y-4">
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Product Name</label>
+                <label class="block text-sm font-medium text-gray-700 mb-2"
+                  >Product Name</label
+                >
                 <input
                   v-model="editForm.name"
                   type="text"
@@ -401,19 +747,27 @@
                 />
               </div>
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Category</label>
+                <label class="block text-sm font-medium text-gray-700 mb-2"
+                  >Category</label
+                >
                 <select
                   v-model="editForm.category"
                   class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-150"
                 >
                   <option value="" disabled>Select Category</option>
-                  <option v-for="cat in categories" :key="cat.id" :value="cat.id">
+                  <option
+                    v-for="cat in categories"
+                    :key="cat.id"
+                    :value="cat.id"
+                  >
                     {{ cat.name }}
                   </option>
                 </select>
               </div>
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Cost Price</label>
+                <label class="block text-sm font-medium text-gray-700 mb-2"
+                  >Cost Price</label
+                >
                 <input
                   v-model="editForm.cost_price"
                   type="number"
@@ -422,7 +776,9 @@
                 />
               </div>
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Margin</label>
+                <label class="block text-sm font-medium text-gray-700 mb-2"
+                  >Margin</label
+                >
                 <input
                   v-model="editForm.margin"
                   type="number"
@@ -431,7 +787,9 @@
                 />
               </div>
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Stock Quantity</label>
+                <label class="block text-sm font-medium text-gray-700 mb-2"
+                  >Stock Quantity</label
+                >
                 <input
                   v-model="editForm.stock"
                   type="number"
@@ -464,10 +822,12 @@
     <transition name="modal-fade">
       <div
         v-if="showCreateModal"
-        class="fixed inset-0  bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+        class="fixed inset-0 bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
         @click.self="showCreateModal = false"
       >
-        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full max-h-90vh overflow-y-auto border border-gray-200">
+        <div
+          class="bg-white rounded-2xl shadow-2xl max-w-md w-full max-h-90vh overflow-y-auto border border-gray-200"
+        >
           <div class="p-6">
             <div class="flex items-center justify-between mb-6">
               <h3 class="text-2xl font-bold text-gray-900">Add New Product</h3>
@@ -480,7 +840,9 @@
             </div>
             <form @submit.prevent="handleCreate" class="space-y-4">
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Product Name</label>
+                <label class="block text-sm font-medium text-gray-700 mb-2"
+                  >Product Name</label
+                >
                 <input
                   v-model="createForm.name"
                   type="text"
@@ -489,19 +851,27 @@
                 />
               </div>
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Category</label>
+                <label class="block text-sm font-medium text-gray-700 mb-2"
+                  >Category</label
+                >
                 <select
                   v-model="createForm.category"
                   class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-150"
                 >
                   <option value="" disabled>Select Category</option>
-                  <option v-for="cat in categories" :key="cat.id" :value="cat.id">
+                  <option
+                    v-for="cat in categories"
+                    :key="cat.id"
+                    :value="cat.id"
+                  >
                     {{ cat.name }}
                   </option>
                 </select>
               </div>
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Cost Price</label>
+                <label class="block text-sm font-medium text-gray-700 mb-2"
+                  >Cost Price</label
+                >
                 <input
                   v-model.number="createForm.cost_price"
                   type="number"
@@ -511,7 +881,9 @@
                 />
               </div>
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Margin</label>
+                <label class="block text-sm font-medium text-gray-700 mb-2"
+                  >Margin</label
+                >
                 <input
                   v-model.number="createForm.margin"
                   type="number"
@@ -521,7 +893,9 @@
                 />
               </div>
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Stock Quantity</label>
+                <label class="block text-sm font-medium text-gray-700 mb-2"
+                  >Stock Quantity</label
+                >
                 <input
                   v-model.number="createForm.stock"
                   type="number"
@@ -533,7 +907,9 @@
               <div class="bg-blue-50 p-4 rounded-xl">
                 <div class="flex justify-between items-center">
                   <span class="font-medium text-gray-700">Selling Price:</span>
-                  <span class="text-xl font-bold text-blue-600">Rs. {{ sellingPrice }}</span>
+                  <span class="text-xl font-bold text-blue-600"
+                    >Rs. {{ sellingPrice }}</span
+                  >
                 </div>
               </div>
               <div class="flex space-x-3 pt-6">
@@ -564,7 +940,9 @@
         class="fixed inset-0 bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
         @click.self="showCreateCategoryModal = false"
       >
-        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full border border-gray-200">
+        <div
+          class="bg-white rounded-2xl shadow-2xl max-w-md w-full border border-gray-200"
+        >
           <div class="p-6">
             <div class="flex items-center justify-between mb-6">
               <h3 class="text-2xl font-bold text-gray-900">Add New Category</h3>
@@ -577,7 +955,9 @@
             </div>
             <form @submit.prevent="handleCreateCategory" class="space-y-4">
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Category Name</label>
+                <label class="block text-sm font-medium text-gray-700 mb-2"
+                  >Category Name</label
+                >
                 <input
                   v-model="createCategoryForm.name"
                   type="text"
@@ -586,7 +966,9 @@
                 />
               </div>
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                <label class="block text-sm font-medium text-gray-700 mb-2"
+                  >Description</label
+                >
                 <textarea
                   v-model="createCategoryForm.description"
                   rows="3"
@@ -619,10 +1001,12 @@
     <transition name="modal-fade">
       <div
         v-if="showEditCategoryModal"
-        class="fixed inset-0  bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+        class="fixed inset-0 bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
         @click.self="showEditCategoryModal = false"
       >
-        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full border border-gray-200">
+        <div
+          class="bg-white rounded-2xl shadow-2xl max-w-md w-full border border-gray-200"
+        >
           <div class="p-6">
             <div class="flex items-center justify-between mb-6">
               <h3 class="text-2xl font-bold text-gray-900">Edit Category</h3>
@@ -635,7 +1019,9 @@
             </div>
             <form @submit.prevent="handleEditCategory" class="space-y-4">
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Category Name</label>
+                <label class="block text-sm font-medium text-gray-700 mb-2"
+                  >Category Name</label
+                >
                 <input
                   v-model="editCategoryForm.name"
                   type="text"
@@ -644,7 +1030,9 @@
                 />
               </div>
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                <label class="block text-sm font-medium text-gray-700 mb-2"
+                  >Description</label
+                >
                 <textarea
                   v-model="editCategoryForm.description"
                   rows="3"
@@ -679,7 +1067,7 @@
 import { onMounted, ref, computed, onUnmounted } from "vue";
 import Sidebar from "@/components/Sidebar.vue";
 import Navbar from "@/components/Navbar.vue";
-import Modal from "@/components/Modal.vue";
+// import Modal from "@/components/Modal.vue";
 import { useAuthStore } from "@/stores/auth";
 import { useToast } from "vue-toast-notification";
 import {
@@ -720,7 +1108,7 @@ const $toast = useToast();
 const stocks = ref([]);
 const categories = ref([]);
 const loading = ref(false);
-const error = ref("");
+// const error = ref("");
 const dropdownOpen = ref(null);
 const showViewModal = ref(false);
 const showEditModal = ref(false);
@@ -1008,7 +1396,7 @@ const handleClickOutside = (event) => {
 
 // Close modals on ESC key press
 const handleKeyDown = (event) => {
-  if (event.key === 'Escape') {
+  if (event.key === "Escape") {
     // Close any open modal
     if (showViewModal.value) {
       showViewModal.value = false;
@@ -1021,7 +1409,7 @@ const handleKeyDown = (event) => {
     } else if (showEditCategoryModal.value) {
       showEditCategoryModal.value = false;
     }
-    
+
     // Also close dropdown if open
     dropdownOpen.value = null;
   }
@@ -1048,8 +1436,15 @@ onUnmounted(() => {
 <style scoped>
 @import url("https://fonts.googleapis.com/icon?family=Material+Icons");
 
-.text-18 { font-size: 18px; }
-.text-20 { font-size: 20px; }
+.text-16 {
+  font-size: 16px;
+}
+.text-18 {
+  font-size: 18px;
+}
+.text-20 {
+  font-size: 20px;
+}
 
 /* Unified scrollbar styling for all elements */
 .overflow-auto::-webkit-scrollbar,
@@ -1080,10 +1475,28 @@ onUnmounted(() => {
   background: linear-gradient(135deg, #cbd5e1, #94a3b8);
 }
 
-/* Mobile responsiveness */
-@media (max-width: 768px) {
+/* Enhanced mobile responsiveness */
+@media (max-width: 767px) {
   main {
     margin-left: 0;
+  }
+
+  .material-icons.text-16 {
+    font-size: 16px;
+  }
+
+  .material-icons.text-18 {
+    font-size: 18px;
+  }
+
+  .material-icons.text-20 {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 640px) {
+  .min-h-screen {
+    padding-top: 70px;
   }
 }
 </style>
