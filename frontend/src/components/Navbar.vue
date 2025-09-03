@@ -2,9 +2,18 @@
   <nav
     class="bg-[#6A89A7] shadow flex flex-col md:flex-row items-center justify-between px-4 md:px-8 py-3 md:py-4 sticky top-0 z-10"
   >
-    <div class="flex items-center gap-2 mb-2 md:mb-0">
+    <div class="flex items-center gap-3 mb-2 md:mb-0">
+      <!-- Logo -->
+      <div class="w-8 h-8 md:w-10 md:h-10 bg-white rounded-lg flex items-center justify-center">
+        <img
+          src="@/assets/Vendora-.png"
+          alt="Vendora Logo"
+          class="w-full h-full object-contain"
+        />
+       
+      </div>
       <span class="text-white font-bold text-xl md:text-2xl tracking-wide"
-        >Stationary App</span
+        >Vendora</span
       >
     </div>
     <div class="flex items-center gap-4 relative">
