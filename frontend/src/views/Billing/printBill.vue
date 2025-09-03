@@ -129,7 +129,7 @@
                       >Rs. {{ formatPrice(subtotalAmount) }}</span
                     >
                   </div>
-                  <div class="flex justify-between text-green-600">
+                  <div class="flex justify-between text-red-600">
                     <span>Discount:</span>
                     <span class="font-medium"
                       >- Rs.
@@ -169,7 +169,7 @@
 </template>
 
 <script setup>
-import { computed, ref, onMounted } from "vue";
+import { computed, ref, onMounted, onUnmounted } from "vue";
 
 const props = defineProps({
   bill: {
@@ -236,7 +236,22 @@ onMounted(() => {
   if (props.bill.billed_by) {
     billedByUsername.value = getUsernameFromId(props.bill.billed_by);
   }
+
+  // Add ESC key listener
+  document.addEventListener("keydown", handleEscKey);
 });
+
+// Cleanup event listener
+onUnmounted(() => {
+  document.removeEventListener("keydown", handleEscKey);
+});
+
+// ESC key handler
+const handleEscKey = (event) => {
+  if (event.key === "Escape") {
+    emit("close");
+  }
+};
 
 // Helper function to safely convert to number
 const safeNumber = (value) => {

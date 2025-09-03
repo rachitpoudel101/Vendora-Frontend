@@ -3,7 +3,7 @@
     class="fixed inset-0 bg-gray-900/50 backdrop-blur-sm z-40 flex items-center justify-center p-4"
   >
     <div
-      class="bg-white rounded-xl shadow-2xl w-full max-w-7xl h-[90vh] flex flex-col overflow-hidden"
+      class="bg-white rounded-xl shadow-2xl w-full max-w-7xl max-h-[90vh] flex flex-col overflow-hidden"
     >
       <!-- Toast Notification -->
       <div
@@ -76,30 +76,41 @@
             </div>
           </div>
         </div>
-        <button
-          class="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
-          @click="$emit('close')"
-        >
-          <svg
-            class="w-6 h-6"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
+
+        <!-- Action Buttons moved to header -->
+        <div class="flex items-center space-x-3">
+          <button
+            class="px-6 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-all"
+            @click="$emit('close')"
           >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M6 18L18 6M6 6l12 12"
-            />
-          </svg>
-        </button>
+            Cancel
+          </button>
+          <button
+            class="px-6 py-2 text-sm font-medium bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all shadow-lg"
+            @click="onSubmit"
+          >
+            <svg
+              class="w-4 h-4 inline mr-2"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M5 13l4 4L19 7"
+              />
+            </svg>
+            Save Bill
+          </button>
+        </div>
       </div>
 
       <div class="flex-1 overflow-y-auto p-6 bg-gray-50">
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 lg:grid-cols-1 gap-6">
           <!-- Main Form Section -->
-          <div class="lg:col-span-2 space-y-6">
+          <div class="lg:col-span-1 space-y-6">
             <!-- Top Form Fields -->
             <div
               class="bg-white rounded-lg shadow-sm border border-gray-200 p-6"
@@ -445,129 +456,96 @@
               </div>
             </div>
           </div>
+        </div>
 
-          <!-- Bill Summary Section -->
-          <div class="lg:col-span-1">
+        <!-- Bill Summary Section -->
+        <div class="mt-6">
+          <div
+            class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden"
+          >
             <div
-              class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden sticky top-6"
+              class="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-4"
             >
-              <div
-                class="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-4"
-              >
-                <h3 class="font-semibold text-lg flex items-center">
-                  <svg
-                    class="w-5 h-5 mr-2"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4zM18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z"
-                    />
-                  </svg>
-                  Bill Summary
-                </h3>
-              </div>
-              <div class="p-6 space-y-4">
-                <!-- Total Quantity -->
-                <div class="flex justify-between items-center py-2">
-                  <label class="text-sm font-medium text-gray-700"
-                    >Total Quantity:</label
-                  >
-                  <div class="flex items-center space-x-2">
-                    <span class="text-lg font-semibold text-gray-900">{{
-                      totalQuantity
-                    }}</span>
-                    <select
-                      class="border border-gray-300 rounded text-xs px-2 py-1 text-gray-500"
-                    >
-                      <option>pcs</option>
-                    </select>
-                  </div>
-                </div>
-
-                <!-- Amount -->
-                <div class="flex justify-between items-center py-2">
-                  <label class="text-sm font-medium text-gray-700"
-                    >Subtotal:</label
-                  >
-                  <div class="text-right">
-                    <span class="text-lg font-semibold text-gray-900"
-                      >Rs. {{ totalAmount.toFixed(2) }}</span
-                    >
-                  </div>
-                </div>
-
-                <!-- Discount Amount -->
-                <div class="flex justify-between items-center py-2">
-                  <label class="text-sm font-medium text-gray-700"
-                    >Discount:</label
-                  >
-                  <div class="text-right">
-                    <span class="text-lg font-semibold text-green-600"
-                      >- Rs. {{ totalDiscountAmount.toFixed(2) }}</span
-                    >
-                  </div>
-                </div>
-
-                <!-- VAT Amount -->
-                <div class="flex justify-between items-center py-2">
-                  <label class="text-sm font-medium text-gray-700"
-                    >VAT Amount:</label
-                  >
-                  <div class="text-right">
-                    <span class="text-lg font-semibold text-gray-900"
-                      >Rs. {{ totalTaxAmount.toFixed(2) }}</span
-                    >
-                  </div>
-                </div>
-
-                <!-- Total Amount -->
-                <div
-                  class="flex justify-between items-center pt-4 border-t-2 border-gray-200"
+              <h3 class="font-semibold text-lg flex items-center">
+                <svg
+                  class="w-5 h-5 mr-2"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
                 >
-                  <label class="text-base font-bold text-gray-900"
-                    >Grand Total:</label
+                  <path
+                    d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4zM18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z"
+                  />
+                </svg>
+                Bill Summary
+              </h3>
+            </div>
+            <div class="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+              <!-- Total Quantity -->
+              <div class="flex flex-col items-center justify-center p-4 bg-gray-50 rounded-lg">
+                <label class="text-sm font-medium text-gray-700 mb-2"
+                  >Total Quantity:</label
+                >
+                <div class="flex items-center space-x-2">
+                  <span class="text-2xl font-bold text-gray-900">{{
+                    totalQuantity
+                  }}</span>
+                  <select
+                    class="border border-gray-300 rounded text-xs px-2 py-1 text-gray-500"
                   >
-                  <div class="text-right">
-                    <span class="text-2xl font-bold text-blue-600"
-                      >Rs. {{ grandTotal.toFixed(2) }}</span
-                    >
-                  </div>
+                    <option>pcs</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Subtotal -->
+              <div class="flex flex-col items-center justify-center p-4 bg-gray-50 rounded-lg">
+                <label class="text-sm font-medium text-gray-700 mb-2"
+                  >Subtotal:</label
+                >
+                <div class="text-center">
+                  <span class="text-2xl font-bold text-gray-900"
+                    >Rs. {{ totalAmount.toFixed(2) }}</span
+                  >
+                </div>
+              </div>
+
+              <!-- Discount Amount -->
+              <div class="flex flex-col items-center justify-center p-4 bg-gray-50 rounded-lg">
+                <label class="text-sm font-medium text-gray-700 mb-2"
+                  >Discount:</label
+                >
+                <div class="text-center">
+                  <span class="text-2xl font-bold text-red-600"
+                    >- Rs. {{ totalDiscountAmount.toFixed(2) }}</span
+                  >
+                </div>
+              </div>
+
+              <!-- VAT Amount -->
+              <div class="flex flex-col items-center justify-center p-4 bg-gray-50 rounded-lg">
+                <label class="text-sm font-medium text-gray-700 mb-2"
+                  >VAT Amount:</label
+                >
+                <div class="text-center">
+                  <span class="text-2xl font-bold text-gray-900"
+                    >Rs. {{ totalTaxAmount.toFixed(2) }}</span
+                  >
+                </div>
+              </div>
+
+              <!-- Grand Total -->
+              <div class="flex flex-col items-center justify-center p-4 bg-blue-50 rounded-lg border-2 border-blue-200">
+                <label class="text-sm font-bold text-gray-900 mb-2"
+                  >Grand Total:</label
+                >
+                <div class="text-center">
+                  <span class="text-3xl font-bold text-blue-600"
+                    >Rs. {{ grandTotal.toFixed(2) }}</span
+                  >
                 </div>
               </div>
             </div>
           </div>
-        </div>
-
-        <!-- Action Buttons -->
-        <div
-          class="flex justify-end space-x-4 mt-8 pt-6 border-t border-gray-200"
-        >
-          <button
-            class="px-6 py-3 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-all"
-            @click="$emit('close')"
-          >
-            Cancel
-          </button>
-          <button
-            class="px-8 py-3 text-sm font-medium bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all shadow-lg"
-            @click="onSubmit"
-          >
-            <svg
-              class="w-5 h-5 inline mr-2"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M5 13l4 4L19 7"
-              />
-            </svg>
-            Save Bill
-          </button>
         </div>
       </div>
     </div>
@@ -575,7 +553,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, nextTick } from "vue";
+import { ref, computed, onMounted, nextTick, onUnmounted } from "vue";
 import { useRouter } from "vue-router";
 import { createBills } from "@/stores/billsAPI";
 import { fetchProduct } from "@/stores/InventoryAPI";
@@ -640,6 +618,16 @@ const getCurrentUser = () => {
   return { username: "", id: "" };
 };
 
+// Add defineEmits for event emission
+const emit = defineEmits(["close", "bill-created"]);
+
+// ESC key handler
+const handleEscKey = (event) => {
+  if (event.key === "Escape") {
+    emit("close");
+  }
+};
+
 // Fetch products on mount using inventory store
 onMounted(async () => {
   products.value = await fetchProduct();
@@ -650,6 +638,14 @@ onMounted(async () => {
     billedBy.value = currentUser.username;
     billedById.value = currentUser.id;
   }
+
+  // Add ESC key listener
+  document.addEventListener("keydown", handleEscKey);
+});
+
+// Cleanup event listener
+onUnmounted(() => {
+  document.removeEventListener("keydown", handleEscKey);
 });
 
 // Helper to get stock for a product
@@ -723,13 +719,13 @@ const calculateRow = (index) => {
   }
   const subtotal = item.qty * item.price;
   item.discountAmount = item.discountCheckbox
-    ? (subtotal * item.discountPercent) / 100
+    ? Math.round((subtotal * item.discountPercent) / 100 * 100) / 100
     : 0;
   const afterDiscount = subtotal - item.discountAmount;
   item.vatAmount = item.vatCheckbox
-    ? (afterDiscount * item.vatPercent) / 100
+    ? Math.round((afterDiscount * item.vatPercent) / 100 * 100) / 100
     : 0;
-  item.totalPrice = afterDiscount + item.vatAmount;
+  item.totalPrice = Math.round((afterDiscount + item.vatAmount) * 100) / 100;
 };
 
 // Computed totals
@@ -738,19 +734,19 @@ const totalQuantity = computed(() =>
 );
 
 const totalAmount = computed(() =>
-  items.value.reduce((sum, item) => sum + (item.qty * item.price || 0), 0),
+  Math.round(items.value.reduce((sum, item) => sum + (item.qty * item.price || 0), 0) * 100) / 100,
 );
 
 const totalDiscountAmount = computed(() =>
-  items.value.reduce((sum, item) => sum + (item.discountAmount || 0), 0),
+  Math.round(items.value.reduce((sum, item) => sum + (item.discountAmount || 0), 0) * 100) / 100,
 );
 
 const totalTaxAmount = computed(() =>
-  items.value.reduce((sum, item) => sum + (item.vatAmount || 0), 0),
+  Math.round(items.value.reduce((sum, item) => sum + (item.vatAmount || 0), 0) * 100) / 100,
 );
 
 const grandTotal = computed(() =>
-  items.value.reduce((sum, item) => sum + (item.totalPrice || 0), 0),
+  Math.round(items.value.reduce((sum, item) => sum + (item.totalPrice || 0), 0) * 100) / 100,
 );
 
 // OnSubmit function for form submission
@@ -760,9 +756,6 @@ const showToast = ref(false);
 const toastType = ref("error");
 const toastMessage = ref("");
 let toastTimeout = null;
-
-// Add defineEmits for event emission
-const emit = defineEmits(["close", "bill-created"]);
 
 const showToastNotification = (type, message, duration = 3000) => {
   toastType.value = type;

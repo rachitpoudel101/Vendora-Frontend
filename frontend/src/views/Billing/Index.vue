@@ -1,10 +1,10 @@
 <template>
-  <div class="min-h-screen bg-gray-50 flex flex-col">
+  <div class="min-h-screen flex flex-col bg-gradient-to-br from-slate-50 to-slate-100">
     <Navbar />
-    <div class="flex flex-1 h-0">
+    <div class="flex flex-1">
       <Sidebar />
 
-      <main class="flex-1 flex flex-col px-2 md:px-6 py-4 md:py-10">
+      <main class="flex-1 flex flex-col px-2 md:px-6 py-4 md:py-10 overflow-hidden">
         <div
           class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 md:mb-6 gap-2"
         >
@@ -19,11 +19,13 @@
 
         <!-- Bills Table -->
         <div
-          class="bg-white shadow rounded p-1 md:p-2 overflow-x-auto max-w-full scrollbar-hide"
+          class="bg-white shadow rounded p-1 md:p-2 flex-1 flex flex-col"
+          :class="{ 'overflow-x-auto scrollbar-hide': bills.length > 0 }"
         >
           <div class="w-full">
             <table
-              class="w-full min-w-[480px] md:min-w-[600px] divide-y divide-gray-200 text-base md:text-lg"
+              class="w-full divide-y divide-gray-200 text-base md:text-lg"
+              :class="{ 'min-w-[480px] md:min-w-[600px]': bills.length > 0 }"
             >
               <thead>
                 <tr>
@@ -118,8 +120,14 @@
                   </td>
                 </tr>
                 <tr v-if="paginatedBills.length === 0">
-                  <td colspan="8" class="text-center py-4 text-gray-500">
-                    No bills found.
+                  <td colspan="8" class="text-center py-8 text-gray-500">
+                    <div class="flex flex-col items-center justify-center space-y-2">
+                      <svg class="w-12 h-12 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      </svg>
+                      <p class="text-lg font-medium">No bills found</p>
+                      <p class="text-sm">Create your first bill to get started</p>
+                    </div>
                   </td>
                 </tr>
               </tbody>
@@ -356,5 +364,15 @@ function openPrintModal(bill: any) {
 .scrollbar-hide {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+/* Prevent body scroll */
+body {
+  overflow: hidden;
+}
+
+/* Ensure main container doesn't scroll */
+main {
+  width: 100%;
 }
 </style>
