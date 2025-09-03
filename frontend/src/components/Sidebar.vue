@@ -1,12 +1,12 @@
 <template>
   <!-- Hamburger for mobile -->
   <button
-    class="md:hidden fixed top-4 left-4 z-40 bg-[#6A89A7] text-white rounded-full p-2 shadow-lg"
+    class="md:hidden fixed top-20 left-4 z-30 bg-[#6A89A7] text-white rounded-lg p-2.5 shadow-lg hover:bg-[#5a7a94] transition-colors duration-200"
     @click="showSidebar = true"
     aria-label="Open sidebar"
   >
     <svg
-      class="w-6 h-6"
+      class="w-5 h-5"
       fill="none"
       stroke="currentColor"
       stroke-width="2"
@@ -23,34 +23,43 @@
   <!-- Overlay for mobile sidebar -->
   <div
     v-if="showSidebar"
-    class="fixed inset-0 bg-black bg-opacity-30 z-30 md:hidden"
+    class="fixed inset-0 bg-black/30 backdrop-blur-sm z-20 md:hidden transition-opacity duration-300"
     @click="showSidebar = false"
   ></div>
 
   <!-- Sidebar -->
   <div
-    class="sidebar"
+    class="sidebar fixed top-16 left-0 h-[calc(100vh-4rem)] w-64 bg-gradient-to-b from-[#6A89A7] to-[#5a7a94] text-white shadow-2xl z-30 transition-transform duration-300 ease-in-out"
     :class="[
       showSidebar ? 'translate-x-0' : '-translate-x-full',
-      'md:static md:translate-x-0 md:flex',
+      'md:translate-x-0'
     ]"
   >
-    <nav class="flex flex-col gap-2 mt-12 md:mt-0">
+
+    <!-- Navigation -->
+    <nav class="flex flex-col gap-1 p-4 flex-1 overflow-y-auto">
       <router-link
         v-for="item in navItems"
         :key="item.path"
         :to="item.path"
-        class="px-3 py-2 rounded transition-colors duration-200 flex items-center gap-2 text-base"
+        class="group flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-sm font-medium"
         :class="{
-          'bg-blue-900 font-semibold shadow': $route.path === item.path,
-          'hover:bg-blue-800': $route.path !== item.path,
+          'bg-white/20 text-white shadow-lg backdrop-blur-sm': $route.path === item.path,
+          'text-white/80 hover:text-white hover:bg-white/10': $route.path !== item.path,
         }"
         @click="showSidebar = false"
       >
-        <span v-if="item.icon" class="text-lg">{{ item.icon }}</span>
-        {{ item.label }}
+        <span class="text-lg group-hover:scale-110 transition-transform duration-200">{{ item.icon }}</span>
+        <span>{{ item.label }}</span>
       </router-link>
     </nav>
+
+    <!-- Footer Section -->
+    <div class="p-4 border-t border-white/10">
+      <div class="text-xs text-white/60 text-center">
+        © 2024 StationaryApp
+      </div>
+    </div>
   </div>
 </template>
 
@@ -71,27 +80,37 @@ const navItems = [
 
 <style scoped>
 .sidebar {
-  background: #6a89a7;
-  color: white;
-  width: 16rem;
-  display: flex;
-  flex-direction: column;
-  padding: 1rem;
-  box-shadow: 0 2px 12px rgba(59, 130, 246, 0.06);
-  z-index: 40;
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 100vh;
-  transition: transform 0.3s;
+  backdrop-filter: blur(20px);
 }
-@media (min-width: 768px) {
+
+/* Custom scrollbar for navigation */
+nav::-webkit-scrollbar {
+  width: 4px;
+}
+
+nav::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+nav::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 2px;
+}
+
+nav::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+@media (max-width: 767px) {
   .sidebar {
-    position: static;
+    transform: translateX(-100%);
+    top: 0;
     height: 100vh;
-    width: 16rem;
-    box-shadow: none;
-    transform: none !important;
+    z-index: 25;
+  }
+  
+  .sidebar.translate-x-0 {
+    transform: translateX(0);
   }
 }
 </style>

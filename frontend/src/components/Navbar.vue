@@ -1,6 +1,6 @@
 <template>
   <nav
-    class="bg-[#6A89A7] shadow flex flex-col md:flex-row items-center justify-between px-4 md:px-8 py-3 md:py-4 sticky top-0 z-10"
+    class="bg-[#6A89A7] shadow flex flex-col md:flex-row items-center justify-between px-4 md:px-8 py-3 md:py-4 fixed top-0 left-0 right-0 z-20"
   >
     <div class="flex items-center gap-3 mb-2 md:mb-0">
       <!-- Logo -->
@@ -55,7 +55,7 @@
       </div>
     </div>
   </nav>
-  <div v-if="logoutMsg" class="w-full text-center py-2" :class="logoutMsgType">
+  <div v-if="logoutMsg" class="w-full text-center py-2 mt-16" :class="logoutMsgType">
     {{ logoutMsg }}
   </div>
 </template>
