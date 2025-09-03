@@ -1,336 +1,305 @@
 <template>
-  <div
-    class="min-h-screen bg-gradient-to-br from-gray-100 via-blue-50 to-purple-100 flex flex-col"
-  >
+  <div class="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 pt-16">
     <Navbar />
-    <div class="flex flex-1 flex-col md:flex-row">
-      <Sidebar class="w-full md:w-64" />
-      <main class="flex-1 flex flex-col px-2 md:px-6 mt-2 md:mt-5">
-        <div
-          class="bg-white p-2 md:p-10 rounded-2xl shadow-xl w-full text-center border border-blue-100 mt-0"
-        >
-          <div
-            class="flex flex-col md:flex-row items-start md:items-center justify-between mb-2"
-          >
-            <h2
-              class="text-2xl md:text-4xl font-extrabold text-black-500 tracking-tight drop-shadow text-left"
-            >
-              Stocks
-            </h2>
-            <!-- Create Stock & Category Buttons -->
-            <div
-              class="flex flex-col md:flex-row justify-end gap-2 md:gap-4 mb-4 md:mb-6"
-              v-if="!isStaff"
-            >
-              <button
-                class="px-4 md:px-6 py-2 bg-gradient-to-r from-blue-600 to-purple-500 text-white rounded-full shadow-lg hover:scale-105 hover:shadow-xl transition-all flex items-center gap-2 font-semibold text-sm md:text-base"
-                @click="handleCreateStockClick"
-              >
-                <span class="material-icons text-lg">add_circle</span>
-                <span>Create Stock</span>
-              </button>
-              <button
-                class="px-4 md:px-6 py-2 bg-gradient-to-r from-green-600 to-blue-500 text-white rounded-full shadow-lg hover:scale-105 hover:shadow-xl transition-all flex items-center gap-2 font-semibold text-sm md:text-base"
-                @click="handleCreateCategoryClick"
-              >
-                <span class="material-icons text-lg">category</span>
-                <span>Create Category</span>
-              </button>
+    <div class="flex">
+      <Sidebar />
+      
+      <!-- Main Content -->
+      <main class="flex-1 ml-0 md:ml-64 h-[calc(100vh-4rem)] flex flex-col">
+        <div class="p-4 md:p-8 flex flex-col h-full">
+          <!-- Header Section -->
+          <div class="bg-white rounded-2xl shadow-sm border border-gray-200 mb-6 flex-shrink-0">
+            <div class="p-6 lg:p-8">
+              <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                <div>
+                  <h1 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-2 bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
+                    Stocks Management
+                  </h1>
+                  <p class="text-gray-600 text-lg">
+                    Manage your products and categories efficiently
+                  </p>
+                </div>
+                
+                <!-- Action Buttons -->
+                <div class="flex flex-col sm:flex-row gap-3" v-if="!isStaff">
+                  <button
+                    class="inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-medium rounded-xl shadow-sm hover:shadow-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                    @click="handleCreateStockClick"
+                  >
+                    <span class="material-icons text-20 mr-2">add_box</span>
+                    Add Product
+                  </button>
+                  <button
+                    class="inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-emerald-600 to-emerald-700 text-white font-medium rounded-xl shadow-sm hover:shadow-lg hover:from-emerald-700 hover:to-emerald-800 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
+                    @click="handleCreateCategoryClick"
+                  >
+                    <span class="material-icons text-20 mr-2">category</span>
+                    Add Category
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
-          <!-- Tabs for Products and Categories -->
-          <div class="mb-4 md:mb-6 flex flex-col md:flex-row gap-2">
-            <button
-              class="px-4 py-2 rounded-t-md font-semibold transition-all w-full md:w-auto"
-              :class="
-                tab === 'products'
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-gray-200 text-gray-700'
-              "
-              @click="tab = 'products'"
-            >
-              Products
-            </button>
-            <button
-              class="px-4 py-2 rounded-t-md font-semibold transition-all w-full md:w-auto"
-              :class="
-                tab === 'categories'
-                  ? 'bg-green-600 text-white'
-                  : 'bg-gray-200 text-gray-700'
-              "
-              @click="tab = 'categories'"
-            >
-              Categories
-            </button>
-          </div>
-          <div>
-            <div v-if="tab === 'products'">
-              <!-- Products Table -->
-              <div>
-                <h3
-                  class="text-lg md:text-xl font-bold text-blue-700 mb-2 text-left"
+
+          <!-- Tabs Section -->
+          <div class="bg-white rounded-2xl shadow-sm border border-gray-200 flex-1 flex flex-col overflow-hidden min-h-0">
+            <div class="border-b border-gray-200 flex-shrink-0">
+              <nav class="flex space-x-8 px-6 lg:px-8" aria-label="Tabs">
+                <button
+                  class="relative py-4 px-1 font-medium text-sm transition-colors duration-200 border-b-2 focus:outline-none"
+                  :class="tab === 'products' 
+                    ? 'text-blue-600 border-blue-600' 
+                    : 'text-gray-500 border-transparent hover:text-gray-700 hover:border-gray-300'"
+                  @click="tab = 'products'"
                 >
-                  Products
-                </h3>
-                <div class="overflow-x-auto max-w-full scrollbar-hide">
-                  <table
-                    class="w-full min-w-[320px] md:min-w-[600px] border border-gray-200 rounded-xl shadow-sm bg-white text-[11px] md:text-base"
-                  >
-                    <thead class="bg-gradient-to-r from-blue-50 to-purple-50">
+                  <span class="flex items-center">
+                    <span class="material-icons text-18 mr-2">inventory_2</span>
+                    Products
+                    <span class="ml-2 bg-blue-100 text-blue-600 py-1 px-2 rounded-full text-xs font-medium">
+                      {{ stocks.length }}
+                    </span>
+                  </span>
+                </button>
+                <button
+                  class="relative py-4 px-1 font-medium text-sm transition-colors duration-200 border-b-2 focus:outline-none"
+                  :class="tab === 'categories' 
+                    ? 'text-emerald-600 border-emerald-600' 
+                    : 'text-gray-500 border-transparent hover:text-gray-700 hover:border-gray-300'"
+                  @click="tab = 'categories'"
+                >
+                  <span class="flex items-center">
+                    <span class="material-icons text-18 mr-2">category</span>
+                    Categories
+                    <span class="ml-2 bg-emerald-100 text-emerald-600 py-1 px-2 rounded-full text-xs font-medium">
+                      {{ categories.length }}
+                    </span>
+                  </span>
+                </button>
+              </nav>
+            </div>
+
+            <!-- Content Area -->
+            <div class=" flex-1 overflow-hidden">
+              <!-- Products Tab -->
+              <div v-if="tab === 'products'" class="h-full flex flex-col">
+                <!-- Loading State -->
+                <div v-if="loading" class="flex items-center justify-center flex-1">
+                  <div class="flex items-center space-x-3">
+                    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                    <span class="text-gray-600 font-medium text-lg">Loading products...</span>
+                  </div>
+                </div>
+
+                <!-- Products Table -->
+                <div v-else class="bg-gradient-to-br from-gray-50 to-white rounded-xl border border-gray-200 flex-1 flex flex-col overflow-hidden">
+                  <div class="flex-1 overflow-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                      <thead class="bg-gradient-to-r from-gray-100 to-gray-50 sticky top-0">
+                        <tr>
+                          <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                            #
+                          </th>
+                          <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                            Product Name
+                          </th>
+                          <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                            Category
+                          </th>
+                          <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                            Stock Level
+                          </th>
+                          <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                            Actions
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody class="bg-white divide-y divide-gray-100">
+                        <tr 
+                          v-for="(item, idx) in paginatedStocks"
+                          :key="item.id"
+                          class="hover:bg-gray-50 transition-colors duration-150"
+                        >
+                          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            {{ (currentPage - 1) * itemsPerPage + idx + 1 }}
+                          </td>
+                          <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm font-medium text-gray-900">{{ item.name }}</div>
+                          </td>
+                          <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">
+                              {{ categoryNameMap[item.category] || item.category_name }}
+                            </span>
+                          </td>
+                          <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex items-center">
+                              <span class="text-sm font-semibold text-gray-900 mr-2">{{ item.stock }}</span>
+                              <span 
+                                class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium"
+                                :class="item.stock > 10 
+                                  ? 'bg-green-100 text-green-800' 
+                                  : item.stock > 5 
+                                    ? 'bg-yellow-100 text-yellow-800' 
+                                    : 'bg-red-100 text-red-800'"
+                              >
+                                {{ item.stock > 10 ? 'In Stock' : item.stock > 5 ? 'Low Stock' : 'Critical' }}
+                              </span>
+                            </div>
+                          </td>
+                          <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                            <div class="relative dropdown-container">
+                              <button
+                                @click.stop="dropdownOpen === item.id ? (dropdownOpen = null) : (dropdownOpen = item.id)"
+                                class="text-gray-400 hover:text-gray-600 focus:outline-none focus:text-gray-600 transition-colors duration-150"
+                              >
+                                <span class="material-icons">more_vert</span>
+                              </button>
+                              <div
+                                v-if="dropdownOpen === item.id"
+                                class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-50"
+                              >
+                                <div class="py-1">
+                                  <button
+                                    class="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-150"
+                                    @click="openViewModal(item.id); dropdownOpen = null;"
+                                  >
+                                    <span class="material-icons text-18 mr-3">visibility</span>
+                                    View Details
+                                  </button>
+                                  <template v-if="!isStaff">
+                                    <button
+                                      class="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-150"
+                                      @click="openEditModal(item.id); dropdownOpen = null;"
+                                    >
+                                      <span class="material-icons text-18 mr-3">edit</span>
+                                      Edit Product
+                                    </button>
+                                    <button
+                                      class="flex items-center w-full px-4 py-2 text-sm text-red-700 hover:bg-red-50 transition-colors duration-150"
+                                      @click="deleteProducts(item.id); dropdownOpen = null;"
+                                    >
+                                      <span class="material-icons text-18 mr-3">delete</span>
+                                      Delete Product
+                                    </button>
+                                  </template>
+                                </div>
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <!-- Fixed Pagination -->
+                  <div class="bg-gradient-to-r from-gray-50 to-white px-6 py-4 border-t border-gray-200 flex-shrink-0">
+                    <div class="flex items-center justify-between">
+                      <div class="flex items-center text-sm text-gray-500">
+                        Showing {{ (currentPage - 1) * itemsPerPage + 1 }} to 
+                        {{ Math.min(currentPage * itemsPerPage, stocks.length) }} of 
+                        {{ stocks.length }} results
+                      </div>
+                      <div class="flex items-center space-x-2">
+                        <button
+                          @click="prevPage"
+                          :disabled="currentPage === 1"
+                          class="px-3 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-150"
+                        >
+                          Previous
+                        </button>
+                        <div class="flex space-x-1">
+                          <button
+                            v-for="page in Math.min(totalPages, 5)"
+                            :key="page"
+                            @click="goToPage(page)"
+                            :class="[
+                              'px-3 py-2 text-sm font-medium rounded-lg transition-colors duration-150',
+                              currentPage === page
+                                ? 'bg-blue-600 text-white'
+                                : 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-50'
+                            ]"
+                          >
+                            {{ page }}
+                          </button>
+                        </div>
+                        <button
+                          @click="nextPage"
+                          :disabled="currentPage === totalPages"
+                          class="px-3 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-150"
+                        >
+                          Next
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Categories Tab -->
+              <div v-else class="h-full flex flex-col">
+                <div class="mb-6 flex-shrink-0">
+                  <h2 class="text-2xl font-semibold text-gray-900 mb-2">Categories</h2>
+                  <p class="text-gray-600">Organize your products with custom categories</p>
+                </div>
+
+                <div class="bg-gray-50 rounded-xl border border-gray-200 flex-1 overflow-auto">
+                  <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-100">
                       <tr>
-                        <th
-                          class="px-4 py-3 border-b text-center font-semibold text-black-100 text-lg"
-                        >
-                          SN
+                        <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                          #
                         </th>
-                        <th
-                          class="px-4 py-3 border-b text-center font-semibold text-black-100 text-lg"
-                        >
-                          Product Name
-                        </th>
-                        <th
-                          class="px-4 py-3 border-b text-center font-semibold text-black-100 text-lg"
-                        >
+                        <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                           Category Name
                         </th>
-                        <th
-                          class="px-4 py-3 border-b text-center font-semibold text-black-100 text-lg"
-                        >
-                          Stocks
+                        <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                          Description
                         </th>
-                        <th
-                          class="px-4 py-3 border-b text-center font-semibold text-black-100 text-lg"
-                        >
+                        <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                           Actions
                         </th>
                       </tr>
                     </thead>
-                    <tbody>
-                      <tr
-                        v-for="(item, idx) in paginatedStocks"
-                        :key="item.id"
-                        class="hover:bg-blue-50 transition-colors"
+                    <tbody class="bg-white divide-y divide-gray-200">
+                      <tr 
+                        v-for="(cat, idx) in categories"
+                        :key="cat.id"
+                        class="hover:bg-gray-50 transition-colors duration-150"
                       >
-                        <td class="px-4 py-3 text-center border-b">
-                          {{ (currentPage - 1) * itemsPerPage + idx + 1 }}
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {{ idx + 1 }}
                         </td>
-                        <td
-                          class="px-4 py-3 border-b text-center font-medium text-blue-900"
-                        >
-                          {{ item.name }}
+                        <td class="px-6 py-4 whitespace-nowrap">
+                          <div class="text-sm font-medium text-gray-900">{{ cat.name }}</div>
                         </td>
-                        <td
-                          class="px-4 py-3 border-b text-center font-medium text-green-700"
-                        >
-                          {{
-                            categoryNameMap[item.category] || item.category_name
-                          }}
+                        <td class="px-6 py-4">
+                          <div class="text-sm text-gray-600">{{ cat.description || 'No description' }}</div>
                         </td>
-                        <td
-                          class="px-4 py-3 text-center border-b font-semibold text-purple-700"
-                        >
-                          {{ item.stock }}
-                        </td>
-                        <td class="py-3 px-4 flex justify-center relative">
-                          <!-- Wrapper with relative -->
-                          <div class="relative">
-                            <!-- Three-dot button -->
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                          <div class="flex space-x-3">
                             <button
-                              @click.stop="
-                                dropdownOpen === item.id
-                                  ? (dropdownOpen = null)
-                                  : (dropdownOpen = item.id)
-                              "
-                              class="text-gray-700 hover:text-gray-900 focus:outline-none text-xl font-bold px-2 py-1"
+                              @click="openEditCategoryModal(cat)"
+                              class="text-blue-600 hover:text-blue-900 transition-colors duration-150"
+                              title="Edit Category"
                             >
-                              ⋮
+                              <span class="material-icons text-18">edit</span>
                             </button>
-                            <!-- Dropdown menu -->
-                            <div
-                              v-if="dropdownOpen === item.id"
-                              class="absolute right-0 mt-2 w-20 bg-white border rounded-md shadow-md z-50"
+                            <button
+                              @click="deleteCategory(cat.id)"
+                              class="text-red-600 hover:text-red-900 transition-colors duration-150"
+                              title="Delete Category"
                             >
-                              <ul class="flex flex-col text-sm text-gray-700">
-                                <li>
-                                  <button
-                                    class="w-full text-left px-3 py-2 hover:bg-gray-100"
-                                    @click="
-                                      openViewModal(item.id);
-                                      dropdownOpen = null;
-                                    "
-                                  >
-                                    View
-                                  </button>
-                                </li>
-                                <template v-if="!isStaff">
-                                  <li>
-                                    <button
-                                      class="w-full text-left px-3 py-2 hover:bg-gray-100"
-                                      @click="
-                                        openEditModal(item.id);
-                                        dropdownOpen = null;
-                                      "
-                                    >
-                                      Edit
-                                    </button>
-                                  </li>
-                                  <li>
-                                    <button
-                                      class="w-full text-left px-3 py-2 hover:bg-gray-100 text-red-600"
-                                      @click="deleteProducts(item.id)"
-                                    >
-                                      Delete
-                                    </button>
-                                  </li>
-                                </template>
-                              </ul>
-                            </div>
+                              <span class="material-icons text-18">delete</span>
+                            </button>
                           </div>
                         </td>
                       </tr>
-                      <tr v-if="loading">
-                        <td
-                          colspan="5"
-                          class="text-center py-6 text-blue-600 font-semibold animate-pulse"
-                        >
-                          Loading...
-                        </td>
-                      </tr>
-                      <tr v-if="error">
-                        <td
-                          colspan="5"
-                          class="text-center py-6 text-red-500 font-semibold"
-                        >
-                          {{ error }}
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                  <!-- Add loading/error notification below the table -->
-                  <div
-                    v-if="loading"
-                    class="text-center py-6 text-blue-600 font-semibold animate-pulse"
-                  >
-                    Loading...
-                  </div>
-                  <div
-                    v-if="error"
-                    class="text-center py-6 text-red-500 font-semibold"
-                  >
-                    {{ error }}
-                  </div>
-                  <!-- Pagination Controls -->
-                  <div class="flex justify-between items-center mt-4">
-                    <button
-                      class="px-3 py-1 bg-gray-200 rounded shadow hover:bg-gray-300"
-                      @click="prevPage"
-                      :disabled="currentPage === 1"
-                    >
-                      Prev
-                    </button>
-
-                    <div class="flex gap-2">
-                      <button
-                        v-for="page in totalPages"
-                        :key="page"
-                        @click="goToPage(page)"
-                        :class="[
-                          'px-3 py-1 rounded shadow',
-                          currentPage === page
-                            ? 'bg-blue-500 text-white'
-                            : 'bg-gray-200 hover:bg-gray-300',
-                        ]"
-                      >
-                        {{ page }}
-                      </button>
-                    </div>
-
-                    <button
-                      class="px-3 py-1 bg-gray-200 rounded shadow hover:bg-gray-300"
-                      @click="nextPage"
-                      :disabled="currentPage === totalPages"
-                    >
-                      Next
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div v-else>
-              <!-- Category Table -->
-              <div>
-                <h3
-                  class="text-lg md:text-xl font-bold text-green-700 mb-2 text-left"
-                >
-                  Categories
-                </h3>
-                <div class="overflow-x-auto max-w-full scrollbar-hide">
-                  <table
-                    class="w-full min-w-[240px] md:min-w-[400px] border border-gray-200 rounded-xl shadow-sm bg-white text-[11px] md:text-base"
-                  >
-                    <thead class="bg-gradient-to-r from-green-50 to-blue-50">
-                      <tr>
-                        <th
-                          class="px-4 py-3 border-b text-center font-semibold text-black-100 text-lg"
-                        >
-                          SN
-                        </th>
-                        <th
-                          class="px-4 py-3 border-b text-center font-semibold text-black-100 text-lg"
-                        >
-                          Category Name
-                        </th>
-                        <th
-                          class="px-4 py-3 border-b text-center font-semibold text-black-100 text-lg"
-                        >
-                          Description
-                        </th>
-                        <th
-                          class="px-4 py-3 border-b text-center font-semibold text-black-100 text-lg"
-                        >
-                          Actions
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr
-                        v-for="(cat, idx) in categories"
-                        :key="cat.id"
-                        class="hover:bg-green-50 transition-colors"
-                      >
-                        <td class="px-4 py-3 text-center border-b">
-                          {{ idx + 1 }}
-                        </td>
-                        <td
-                          class="px-4 py-3 border-b text-center font-medium text-green-700"
-                        >
-                          {{ cat.name }}
-                        </td>
-                        <td
-                          class="px-4 py-3 border-b text-center text-gray-700"
-                        >
-                          {{ cat.description }}
-                        </td>
-                        <td class="px-4 py-3 border-b text-center">
-                          <button
-                            class="text-blue-600 hover:text-blue-800 px-2"
-                            @click="openEditCategoryModal(cat)"
-                            title="Edit"
-                          >
-                            <span class="material-icons text-base">edit</span>
-                          </button>
-                          <button
-                            class="text-red-600 hover:text-red-800 px-2"
-                            @click="deleteCategory(cat.id)"
-                            title="Delete"
-                          >
-                            <span class="material-icons text-base">delete</span>
-                          </button>
-                        </td>
-                      </tr>
                       <tr v-if="categories.length === 0">
-                        <td colspan="4" class="text-center py-6 text-gray-500">
-                          No categories found.
+                        <td colspan="4" class="px-6 py-12 text-center text-gray-500">
+                          <div class="flex flex-col items-center">
+                            <span class="material-icons text-48 text-gray-300 mb-4">category</span>
+                            <p class="text-lg font-medium">No categories found</p>
+                            <p class="text-sm">Create your first category to get started</p>
+                          </div>
                         </td>
                       </tr>
                     </tbody>
@@ -339,324 +308,373 @@
               </div>
             </div>
           </div>
-
-          <!-- Modals -->
-          <transition name="modal-fade">
-            <div
-              v-if="showViewModal"
-              class="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50"
-              @click.self="showViewModal = false"
-            >
-              <Modal
-                :show="showViewModal"
-                customClass="stock-modal"
-                @close="showViewModal = false"
-              >
-                <h3 class="text-2xl font-bold mb-4 text-blue-700">
-                  View Stock
-                </h3>
-                <div class="mb-2 text-left space-y-2">
-                  <div>
-                    <span class="font-semibold">Product Name:</span>
-                    <span class="text-blue-900">{{ selectedStock?.name }}</span>
-                  </div>
-                  <div>
-                    <span class="font-semibold">Category:</span>
-                    <span class="text-green-700">{{
-                      selectedStock?.category_name
-                    }}</span>
-                  </div>
-                  <div>
-                    <span class="font-semibold">Stocks:</span>
-                    <span class="text-purple-700">{{
-                      selectedStock?.stock
-                    }}</span>
-                  </div>
-                  <div>
-                    <span class="font-semibold">Cost Price:</span>
-                    <span class="text-gray-700">{{
-                      selectedStock?.cost_price
-                    }}</span>
-                  </div>
-                  <div>
-                    <span class="font-semibold">Margin:</span>
-                    <span class="text-gray-700">{{
-                      selectedStock?.margin
-                    }}</span>
-                  </div>
-                  <div>
-                    <span class="font-semibold">Selling Price (sp):</span>
-                    <span class="text-blue-700 font-bold">{{
-                      viewSellingPrice
-                    }}</span>
-                  </div>
-                </div>
-                <button
-                  class="mt-6 px-5 py-2 bg-blue-500 text-white rounded-full shadow hover:bg-blue-600 transition-all"
-                  @click="showViewModal = false"
-                >
-                  Close
-                </button>
-              </Modal>
-            </div>
-          </transition>
-          <transition name="modal-fade">
-            <div
-              v-if="showEditModal"
-              class="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50"
-              @click.self="showEditModal = false"
-            >
-              <Modal
-                :show="showEditModal"
-                customClass="stock-modal"
-                @close="showEditModal = false"
-              >
-                <h3 class="text-3xl font-bold mb-1 text-blue-700">
-                  Edit Stock
-                </h3>
-                <form @submit.prevent="handleEdit" class="flex flex-col gap-2">
-                  <input
-                    v-model="editForm.name"
-                    type="text"
-                    placeholder="Product Name"
-                    class="border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                  />
-                  <select
-                    v-model="editForm.category"
-                    class="border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                  >
-                    <option value="" disabled>Select Category</option>
-                    <option
-                      v-for="cat in categories"
-                      :key="cat.id"
-                      :value="cat.id"
-                    >
-                      {{ cat.name }}
-                    </option>
-                  </select>
-                  <input
-                    v-model="editForm.cost_price"
-                    type="number"
-                    placeholder="Cost Price"
-                    class="border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                  />
-                  <input
-                    v-model="editForm.margin"
-                    type="number"
-                    placeholder="Margin"
-                    class="border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                  />
-                  <input
-                    v-model="editForm.stock"
-                    type="number"
-                    placeholder="Stocks"
-                    class="border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                  />
-                  <div class="flex justify-end gap-2 mt-4">
-                    <button
-                      type="button"
-                      class="px-4 py-2 bg-gray-200 rounded-full shadow hover:bg-gray-300 transition-all"
-                      @click="showEditModal = false"
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      type="submit"
-                      class="px-4 py-2 bg-blue-500 text-white rounded-full shadow hover:bg-blue-600 transition-all"
-                    >
-                      Save
-                    </button>
-                  </div>
-                </form>
-              </Modal>
-            </div>
-          </transition>
-          <transition name="modal-fade">
-            <div
-              v-if="showCreateModal"
-              class="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50"
-              @click.self="showCreateModal = false"
-            >
-              <Modal
-                :show="showCreateModal"
-                customClass="stock-modal"
-                @close="showCreateModal = false"
-              >
-                <h3 class="text-2xl font-bold mb-4 text-blue-700">
-                  Create Stock
-                </h3>
-                <form
-                  @submit.prevent="handleCreate"
-                  class="flex flex-col gap-4"
-                >
-                  <input
-                    v-model="createForm.name"
-                    type="text"
-                    placeholder="Product Name"
-                    class="border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                  />
-                  <select
-                    v-model="createForm.category"
-                    class="border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                  >
-                    <option value="" disabled>Select Category</option>
-                    <option
-                      v-for="cat in categories"
-                      :key="cat.id"
-                      :value="cat.id"
-                    >
-                      {{ cat.name }}
-                    </option>
-                  </select>
-                  <input
-                    v-model.number="createForm.cost_price"
-                    type="number"
-                    min="0"
-                    placeholder="Cost Price (cp)"
-                    class="border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                  />
-                  <input
-                    v-model.number="createForm.margin"
-                    type="number"
-                    placeholder="Margin"
-                    min="0"
-                    class="border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                  />
-                  <input
-                    v-model.number="createForm.stock"
-                    type="number"
-                    placeholder="Stocks"
-                    min="0"
-                    class="border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                  />
-                  <div class="flex items-center gap-2">
-                    <span class="font-semibold">Selling Price (sp):</span>
-                    <span class="text-blue-700 font-bold">{{
-                      sellingPrice
-                    }}</span>
-                  </div>
-                  <div class="flex justify-end gap-2 mt-4">
-                    <button
-                      type="button"
-                      class="px-4 py-2 bg-gray-200 rounded-full shadow hover:bg-gray-300 transition-all"
-                      @click="showCreateModal = false"
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      type="submit"
-                      class="px-4 py-2 bg-blue-500 text-white rounded-full shadow hover:bg-blue-600 transition-all"
-                    >
-                      Create
-                    </button>
-                  </div>
-                </form>
-              </Modal>
-            </div>
-          </transition>
-          <transition name="modal-fade">
-            <div
-              v-if="showCreateCategoryModal"
-              class="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50"
-              @click.self="showCreateCategoryModal = false"
-            >
-              <Modal
-                :show="showCreateCategoryModal"
-                customClass="stock-modal"
-                @close="showCreateCategoryModal = false"
-              >
-                <h3 class="text-2xl font-bold mb-4 text-green-700">
-                  Create Category
-                </h3>
-                <form
-                  @submit.prevent="handleCreateCategory"
-                  class="flex flex-col gap-4"
-                >
-                  <input
-                    v-model="createCategoryForm.name"
-                    type="text"
-                    placeholder="Category Name"
-                    class="border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400"
-                  />
-                  <input
-                    v-model="createCategoryForm.description"
-                    type="text"
-                    placeholder="Description"
-                    class="border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400"
-                  />
-                  <div class="flex justify-end gap-2 mt-4">
-                    <button
-                      type="button"
-                      class="px-4 py-2 bg-gray-200 rounded-full shadow hover:bg-gray-300 transition-all"
-                      @click="showCreateCategoryModal = false"
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      type="submit"
-                      class="px-4 py-2 bg-green-500 text-white rounded-full shadow hover:bg-green-600 transition-all"
-                    >
-                      Create
-                    </button>
-                  </div>
-                </form>
-              </Modal>
-            </div>
-          </transition>
-          <transition name="modal-fade">
-            <div
-              v-if="showEditCategoryModal"
-              class="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50"
-              @click.self="showEditCategoryModal = false"
-            >
-              <Modal
-                :show="showEditCategoryModal"
-                customClass="stock-modal"
-                @close="showEditCategoryModal = false"
-              >
-                <h3 class="text-2xl font-bold mb-4 text-green-700">
-                  Edit Category
-                </h3>
-                <form
-                  @submit.prevent="handleEditCategory"
-                  class="flex flex-col gap-4"
-                >
-                  <input
-                    v-model="editCategoryForm.name"
-                    type="text"
-                    placeholder="Category Name"
-                    class="border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400"
-                  />
-                  <input
-                    v-model="editCategoryForm.description"
-                    type="text"
-                    placeholder="Description"
-                    class="border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400"
-                  />
-                  <div class="flex justify-end gap-2 mt-4">
-                    <button
-                      type="button"
-                      class="px-4 py-2 bg-gray-200 rounded-full shadow hover:bg-gray-300 transition-all"
-                      @click="showEditCategoryModal = false"
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      type="submit"
-                      class="px-4 py-2 bg-green-500 text-white rounded-full shadow hover:bg-green-600 transition-all"
-                    >
-                      Save
-                    </button>
-                  </div>
-                </form>
-              </Modal>
-            </div>
-          </transition>
         </div>
       </main>
     </div>
+
+    <!-- Modals -->
+    <!-- View Modal -->
+    <transition name="modal-fade">
+      <div
+        v-if="showViewModal"
+        class="fixed inset-0  bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+        @click.self="showViewModal = false"
+      >
+        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full max-h-90vh overflow-y-auto border border-gray-200">
+          <div class="p-6">
+            <div class="flex items-center justify-between mb-6">
+              <h3 class="text-2xl font-bold text-gray-900">Product Details</h3>
+              <button
+                @click="showViewModal = false"
+                class="text-gray-400 hover:text-gray-600 transition-colors duration-150"
+              >
+                <span class="material-icons">close</span>
+              </button>
+            </div>
+            <div class="space-y-4">
+              <div class="flex justify-between items-center py-3 border-b border-gray-100">
+                <span class="font-medium text-gray-600">Product Name</span>
+                <span class="text-gray-900 font-semibold">{{ selectedStock?.name }}</span>
+              </div>
+              <div class="flex justify-between items-center py-3 border-b border-gray-100">
+                <span class="font-medium text-gray-600">Category</span>
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">
+                  {{ selectedStock?.category_name }}
+                </span>
+              </div>
+              <div class="flex justify-between items-center py-3 border-b border-gray-100">
+                <span class="font-medium text-gray-600">Stock Quantity</span>
+                <span class="text-gray-900 font-semibold">{{ selectedStock?.stock }}</span>
+              </div>
+              <div class="flex justify-between items-center py-3 border-b border-gray-100">
+                <span class="font-medium text-gray-600">Cost Price</span>
+                <span class="text-gray-900 font-semibold">Rs. {{ selectedStock?.cost_price }}</span>
+              </div>
+              <div class="flex justify-between items-center py-3 border-b border-gray-100">
+                <span class="font-medium text-gray-600">Margin</span>
+                <span class="text-gray-900 font-semibold">Rs. {{ selectedStock?.margin }}</span>
+              </div>
+              <div class="flex justify-between items-center py-3">
+                <span class="font-medium text-gray-600">Selling Price</span>
+                <span class="text-blue-600 font-bold text-lg">Rs. {{ viewSellingPrice }}</span>
+              </div>
+            </div>
+            <div class="mt-6 pt-6 border-t border-gray-200">
+              <button
+                @click="showViewModal = false"
+                class="w-full px-4 py-3 bg-gray-100 text-gray-700 rounded-xl font-medium hover:bg-gray-200 transition-colors duration-150"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </transition>
+
+    <!-- Edit Modal -->
+    <transition name="modal-fade">
+      <div
+        v-if="showEditModal"
+        class="fixed inset-0  bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+        @click.self="showEditModal = false"
+      >
+        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full max-h-90vh overflow-y-auto border border-gray-200">
+          <div class="p-6">
+            <div class="flex items-center justify-between mb-6">
+              <h3 class="text-2xl font-bold text-gray-900">Edit Product</h3>
+              <button
+                @click="showEditModal = false"
+                class="text-gray-400 hover:text-gray-600 transition-colors duration-150"
+              >
+                <span class="material-icons">close</span>
+              </button>
+            </div>
+            <form @submit.prevent="handleEdit" class="space-y-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Product Name</label>
+                <input
+                  v-model="editForm.name"
+                  type="text"
+                  class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-150"
+                  placeholder="Enter product name"
+                />
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Category</label>
+                <select
+                  v-model="editForm.category"
+                  class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-150"
+                >
+                  <option value="" disabled>Select Category</option>
+                  <option v-for="cat in categories" :key="cat.id" :value="cat.id">
+                    {{ cat.name }}
+                  </option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Cost Price</label>
+                <input
+                  v-model="editForm.cost_price"
+                  type="number"
+                  class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-150"
+                  placeholder="0.00"
+                />
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Margin</label>
+                <input
+                  v-model="editForm.margin"
+                  type="number"
+                  class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-150"
+                  placeholder="0.00"
+                />
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Stock Quantity</label>
+                <input
+                  v-model="editForm.stock"
+                  type="number"
+                  class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-150"
+                  placeholder="0"
+                />
+              </div>
+              <div class="flex space-x-3 pt-6">
+                <button
+                  type="button"
+                  @click="showEditModal = false"
+                  class="flex-1 px-4 py-3 border border-gray-300 text-gray-700 rounded-xl font-medium hover:bg-gray-50 transition-colors duration-150"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  class="flex-1 px-4 py-3 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 transition-colors duration-150"
+                >
+                  Save Changes
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </transition>
+
+    <!-- Create Product Modal -->
+    <transition name="modal-fade">
+      <div
+        v-if="showCreateModal"
+        class="fixed inset-0  bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+        @click.self="showCreateModal = false"
+      >
+        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full max-h-90vh overflow-y-auto border border-gray-200">
+          <div class="p-6">
+            <div class="flex items-center justify-between mb-6">
+              <h3 class="text-2xl font-bold text-gray-900">Add New Product</h3>
+              <button
+                @click="showCreateModal = false"
+                class="text-gray-400 hover:text-gray-600 transition-colors duration-150"
+              >
+                <span class="material-icons">close</span>
+              </button>
+            </div>
+            <form @submit.prevent="handleCreate" class="space-y-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Product Name</label>
+                <input
+                  v-model="createForm.name"
+                  type="text"
+                  class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-150"
+                  placeholder="Enter product name"
+                />
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Category</label>
+                <select
+                  v-model="createForm.category"
+                  class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-150"
+                >
+                  <option value="" disabled>Select Category</option>
+                  <option v-for="cat in categories" :key="cat.id" :value="cat.id">
+                    {{ cat.name }}
+                  </option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Cost Price</label>
+                <input
+                  v-model.number="createForm.cost_price"
+                  type="number"
+                  min="0"
+                  class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-150"
+                  placeholder="0.00"
+                />
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Margin</label>
+                <input
+                  v-model.number="createForm.margin"
+                  type="number"
+                  min="0"
+                  class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-150"
+                  placeholder="0.00"
+                />
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Stock Quantity</label>
+                <input
+                  v-model.number="createForm.stock"
+                  type="number"
+                  min="0"
+                  class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-150"
+                  placeholder="0"
+                />
+              </div>
+              <div class="bg-blue-50 p-4 rounded-xl">
+                <div class="flex justify-between items-center">
+                  <span class="font-medium text-gray-700">Selling Price:</span>
+                  <span class="text-xl font-bold text-blue-600">Rs. {{ sellingPrice }}</span>
+                </div>
+              </div>
+              <div class="flex space-x-3 pt-6">
+                <button
+                  type="button"
+                  @click="showCreateModal = false"
+                  class="flex-1 px-4 py-3 border border-gray-300 text-gray-700 rounded-xl font-medium hover:bg-gray-50 transition-colors duration-150"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  class="flex-1 px-4 py-3 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 transition-colors duration-150"
+                >
+                  Create Product
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </transition>
+
+    <!-- Create Category Modal -->
+    <transition name="modal-fade">
+      <div
+        v-if="showCreateCategoryModal"
+        class="fixed inset-0 bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+        @click.self="showCreateCategoryModal = false"
+      >
+        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full border border-gray-200">
+          <div class="p-6">
+            <div class="flex items-center justify-between mb-6">
+              <h3 class="text-2xl font-bold text-gray-900">Add New Category</h3>
+              <button
+                @click="showCreateCategoryModal = false"
+                class="text-gray-400 hover:text-gray-600 transition-colors duration-150"
+              >
+                <span class="material-icons">close</span>
+              </button>
+            </div>
+            <form @submit.prevent="handleCreateCategory" class="space-y-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Category Name</label>
+                <input
+                  v-model="createCategoryForm.name"
+                  type="text"
+                  class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-150"
+                  placeholder="Enter category name"
+                />
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                <textarea
+                  v-model="createCategoryForm.description"
+                  rows="3"
+                  class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-150"
+                  placeholder="Enter category description"
+                ></textarea>
+              </div>
+              <div class="flex space-x-3 pt-6">
+                <button
+                  type="button"
+                  @click="showCreateCategoryModal = false"
+                  class="flex-1 px-4 py-3 border border-gray-300 text-gray-700 rounded-xl font-medium hover:bg-gray-50 transition-colors duration-150"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  class="flex-1 px-4 py-3 bg-emerald-600 text-white rounded-xl font-medium hover:bg-emerald-700 transition-colors duration-150"
+                >
+                  Create Category
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </transition>
+
+    <!-- Edit Category Modal -->
+    <transition name="modal-fade">
+      <div
+        v-if="showEditCategoryModal"
+        class="fixed inset-0  bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+        @click.self="showEditCategoryModal = false"
+      >
+        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full border border-gray-200">
+          <div class="p-6">
+            <div class="flex items-center justify-between mb-6">
+              <h3 class="text-2xl font-bold text-gray-900">Edit Category</h3>
+              <button
+                @click="showEditCategoryModal = false"
+                class="text-gray-400 hover:text-gray-600 transition-colors duration-150"
+              >
+                <span class="material-icons">close</span>
+              </button>
+            </div>
+            <form @submit.prevent="handleEditCategory" class="space-y-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Category Name</label>
+                <input
+                  v-model="editCategoryForm.name"
+                  type="text"
+                  class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-150"
+                  placeholder="Enter category name"
+                />
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                <textarea
+                  v-model="editCategoryForm.description"
+                  rows="3"
+                  class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-150"
+                  placeholder="Enter category description"
+                ></textarea>
+              </div>
+              <div class="flex space-x-3 pt-6">
+                <button
+                  type="button"
+                  @click="showEditCategoryModal = false"
+                  class="flex-1 px-4 py-3 border border-gray-300 text-gray-700 rounded-xl font-medium hover:bg-gray-50 transition-colors duration-150"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  class="flex-1 px-4 py-3 bg-emerald-600 text-white rounded-xl font-medium hover:bg-emerald-700 transition-colors duration-150"
+                >
+                  Save Changes
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </transition>
   </div>
 </template>
+
 <script setup lang="ts">
 import { onMounted, ref, computed, onUnmounted } from "vue";
 import Sidebar from "@/components/Sidebar.vue";
@@ -674,7 +692,7 @@ import {
   deleteProduct,
 } from "@/stores/InventoryAPI";
 const currentPage = ref(1);
-const itemsPerPage = ref(10);
+const itemsPerPage = ref(8);
 const totalPages = computed(() =>
   Math.ceil(stocks.value.length / itemsPerPage.value),
 );
@@ -793,9 +811,9 @@ async function deleteProducts(id) {
     stocks.value = stocks.value.filter((s) => s.id !== id);
 
     // Adjust pagination if needed
-    if (currentPage.value > totalPages.value)
-      currentPage.value = totalPages.value || 1;
-    currentPage.value = totalPages.value || 1;
+    if (currentPage.value > totalPages.value && totalPages.value > 0) {
+      currentPage.value = totalPages.value;
+    }
 
     $toast.success("Product deleted successfully!", {
       position: "top-right",
@@ -987,6 +1005,28 @@ const handleClickOutside = (event) => {
     dropdownOpen.value = null;
   }
 };
+
+// Close modals on ESC key press
+const handleKeyDown = (event) => {
+  if (event.key === 'Escape') {
+    // Close any open modal
+    if (showViewModal.value) {
+      showViewModal.value = false;
+    } else if (showEditModal.value) {
+      showEditModal.value = false;
+    } else if (showCreateModal.value) {
+      showCreateModal.value = false;
+    } else if (showCreateCategoryModal.value) {
+      showCreateCategoryModal.value = false;
+    } else if (showEditCategoryModal.value) {
+      showEditCategoryModal.value = false;
+    }
+    
+    // Also close dropdown if open
+    dropdownOpen.value = null;
+  }
+};
+
 onMounted(async () => {
   if (!auth.user) {
     await auth.self();
@@ -996,42 +1036,54 @@ onMounted(async () => {
 
 onMounted(() => {
   window.addEventListener("click", handleClickOutside);
+  window.addEventListener("keydown", handleKeyDown);
 });
 
 onUnmounted(() => {
   window.removeEventListener("click", handleClickOutside);
+  window.removeEventListener("keydown", handleKeyDown);
 });
 </script>
 
 <style scoped>
 @import url("https://fonts.googleapis.com/icon?family=Material+Icons");
 
-/* Responsive table */
-table {
-  border-collapse: separate;
-  border-spacing: 0;
+.text-18 { font-size: 18px; }
+.text-20 { font-size: 20px; }
+
+/* Unified scrollbar styling for all elements */
+.overflow-auto::-webkit-scrollbar,
+.overflow-x-auto::-webkit-scrollbar,
+.overflow-y-auto::-webkit-scrollbar {
+  height: 8px;
+  width: 8px;
 }
-.scrollbar-hide::-webkit-scrollbar {
-  display: none;
+
+.overflow-auto::-webkit-scrollbar-track,
+.overflow-x-auto::-webkit-scrollbar-track,
+.overflow-y-auto::-webkit-scrollbar-track {
+  background: #f8fafc;
+  border-radius: 4px;
 }
-.scrollbar-hide {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+
+.overflow-auto::-webkit-scrollbar-thumb,
+.overflow-x-auto::-webkit-scrollbar-thumb,
+.overflow-y-auto::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #e2e8f0, #cbd5e1);
+  border-radius: 4px;
+  border: 1px solid #f1f5f9;
 }
+
+.overflow-auto::-webkit-scrollbar-thumb:hover,
+.overflow-x-auto::-webkit-scrollbar-thumb:hover,
+.overflow-y-auto::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #cbd5e1, #94a3b8);
+}
+
+/* Mobile responsiveness */
 @media (max-width: 768px) {
-  [class*="min-w-[600px]"] {
-    min-width: 320px !important;
-  }
-  [class*="min-w-[400px]"] {
-    min-width: 240px !important;
-  }
-  th,
-  td {
-    padding: 0.5rem !important;
-    font-size: 0.85rem !important;
-  }
-  .bg-white {
-    padding: 1rem !important;
+  main {
+    margin-left: 0;
   }
 }
 </style>

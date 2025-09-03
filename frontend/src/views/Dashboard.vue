@@ -1,250 +1,240 @@
 <template>
-  <div
-    class="min-h-screen flex flex-col bg-gradient-to-br from-slate-50 to-slate-100"
-  >
-    <div class="fixed top-0 left-0 right-0 z-50">
-      <Navbar />
-    </div>
-    <div class="flex flex-1 pt-16">
-      <div class="fixed top-16 left-0 h-[calc(100vh-4rem)] w-64 z-40">
-        <Sidebar />
-      </div>
-      <main class="flex-1 md:ml-64 px-4 md:px-8 py-6 md:py-8">
-        <div class="space-y-6">
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div v-if="dashboardStats?.week_top_product" class="group">
-              <div
-                class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
-              >
-                <div class="flex items-center justify-between mb-4">
-                  <div class="flex items-center space-x-2">
-                    <div class="w-3 h-3 bg-emerald-500 rounded-full"></div>
-                    <h3 class="font-semibold text-slate-900">
-                      Top Product This Week
-                    </h3>
+  <div class="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 pt-16">
+    <Navbar />
+    <div class="flex">
+      <Sidebar />
+      
+      <!-- Main Content -->
+      <main class="flex-1 ml-0 md:ml-64 h-[calc(100vh-4rem)] flex flex-col">
+        <div class="p-4 md:p-8 flex flex-col h-full overflow-hidden">
+          <div class="space-y-8 flex-1 overflow-y-auto">
+            <!-- Top Products Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div v-if="dashboardStats?.week_top_product" class="group">
+                <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 bg-gradient-to-br from-white to-emerald-50">
+                  <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center space-x-2">
+                      <div class="w-3 h-3 bg-emerald-500 rounded-full"></div>
+                      <h3 class="font-semibold text-slate-900">
+                        Top Product This Week
+                      </h3>
+                    </div>
                   </div>
-                </div>
-                <div class="space-y-3">
-                  <div
-                    class="inline-flex items-center px-4 py-2 bg-slate-900 text-white rounded-full text-sm font-medium"
-                  >
-                    {{ dashboardStats.week_top_product.product_name }}
-                  </div>
-                  <div class="flex justify-between text-sm">
-                    <span class="text-emerald-600 font-medium">
-                      Sold: {{ dashboardStats.week_top_product.sold_quantity }}
-                    </span>
-                    <span class="text-slate-600">
-                      Stock: {{ dashboardStats.week_top_product.stock }}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div v-if="dashboardStats?.month_top_product" class="group">
-              <div
-                class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
-              >
-                <div class="flex items-center justify-between mb-4">
-                  <div class="flex items-center space-x-2">
-                    <div class="w-3 h-3 bg-blue-500 rounded-full"></div>
-                    <h3 class="font-semibold text-slate-900">
-                      Top Product This Month
-                    </h3>
-                  </div>
-                </div>
-                <div class="space-y-3">
-                  <div
-                    class="inline-flex items-center px-4 py-2 bg-slate-900 text-white rounded-full text-sm font-medium"
-                  >
-                    {{ dashboardStats.month_top_product.product_name }}
-                  </div>
-                  <div class="flex justify-between text-sm">
-                    <span class="text-emerald-600 font-medium">
-                      Sold: {{ dashboardStats.month_top_product.sold_quantity }}
-                    </span>
-                    <span class="text-slate-600">
-                      Stock: {{ dashboardStats.month_top_product.stock }}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div v-if="dashboardStats?.year_top_product" class="group">
-              <div
-                class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
-              >
-                <div class="flex items-center justify-between mb-4">
-                  <div class="flex items-center space-x-2">
-                    <div class="w-3 h-3 bg-violet-500 rounded-full"></div>
-                    <h3 class="font-semibold text-slate-900">
-                      Top Product This Year
-                    </h3>
-                  </div>
-                </div>
-                <div class="space-y-3">
-                  <div
-                    class="inline-flex items-center px-4 py-2 bg-slate-900 text-white rounded-full text-sm font-medium"
-                  >
-                    {{ dashboardStats.year_top_product.product_name }}
-                  </div>
-                  <div class="flex justify-between text-sm">
-                    <span class="text-emerald-600 font-medium">
-                      Sold: {{ dashboardStats.year_top_product.sold_quantity }}
-                    </span>
-                    <span class="text-slate-600">
-                      Stock: {{ dashboardStats.year_top_product.stock }}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="grid grid-cols-1 xl:grid-cols-4 gap-8">
-            <div v-if="canViewPerformanceAnalytics" class="xl:col-span-3">
-              <div
-                class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm"
-              >
-                <div class="flex items-center justify-between mb-6">
-                  <h2 class="text-xl font-bold text-slate-900">
-                    Performance Analytics
-                  </h2>
-                  <div class="flex space-x-2">
-                    <button
-                      class="px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200"
-                      :class="
-                        selectedGraphPeriod === 'weekly'
-                          ? 'bg-slate-900 text-white shadow-sm'
-                          : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
-                      "
-                      @click="selectedGraphPeriod = 'weekly'"
+                  <div class="space-y-3">
+                    <div
+                      class="inline-flex items-center px-4 py-2 bg-slate-900 text-white rounded-full text-sm font-medium"
                     >
-                      Weekly
-                    </button>
-                    <button
-                      class="px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200"
-                      :class="
-                        selectedGraphPeriod === 'yearly'
-                          ? 'bg-slate-900 text-white shadow-sm'
-                          : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
-                      "
-                      @click="selectedGraphPeriod = 'yearly'"
+                      {{ dashboardStats.week_top_product.product_name }}
+                    </div>
+                    <div class="flex justify-between text-sm">
+                      <span class="text-emerald-600 font-medium">
+                        Sold: {{ dashboardStats.week_top_product.sold_quantity }}
+                      </span>
+                      <span class="text-slate-600">
+                        Stock: {{ dashboardStats.week_top_product.stock }}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div v-if="dashboardStats?.month_top_product" class="group">
+                <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 bg-gradient-to-br from-white to-emerald-50">
+                  <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center space-x-2">
+                      <div class="w-3 h-3 bg-blue-500 rounded-full"></div>
+                      <h3 class="font-semibold text-slate-900">
+                        Top Product This Month
+                      </h3>
+                    </div>
+                  </div>
+                  <div class="space-y-3">
+                    <div
+                      class="inline-flex items-center px-4 py-2 bg-slate-900 text-white rounded-full text-sm font-medium"
                     >
-                      Yearly
-                    </button>
-                  </div>
-                </div>
-                <div class="flex flex-wrap gap-6 mb-4">
-                  <div
-                    v-if="selectedGraphPeriod === 'weekly'"
-                    class="flex items-center space-x-4"
-                  >
-                    <div class="flex items-center space-x-2">
-                      <div class="w-3 h-3 rounded-full bg-emerald-500"></div>
-                      <span class="text-sm font-medium text-slate-700"
-                        >Weekly Profit</span
-                      >
+                      {{ dashboardStats.month_top_product.product_name }}
                     </div>
-                    <div class="flex items-center space-x-2">
-                      <div class="w-3 h-3 rounded-full bg-blue-500"></div>
-                      <span class="text-sm font-medium text-slate-700"
-                        >Weekly Sales</span
-                      >
-                    </div>
-                  </div>
-                  <div v-else class="flex items-center space-x-4">
-                    <div class="flex items-center space-x-2">
-                      <div class="w-3 h-3 rounded-full bg-violet-500"></div>
-                      <span class="text-sm font-medium text-slate-700"
-                        >Yearly Profit</span
-                      >
-                    </div>
-                    <div class="flex items-center space-x-2">
-                      <div class="w-3 h-3 rounded-full bg-orange-500"></div>
-                      <span class="text-sm font-medium text-slate-700"
-                        >Yearly Sales</span
-                      >
+                    <div class="flex justify-between text-sm">
+                      <span class="text-emerald-600 font-medium">
+                        Sold: {{ dashboardStats.month_top_product.sold_quantity }}
+                      </span>
+                      <span class="text-slate-600">
+                        Stock: {{ dashboardStats.month_top_product.stock }}
+                      </span>
                     </div>
                   </div>
                 </div>
-                <div class="grid grid-cols-2 gap-4 mb-6">
-                  <template v-if="selectedGraphPeriod === 'weekly'">
-                    <div class="bg-emerald-50 rounded-xl p-4">
-                      <div class="text-sm text-emerald-600 font-medium">
-                        Total Weekly Profit
-                      </div>
-                      <div class="text-2xl font-bold text-emerald-700">
-                        {{ Math.round(weeklyProfitTotal).toLocaleString() }}
-                      </div>
+              </div>
+
+              <div v-if="dashboardStats?.year_top_product" class="group">
+                <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 bg-gradient-to-br from-white to-emerald-50">
+                  <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center space-x-2">
+                      <div class="w-3 h-3 bg-violet-500 rounded-full"></div>
+                      <h3 class="font-semibold text-slate-900">
+                        Top Product This Year
+                      </h3>
                     </div>
-                    <div class="bg-blue-50 rounded-xl p-4">
-                      <div class="text-sm text-blue-600 font-medium">
-                        Total Weekly Sales
-                      </div>
-                      <div class="text-2xl font-bold text-blue-700">
-                        {{ Math.round(weeklySalesTotal).toLocaleString() }}
-                      </div>
+                  </div>
+                  <div class="space-y-3">
+                    <div
+                      class="inline-flex items-center px-4 py-2 bg-slate-900 text-white rounded-full text-sm font-medium"
+                    >
+                      {{ dashboardStats.year_top_product.product_name }}
                     </div>
-                  </template>
-                  <template v-else>
-                    <div class="bg-violet-50 rounded-xl p-4">
-                      <div class="text-sm text-violet-600 font-medium">
-                        Total Yearly Profit
-                      </div>
-                      <div class="text-2xl font-bold text-violet-700">
-                        {{ Math.round(yearlyProfitTotal).toLocaleString() }}
-                      </div>
+                    <div class="flex justify-between text-sm">
+                      <span class="text-emerald-600 font-medium">
+                        Sold: {{ dashboardStats.year_top_product.sold_quantity }}
+                      </span>
+                      <span class="text-slate-600">
+                        Stock: {{ dashboardStats.year_top_product.stock }}
+                      </span>
                     </div>
-                    <div class="bg-orange-50 rounded-xl p-4">
-                      <div class="text-sm text-orange-600 font-medium">
-                        Total Yearly Sales
-                      </div>
-                      <div class="text-2xl font-bold text-orange-700">
-                        {{ Math.round(yearlySalesTotal).toLocaleString() }}
-                      </div>
-                    </div>
-                  </template>
-                </div>
-                <div class="h-80">
-                  <Line
-                    v-if="profitSalesChartData"
-                    :data="profitSalesChartData"
-                    :options="chartOptions"
-                  />
+                  </div>
                 </div>
               </div>
             </div>
 
-            <div class="space-y-6" :class="{ 'xl:col-span-4': !canViewPerformanceAnalytics }">
-              <div
-                class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm"
-              >
-                <h3 class="font-bold text-slate-900 text-lg mb-4 text-center">
-                  Products Sold
-                </h3>
-                <div class="h-48 flex items-center justify-center">
-                  <Pie
-                    v-if="productsSoldChartData"
-                    :data="productsSoldChartData"
-                    :options="pieChartOptions"
-                  />
+            <!-- Analytics Section -->
+            <div class="grid grid-cols-1 xl:grid-cols-4 gap-8">
+              <div v-if="canViewPerformanceAnalytics" class="xl:col-span-3">
+                <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm bg-gradient-to-br from-white to-blue-50">
+                  <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-xl font-bold text-slate-900">
+                      Performance Analytics
+                    </h2>
+                    <div class="flex space-x-2">
+                      <button
+                        class="px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200"
+                        :class="
+                          selectedGraphPeriod === 'weekly'
+                            ? 'bg-slate-900 text-white shadow-sm'
+                            : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                        "
+                        @click="selectedGraphPeriod = 'weekly'"
+                      >
+                        Weekly
+                      </button>
+                      <button
+                        class="px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200"
+                        :class="
+                          selectedGraphPeriod === 'yearly'
+                            ? 'bg-slate-900 text-white shadow-sm'
+                            : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                        "
+                        @click="selectedGraphPeriod = 'yearly'"
+                      >
+                        Yearly
+                      </button>
+                    </div>
+                  </div>
+                  <div class="flex flex-wrap gap-6 mb-4">
+                    <div
+                      v-if="selectedGraphPeriod === 'weekly'"
+                      class="flex items-center space-x-4"
+                    >
+                      <div class="flex items-center space-x-2">
+                        <div class="w-3 h-3 rounded-full bg-emerald-500"></div>
+                        <span class="text-sm font-medium text-slate-700"
+                          >Weekly Profit</span
+                        >
+                      </div>
+                      <div class="flex items-center space-x-2">
+                        <div class="w-3 h-3 rounded-full bg-blue-500"></div>
+                        <span class="text-sm font-medium text-slate-700"
+                          >Weekly Sales</span
+                        >
+                      </div>
+                    </div>
+                    <div v-else class="flex items-center space-x-4">
+                      <div class="flex items-center space-x-2">
+                        <div class="w-3 h-3 rounded-full bg-violet-500"></div>
+                        <span class="text-sm font-medium text-slate-700"
+                          >Yearly Profit</span
+                        >
+                      </div>
+                      <div class="flex items-center space-x-2">
+                        <div class="w-3 h-3 rounded-full bg-orange-500"></div>
+                        <span class="text-sm font-medium text-slate-700"
+                          >Yearly Sales</span
+                        >
+                      </div>
+                    </div>
+                  </div>
+                  <div class="grid grid-cols-2 gap-4 mb-6">
+                    <template v-if="selectedGraphPeriod === 'weekly'">
+                      <div class="bg-emerald-50 rounded-xl p-4">
+                        <div class="text-sm text-emerald-600 font-medium">
+                          Total Weekly Profit
+                        </div>
+                        <div class="text-2xl font-bold text-emerald-700">
+                          {{ Math.round(weeklyProfitTotal).toLocaleString() }}
+                        </div>
+                      </div>
+                      <div class="bg-blue-50 rounded-xl p-4">
+                        <div class="text-sm text-blue-600 font-medium">
+                          Total Weekly Sales
+                        </div>
+                        <div class="text-2xl font-bold text-blue-700">
+                          {{ Math.round(weeklySalesTotal).toLocaleString() }}
+                        </div>
+                      </div>
+                    </template>
+                    <template v-else>
+                      <div class="bg-violet-50 rounded-xl p-4">
+                        <div class="text-sm text-violet-600 font-medium">
+                          Total Yearly Profit
+                        </div>
+                        <div class="text-2xl font-bold text-violet-700">
+                          {{ Math.round(yearlyProfitTotal).toLocaleString() }}
+                        </div>
+                      </div>
+                      <div class="bg-orange-50 rounded-xl p-4">
+                        <div class="text-sm text-orange-600 font-medium">
+                          Total Yearly Sales
+                        </div>
+                        <div class="text-2xl font-bold text-orange-700">
+                          {{ Math.round(yearlySalesTotal).toLocaleString() }}
+                        </div>
+                      </div>
+                    </template>
+                  </div>
+                  <div class="h-80">
+                    <Line
+                      v-if="profitSalesChartData"
+                      :data="profitSalesChartData"
+                      :options="chartOptions"
+                    />
+                  </div>
                 </div>
               </div>
 
-              <div
-                class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm"
-              >
-                <h3 class="font-bold text-slate-900 text-lg mb-4 text-center">
-                  Stock Levels
-                </h3>
-                <div class="h-48 flex items-center justify-center">
-                  <Pie
-                    v-if="productsStockChartData"
-                    :data="productsStockChartData"
-                    :options="pieChartOptions"
-                  />
+              <!-- Pie Charts -->
+              <div class="space-y-6" :class="{ 'xl:col-span-4': !canViewPerformanceAnalytics }">
+                <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm bg-gradient-to-br from-white to-purple-50">
+                  <h3 class="font-bold text-slate-900 text-lg mb-4 text-center">
+                    Products Sold
+                  </h3>
+                  <div class="h-48 flex items-center justify-center">
+                    <Pie
+                      v-if="productsSoldChartData"
+                      :data="productsSoldChartData"
+                      :options="pieChartOptions"
+                    />
+                  </div>
+                </div>
+
+                <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm bg-gradient-to-br from-white to-purple-50">
+                  <h3 class="font-bold text-slate-900 text-lg mb-4 text-center">
+                    Stock Levels
+                  </h3>
+                  <div class="h-48 flex items-center justify-center">
+                    <Pie
+                      v-if="productsStockChartData"
+                      :data="productsStockChartData"
+                      :options="pieChartOptions"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
@@ -595,3 +585,37 @@ const canViewPerformanceAnalytics = computed(() => {
   return auth.user?.role === 'admin' || auth.user?.role === 'superadmin';
 });
 </script>
+
+<style scoped>
+/* Unified scrollbar for dashboard */
+.overflow-y-auto::-webkit-scrollbar,
+.overflow-auto::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-track,
+.overflow-auto::-webkit-scrollbar-track {
+  background: #f8fafc;
+  border-radius: 4px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb,
+.overflow-auto::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #e2e8f0, #cbd5e1);
+  border-radius: 4px;
+  border: 1px solid #f1f5f9;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb:hover,
+.overflow-auto::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #cbd5e1, #94a3b8);
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  main {
+    margin-left: 0;
+  }
+}
+</style>

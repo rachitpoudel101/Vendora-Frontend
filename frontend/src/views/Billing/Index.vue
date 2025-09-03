@@ -1,177 +1,178 @@
 <template>
-  <div class="min-h-screen flex flex-col bg-gradient-to-br from-slate-50 to-slate-100">
+  <div class="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 pt-16">
     <Navbar />
-    <div class="flex flex-1">
+    <div class="flex">
       <Sidebar />
 
-      <main class="flex-1 flex flex-col px-2 md:px-6 py-4 md:py-10 overflow-hidden">
-        <div
-          class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 md:mb-6 gap-2"
-        >
-          <h2 class="text-2xl md:text-3xl font-bold text-blue-700">Billing</h2>
-          <button
-            @click="openModal = true"
-            class="bg-blue-600 text-white px-3 md:px-4 py-2 rounded hover:bg-blue-700 transition w-full md:w-auto"
-          >
-            Create Bill
-          </button>
-        </div>
-
-        <!-- Bills Table -->
-        <div
-          class="bg-white shadow rounded p-1 md:p-2 flex-1 flex flex-col"
-          :class="{ 'overflow-x-auto scrollbar-hide': bills.length > 0 }"
-        >
-          <div class="w-full">
-            <table
-              class="w-full divide-y divide-gray-200 text-base md:text-lg"
-              :class="{ 'min-w-[480px] md:min-w-[600px]': bills.length > 0 }"
-            >
-              <thead>
-                <tr>
-                  <th
-                    class="px-2 md:px-4 py-2 text-left font-semibold text-gray-800 bg-gray-200 border-b border-gray-300 border-r whitespace-nowrap"
-                  >
-                    SN
-                  </th>
-                  <th
-                    class="px-2 md:px-4 py-2 text-left font-semibold text-gray-800 bg-gray-200 border-b border-gray-300 border-r whitespace-nowrap"
-                  >
-                    Products
-                  </th>
-                  <th
-                    class="px-2 md:px-4 py-2 text-left font-semibold text-gray-800 bg-gray-200 border-b border-gray-300 border-r whitespace-nowrap"
-                  >
-                    Quantity
-                  </th>
-                  <th
-                    class="px-2 md:px-4 py-2 text-left font-semibold text-gray-800 bg-gray-200 border-b border-gray-300 border-r whitespace-nowrap"
-                  >
-                    Customer
-                  </th>
-                  <th
-                    class="px-2 md:px-4 py-2 text-left font-semibold text-gray-800 bg-gray-200 border-b border-gray-300 border-r whitespace-nowrap"
-                  >
-                    Date
-                  </th>
-                  <th
-                    class="px-2 md:px-4 py-2 text-left font-semibold text-gray-800 bg-gray-200 border-b border-gray-300 border-r whitespace-nowrap"
-                  >
-                    Payment Method
-                  </th>
-                  <th
-                    class="px-2 md:px-4 py-2 text-left font-semibold text-gray-800 bg-gray-200 border-b border-gray-300 whitespace-nowrap"
-                  >
-                    Amount
-                  </th>
-                  <th
-                    class="px-2 md:px-4 py-2 text-left font-semibold text-gray-800 bg-gray-200 border-b border-gray-300 whitespace-nowrap"
-                  >
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-gray-200">
-                <tr v-for="(b, index) in paginatedBills" :key="b.id">
-                  <td class="px-2 md:px-4 py-2 whitespace-nowrap">
-                    {{ (currentPage - 1) * pageSize + index + 1 }}
-                  </td>
-                  <td class="px-2 md:px-4 py-2 whitespace-nowrap">
-                    <span v-if="b.items && b.items.length">
-                      {{
-                        b.items
-                          .map(
-                            (item) =>
-                              productMap[item.product_id] || item.product_id,
-                          )
-                          .join(", ")
-                      }}
-                    </span>
-                    <span v-else>-</span>
-                  </td>
-                  <td class="px-2 md:px-4 py-2 whitespace-nowrap">
-                    <span v-if="b.items && b.items.length">
-                      {{ b.items.map((item) => item.quantity).join(", ") }}
-                    </span>
-                    <span v-else>-</span>
-                  </td>
-                  <td class="px-2 md:px-4 py-2 whitespace-nowrap">
-                    {{ b.customer_Name }}
-                  </td>
-                  <td class="px-2 md:px-4 py-2 whitespace-nowrap">
-                    {{ b.date }}
-                  </td>
-                  <td
-                    class="px-2 md:px-4 py-2 capitalize text-left whitespace-nowrap"
-                  >
-                    {{ b.payment_method }}
-                  </td>
-                  <td class="px-2 md:px-4 py-2 whitespace-nowrap">
-                    {{ b.grand_total }}
-                  </td>
-                  <td class="px-2 md:px-4 py-2 whitespace-nowrap">
-                    <button
-                      @click="openPrintModal(b)"
-                      class="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700 transition"
-                      title="Print Bill"
-                    >
-                      Print
-                    </button>
-                  </td>
-                </tr>
-                <tr v-if="paginatedBills.length === 0">
-                  <td colspan="8" class="text-center py-8 text-gray-500">
-                    <div class="flex flex-col items-center justify-center space-y-2">
-                      <svg class="w-12 h-12 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                      </svg>
-                      <p class="text-lg font-medium">No bills found</p>
-                      <p class="text-sm">Create your first bill to get started</p>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+      <!-- Main Content -->
+      <main class="flex-1 ml-0 md:ml-64 h-[calc(100vh-4rem)] flex flex-col">
+        <div class="p-4 md:p-8 flex flex-col h-full">
+          <!-- Header Section -->
+          <div class="bg-white rounded-2xl shadow-sm border border-gray-200 mb-6 flex-shrink-0">
+            <div class="p-6 lg:p-8">
+              <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                <div>
+                  <h1 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-2 bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
+                    Billing Management
+                  </h1>
+                  <p class="text-gray-600 text-lg">
+                    Create and manage customer bills efficiently
+                  </p>
+                </div>
+                
+                <button
+                  @click="openModal = true"
+                  class="inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-medium rounded-xl shadow-sm hover:shadow-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                >
+                  <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                  </svg>
+                  Create Bill
+                </button>
+              </div>
+            </div>
           </div>
-          <!-- Pagination Controls -->
-          <div
-            v-if="totalPages > 1"
-            class="flex flex-wrap justify-end items-center mt-4 space-x-2"
-          >
-            <button
-              class="px-2 md:px-3 py-1 rounded border bg-gray-100 text-gray-700"
-              :disabled="currentPage === 1"
-              @click="currentPage--"
-            >
-              Prev
-            </button>
-            <template v-for="page in paginationPages" :key="page">
-              <span v-if="page === '...'">
-                <span class="px-2 text-gray-400">...</span>
-              </span>
-              <button
-                v-else
-                class="px-2 md:px-3 py-1 rounded border"
-                :class="{
-                  'bg-blue-600 text-white font-bold': currentPage === page,
-                  'bg-gray-100 text-gray-700': currentPage !== page,
-                }"
-                @click="currentPage = page"
-              >
-                {{ page }}
-              </button>
-            </template>
-            <button
-              class="px-2 md:px-3 py-1 rounded border bg-gray-100 text-gray-700"
-              :disabled="currentPage === totalPages"
-              @click="nextPage"
-            >
-              Next
-            </button>
+
+          <!-- Bills Table -->
+          <div class="bg-white rounded-2xl shadow-sm border border-gray-200 flex-1 flex flex-col overflow-hidden min-h-0">
+            <div class="flex-1 overflow-auto">
+              <table class="w-full divide-y divide-gray-200 text-sm min-w-[800px]">
+                <thead class="bg-gradient-to-r from-gray-50 to-gray-100 sticky top-0">
+                  <tr>
+                    <th class="px-4 py-4 text-left font-semibold text-gray-800 text-xs uppercase tracking-wider border-r border-gray-200">
+                      SN
+                    </th>
+                    <th class="px-4 py-4 text-left font-semibold text-gray-800 text-xs uppercase tracking-wider border-r border-gray-200">
+                      Products
+                    </th>
+                    <th class="px-4 py-4 text-left font-semibold text-gray-800 text-xs uppercase tracking-wider border-r border-gray-200">
+                      Quantity
+                    </th>
+                    <th class="px-4 py-4 text-left font-semibold text-gray-800 text-xs uppercase tracking-wider border-r border-gray-200">
+                      Customer
+                    </th>
+                    <th class="px-4 py-4 text-left font-semibold text-gray-800 text-xs uppercase tracking-wider border-r border-gray-200">
+                      Date
+                    </th>
+                    <th class="px-4 py-4 text-left font-semibold text-gray-800 text-xs uppercase tracking-wider border-r border-gray-200">
+                      Payment Method
+                    </th>
+                    <th class="px-4 py-4 text-left font-semibold text-gray-800 text-xs uppercase tracking-wider border-r border-gray-200">
+                      Amount
+                    </th>
+                    <th class="px-4 py-4 text-center font-semibold text-gray-800 text-xs uppercase tracking-wider">
+                      Actions
+                    </th>
+                  </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-100">
+                  <tr v-for="(b, index) in paginatedBills" :key="b.id" class="hover:bg-gray-50 transition-colors duration-150">
+                    <td class="px-4 py-4 whitespace-nowrap">
+                      {{ (currentPage - 1) * pageSize + index + 1 }}
+                    </td>
+                    <td class="px-4 py-4 whitespace-nowrap">
+                      <span v-if="b.items && b.items.length">
+                        {{
+                          b.items
+                            .map(
+                              (item) =>
+                                productMap[item.product_id] || item.product_id,
+                            )
+                            .join(", ")
+                        }}
+                      </span>
+                      <span v-else>-</span>
+                    </td>
+                    <td class="px-4 py-4 whitespace-nowrap">
+                      <span v-if="b.items && b.items.length">
+                        {{ b.items.map((item) => item.quantity).join(", ") }}
+                      </span>
+                      <span v-else>-</span>
+                    </td>
+                    <td class="px-4 py-4 whitespace-nowrap">
+                      {{ b.customer_Name }}
+                    </td>
+                    <td class="px-4 py-4 whitespace-nowrap">
+                      {{ b.date }}
+                    </td>
+                    <td
+                      class="px-4 py-4 capitalize text-left whitespace-nowrap"
+                    >
+                      {{ b.payment_method }}
+                    </td>
+                    <td class="px-4 py-4 whitespace-nowrap">
+                      {{ b.grand_total }}
+                    </td>
+                    <td class="px-4 py-4 whitespace-nowrap text-center">
+                      <button
+                        @click="openPrintModal(b)"
+                        class="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700 transition"
+                        title="Print Bill"
+                      >
+                        Print
+                      </button>
+                    </td>
+                  </tr>
+                  <tr v-if="paginatedBills.length === 0">
+                    <td colspan="8" class="text-center py-16 text-gray-500">
+                      <div class="flex flex-col items-center justify-center space-y-4">
+                        <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center">
+                          <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                          </svg>
+                        </div>
+                        <div>
+                          <p class="text-lg font-semibold text-gray-900 mb-1">No bills found</p>
+                          <p class="text-sm text-gray-500">Create your first bill to get started</p>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Pagination -->
+            <div v-if="totalPages > 1" class="bg-gradient-to-r from-gray-50 to-white px-6 py-4 border-t border-gray-200 flex-shrink-0">
+              <div class="flex flex-wrap justify-end items-center mt-4 space-x-2">
+                <button
+                  class="px-3 py-2 rounded-md text-sm font-medium bg-gray-100 text-gray-700 border border-gray-300 hover:bg-gray-200 transition-all duration-150"
+                  :disabled="currentPage === 1"
+                  @click="currentPage--"
+                >
+                  Prev
+                </button>
+                <template v-for="page in paginationPages" :key="page">
+                  <span v-if="page === '...'">
+                    <span class="px-2 text-gray-400">...</span>
+                  </span>
+                  <button
+                    v-else
+                    class="px-3 py-2 rounded-md text-sm font-medium"
+                    :class="{
+                      'bg-blue-600 text-white font-bold': currentPage === page,
+                      'bg-gray-100 text-gray-700': currentPage !== page,
+                    }"
+                    @click="currentPage = page"
+                  >
+                    {{ page }}
+                  </button>
+                </template>
+                <button
+                  class="px-3 py-2 rounded-md text-sm font-medium bg-gray-100 text-gray-700 border border-gray-300 hover:bg-gray-200 transition-all duration-150"
+                  :disabled="currentPage === totalPages"
+                  @click="nextPage"
+                >
+                  Next
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </main>
     </div>
+
+    <!-- Modals -->
     <create
       v-if="openModal"
       @close="openModal = false"
@@ -349,30 +350,44 @@ function openPrintModal(bill: any) {
 }
 </script>
 
-<style>
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.3s;
-}
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-.scrollbar-hide::-webkit-scrollbar {
-  display: none;
-}
-.scrollbar-hide {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+<style scoped>
+/* Unified scrollbar for billing */
+.overflow-auto::-webkit-scrollbar,
+.overflow-y-auto::-webkit-scrollbar,
+.overflow-x-auto::-webkit-scrollbar {
+  height: 8px;
+  width: 8px;
 }
 
-/* Prevent body scroll */
-body {
-  overflow: hidden;
+.overflow-auto::-webkit-scrollbar-track,
+.overflow-y-auto::-webkit-scrollbar-track,
+.overflow-x-auto::-webkit-scrollbar-track {
+  background: #f8fafc;
+  border-radius: 4px;
 }
 
-/* Ensure main container doesn't scroll */
-main {
-  width: 100%;
+.overflow-auto::-webkit-scrollbar-thumb,
+.overflow-y-auto::-webkit-scrollbar-thumb,
+.overflow-x-auto::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #e2e8f0, #cbd5e1);
+  border-radius: 4px;
+  border: 1px solid #f1f5f9;
+}
+
+.overflow-auto::-webkit-scrollbar-thumb:hover,
+.overflow-y-auto::-webkit-scrollbar-thumb:hover,
+.overflow-x-auto::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #cbd5e1, #94a3b8);
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  main {
+    margin-left: 0;
+  }
+  
+  .overflow-auto table {
+    min-width: 800px;
+  }
 }
 </style>
