@@ -1,15 +1,15 @@
 <template>
   <div
-    class="fixed inset-0 bg-gray-900/50 backdrop-blur-sm z-40 flex items-center justify-center p-4"
+    class="fixed inset-0 bg-gray-900/50 backdrop-blur-sm z-40 flex items-center justify-center p-2 sm:p-4"
   >
     <div
-      class="bg-white rounded-xl shadow-2xl w-full max-w-7xl max-h-[90vh] flex flex-col overflow-hidden"
+      class="bg-white rounded-lg sm:rounded-xl shadow-2xl w-full max-w-7xl max-h-[95vh] sm:max-h-[90vh] flex flex-col overflow-hidden"
     >
       <!-- Toast Notification -->
       <div
         v-if="showToast"
         :class="[
-          'fixed top-6 right-6 px-6 py-3 rounded-lg shadow-lg z-50 flex items-center space-x-2',
+          'fixed top-4 sm:top-6 right-2 sm:right-6 px-4 sm:px-6 py-2 sm:py-3 rounded-lg shadow-lg z-50 flex items-center space-x-2 text-sm sm:text-base',
           toastType === 'error'
             ? 'bg-red-500 text-white'
             : 'bg-green-500 text-white',
@@ -39,14 +39,14 @@
 
       <!-- Header -->
       <div
-        class="flex items-center justify-between p-6 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-indigo-50"
+        class="flex flex-col sm:flex-row items-start sm:items-center justify-between p-3 sm:p-6 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-indigo-50 gap-3 sm:gap-0"
       >
-        <div class="flex items-center space-x-3">
+        <div class="flex items-center space-x-2 sm:space-x-3 w-full sm:w-auto">
           <div
-            class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center"
+            class="w-6 h-6 sm:w-8 sm:h-8 bg-blue-600 rounded-lg flex items-center justify-center"
           >
             <svg
-              class="w-5 h-5 text-white"
+              class="w-3 h-3 sm:w-5 sm:h-5 text-white"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -60,12 +60,18 @@
             </svg>
           </div>
           <div>
-            <h1 class="text-xl font-semibold text-gray-900">
+            <h1 class="text-lg sm:text-xl font-semibold text-gray-900">
               Create Purchase Bill
             </h1>
-            <div class="flex items-center space-x-2 text-sm text-gray-500">
+            <div
+              class="flex items-center space-x-1 sm:space-x-2 text-xs sm:text-sm text-gray-500"
+            >
               <span>Purchase Bills</span>
-              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+              <svg
+                class="w-3 h-3 sm:w-4 sm:h-4"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
                 <path
                   fill-rule="evenodd"
                   d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
@@ -78,19 +84,19 @@
         </div>
 
         <!-- Action Buttons moved to header -->
-        <div class="flex items-center space-x-3">
+        <div class="flex items-center space-x-2 sm:space-x-3 w-full sm:w-auto">
           <button
-            class="px-6 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-all"
+            class="flex-1 sm:flex-none px-4 sm:px-6 py-2 text-xs sm:text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-all"
             @click="$emit('close')"
           >
             Cancel
           </button>
           <button
-            class="px-6 py-2 text-sm font-medium bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all shadow-lg"
+            class="flex-1 sm:flex-none px-4 sm:px-6 py-2 text-xs sm:text-sm font-medium bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all shadow-lg"
             @click="onSubmit"
           >
             <svg
-              class="w-4 h-4 inline mr-2"
+              class="w-3 h-3 sm:w-4 sm:h-4 inline mr-1 sm:mr-2"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -107,19 +113,19 @@
         </div>
       </div>
 
-      <div class="flex-1 overflow-y-auto p-6 bg-gray-50">
-        <div class="grid grid-cols-1 lg:grid-cols-1 gap-6">
+      <div class="flex-1 overflow-y-auto p-3 sm:p-6 bg-gray-50">
+        <div class="grid grid-cols-1 lg:grid-cols-1 gap-4 sm:gap-6">
           <!-- Main Form Section -->
-          <div class="lg:col-span-1 space-y-6">
+          <div class="lg:col-span-1 space-y-4 sm:space-y-6">
             <!-- Top Form Fields -->
             <div
-              class="bg-white rounded-lg shadow-sm border border-gray-200 p-6"
+              class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6"
             >
               <h3
-                class="text-lg font-medium text-gray-900 mb-4 flex items-center"
+                class="text-base sm:text-lg font-medium text-gray-900 mb-3 sm:mb-4 flex items-center"
               >
                 <svg
-                  class="w-5 h-5 text-blue-600 mr-2"
+                  class="w-4 h-4 sm:w-5 sm:h-5 text-blue-600 mr-2"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -133,24 +139,30 @@
                 </svg>
                 Bill Information
               </h3>
-              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div
+                class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4"
+              >
                 <!-- Customer Name -->
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">
+                  <label
+                    class="block text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-2"
+                  >
                     Customer Name <span class="text-red-500">*</span>
                   </label>
                   <input
                     ref="customerNameInput"
                     v-model="customerName"
                     type="text"
-                    class="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                    class="w-full border border-gray-300 rounded-lg px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                     placeholder="Enter customer name"
                     @keydown.enter="focusNext"
                   />
                 </div>
                 <!-- Bill Date -->
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">
+                  <label
+                    class="block text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-2"
+                  >
                     Bill Date <span class="text-red-500">*</span>
                   </label>
                   <div
@@ -160,11 +172,11 @@
                       ref="billDateInput"
                       v-model="billDate"
                       type="date"
-                      class="flex-1 px-4 py-3 text-sm focus:outline-none"
+                      class="flex-1 px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm focus:outline-none"
                       @keydown.enter="focusNext"
                     />
                     <button
-                      class="bg-gray-100 border-l border-gray-300 px-4 py-3 text-sm text-gray-600 hover:bg-gray-200 transition-colors"
+                      class="bg-gray-100 border-l border-gray-300 px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-gray-600 hover:bg-gray-200 transition-colors"
                     >
                       AD
                     </button>
@@ -172,13 +184,15 @@
                 </div>
                 <!-- Payment Method -->
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">
+                  <label
+                    class="block text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-2"
+                  >
                     Payment Method <span class="text-red-500">*</span>
                   </label>
                   <select
                     ref="paymentMethodInput"
                     v-model="paymentMethod"
-                    class="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    class="w-full border border-gray-300 rounded-lg px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     @keydown.enter="focusNext"
                   >
                     <option value="cash">Cash</option>
@@ -188,10 +202,14 @@
               </div>
 
               <!-- Second Row for Billed By -->
-              <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+              <div
+                class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 mt-3 sm:mt-4"
+              >
                 <!-- Billed By -->
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">
+                  <label
+                    class="block text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-2"
+                  >
                     Billed By <span class="text-red-500">*</span>
                   </label>
                   <input
@@ -199,14 +217,14 @@
                     v-model="billedBy"
                     type="text"
                     :disabled="isDisabled"
-                    class="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all bg-gray-100 text-gray-500 cursor-not-allowed"
+                    class="w-full border border-gray-300 rounded-lg px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all bg-gray-100 text-gray-500 cursor-not-allowed"
                     placeholder="Enter billed by name"
                     @keydown.enter="focusNext"
                   />
                 </div>
-                <!-- Empty divs for spacing -->
-                <div></div>
-                <div></div>
+                <!-- Empty divs for spacing on larger screens -->
+                <div class="hidden lg:block"></div>
+                <div class="hidden lg:block"></div>
               </div>
             </div>
 
@@ -214,10 +232,12 @@
             <div
               class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden"
             >
-              <div class="p-6 border-b border-gray-200">
-                <h3 class="text-lg font-medium text-gray-900 flex items-center">
+              <div class="p-4 sm:p-6 border-b border-gray-200">
+                <h3
+                  class="text-base sm:text-lg font-medium text-gray-900 flex items-center"
+                >
                   <svg
-                    class="w-5 h-5 text-blue-600 mr-2"
+                    class="w-4 h-4 sm:w-5 sm:h-5 text-blue-600 mr-2"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -232,7 +252,195 @@
                   Items
                 </h3>
               </div>
-              <div class="overflow-x-auto">
+
+              <!-- Mobile Cards View for Items -->
+              <div class="block md:hidden">
+                <div class="p-4 space-y-4">
+                  <div
+                    v-for="(item, index) in items"
+                    :key="index"
+                    class="border border-gray-200 rounded-lg p-4 bg-gray-50"
+                  >
+                    <div class="flex justify-between items-start mb-3">
+                      <span class="text-sm font-semibold text-gray-700"
+                        >Item #{{ index + 1 }}</span
+                      >
+                      <button
+                        class="w-6 h-6 bg-red-500 text-white rounded text-xs hover:bg-red-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                        @click="removeItem(index)"
+                        :disabled="items.length === 1"
+                        title="Remove item"
+                      >
+                        ×
+                      </button>
+                    </div>
+
+                    <!-- Item Selection -->
+                    <div class="space-y-3">
+                      <div>
+                        <label
+                          class="block text-xs font-medium text-gray-700 mb-1"
+                          >Product</label
+                        >
+                        <div class="flex space-x-2">
+                          <select
+                            v-model="item.product_id"
+                            class="flex-1 border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            @change="updateItemPrice(index)"
+                          >
+                            <option value="">Select Item</option>
+                            <option
+                              v-for="product in products"
+                              :key="product.id"
+                              :value="product.id"
+                            >
+                              {{ product.name }}
+                            </option>
+                          </select>
+                          <button
+                            class="w-8 h-8 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors flex items-center justify-center"
+                            @click="addItem(index)"
+                            title="Add new item"
+                          >
+                            <svg
+                              class="w-4 h-4"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                              />
+                            </svg>
+                          </button>
+                        </div>
+                      </div>
+
+                      <!-- Quantity and Stock -->
+                      <div class="grid grid-cols-2 gap-3">
+                        <div>
+                          <label
+                            class="block text-xs font-medium text-gray-700 mb-1"
+                            >Quantity</label
+                          >
+                          <input
+                            v-model="item.qty"
+                            type="number"
+                            :max="getStock(item.product_id)"
+                            min="0"
+                            class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            @input="calculateRow(index)"
+                          />
+                          <span
+                            v-if="item.product_id"
+                            class="text-xs text-gray-500 mt-1"
+                          >
+                            Stock: {{ getStock(item.product_id) }}
+                          </span>
+                        </div>
+                        <div>
+                          <label
+                            class="block text-xs font-medium text-gray-700 mb-1"
+                            >Price</label
+                          >
+                          <input
+                            v-model="item.price"
+                            type="number"
+                            step="0.01"
+                            min="0"
+                            class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm bg-gray-50"
+                            readonly
+                          />
+                        </div>
+                      </div>
+
+                      <!-- Discount and VAT -->
+                      <div class="grid grid-cols-2 gap-3">
+                        <div>
+                          <div class="flex items-center space-x-2 mb-2">
+                            <input
+                              type="checkbox"
+                              v-model="item.discountCheckbox"
+                              @change="calculateRow(index)"
+                              class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                            />
+                            <label class="text-xs font-medium text-gray-700"
+                              >Discount</label
+                            >
+                          </div>
+                          <div
+                            v-if="item.discountCheckbox"
+                            class="flex items-center space-x-1"
+                          >
+                            <input
+                              v-model.number="item.discountPercent"
+                              type="number"
+                              min="0"
+                              max="100"
+                              class="flex-1 border border-gray-300 rounded px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-blue-500"
+                              @input="calculateRow(index)"
+                              placeholder="%"
+                            />
+                            <span class="text-xs text-gray-500">%</span>
+                          </div>
+                          <div class="text-sm font-medium text-gray-900 mt-1">
+                            Rs. {{ item.discountAmount.toFixed(2) }}
+                          </div>
+                        </div>
+                        <div>
+                          <div class="flex items-center space-x-2 mb-2">
+                            <input
+                              type="checkbox"
+                              v-model="item.vatCheckbox"
+                              @change="calculateRow(index)"
+                              class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                            />
+                            <label class="text-xs font-medium text-gray-700"
+                              >VAT</label
+                            >
+                          </div>
+                          <div
+                            v-if="item.vatCheckbox"
+                            class="flex items-center space-x-1"
+                          >
+                            <input
+                              v-model.number="item.vatPercent"
+                              type="number"
+                              min="0"
+                              max="100"
+                              class="flex-1 border border-gray-300 rounded px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-blue-500"
+                              @input="calculateRow(index)"
+                              placeholder="%"
+                            />
+                            <span class="text-xs text-gray-500">%</span>
+                          </div>
+                          <div class="text-sm font-medium text-gray-900 mt-1">
+                            Rs. {{ item.vatAmount.toFixed(2) }}
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- Total -->
+                      <div class="pt-2 border-t border-gray-200">
+                        <div class="flex justify-between items-center">
+                          <span class="text-sm font-medium text-gray-700"
+                            >Total:</span
+                          >
+                          <span class="text-lg font-bold text-blue-600">
+                            Rs. {{ item.totalPrice.toFixed(2) }}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Desktop Table View -->
+              <div class="hidden md:block overflow-x-auto">
                 <table class="w-full min-w-[800px] text-sm">
                   <thead class="bg-gray-50 border-b border-gray-200">
                     <tr>
@@ -459,16 +667,16 @@
         </div>
 
         <!-- Bill Summary Section -->
-        <div class="mt-6">
+        <div class="mt-4 sm:mt-6">
           <div
             class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden"
           >
             <div
-              class="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-4"
+              class="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-4 sm:px-6 py-3 sm:py-4"
             >
-              <h3 class="font-semibold text-lg flex items-center">
+              <h3 class="font-semibold text-base sm:text-lg flex items-center">
                 <svg
-                  class="w-5 h-5 mr-2"
+                  class="w-4 h-4 sm:w-5 sm:h-5 mr-2"
                   fill="currentColor"
                   viewBox="0 0 20 20"
                 >
@@ -479,18 +687,74 @@
                 Bill Summary
               </h3>
             </div>
-            <div class="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+
+            <!-- Mobile Summary Cards -->
+            <div class="block sm:hidden p-4 space-y-3">
+              <div
+                class="flex justify-between items-center p-3 bg-gray-50 rounded-lg"
+              >
+                <span class="text-sm font-medium text-gray-700"
+                  >Total Quantity:</span
+                >
+                <span class="text-lg font-bold text-gray-900">{{
+                  totalQuantity
+                }}</span>
+              </div>
+              <div
+                class="flex justify-between items-center p-3 bg-gray-50 rounded-lg"
+              >
+                <span class="text-sm font-medium text-gray-700">Subtotal:</span>
+                <span class="text-lg font-bold text-gray-900"
+                  >Rs. {{ totalAmount.toFixed(2) }}</span
+                >
+              </div>
+              <div
+                class="flex justify-between items-center p-3 bg-gray-50 rounded-lg"
+              >
+                <span class="text-sm font-medium text-gray-700">Discount:</span>
+                <span class="text-lg font-bold text-red-600"
+                  >- Rs. {{ totalDiscountAmount.toFixed(2) }}</span
+                >
+              </div>
+              <div
+                class="flex justify-between items-center p-3 bg-gray-50 rounded-lg"
+              >
+                <span class="text-sm font-medium text-gray-700"
+                  >VAT Amount:</span
+                >
+                <span class="text-lg font-bold text-gray-900"
+                  >Rs. {{ totalTaxAmount.toFixed(2) }}</span
+                >
+              </div>
+              <div
+                class="flex justify-between items-center p-3 bg-blue-50 rounded-lg border-2 border-blue-200"
+              >
+                <span class="text-sm font-bold text-gray-900"
+                  >Grand Total:</span
+                >
+                <span class="text-xl font-bold text-blue-600"
+                  >Rs. {{ grandTotal.toFixed(2) }}</span
+                >
+              </div>
+            </div>
+
+            <!-- Desktop Summary Grid -->
+            <div
+              class="hidden sm:block p-4 sm:p-6 grid grid-cols-2 lg:grid-cols-5 gap-4 sm:gap-6"
+            >
               <!-- Total Quantity -->
-              <div class="flex flex-col items-center justify-center p-4 bg-gray-50 rounded-lg">
-                <label class="text-sm font-medium text-gray-700 mb-2"
+              <div
+                class="flex flex-col items-center justify-center p-3 sm:p-4 bg-gray-50 rounded-lg"
+              >
+                <label class="text-xs sm:text-sm font-medium text-gray-700 mb-2"
                   >Total Quantity:</label
                 >
                 <div class="flex items-center space-x-2">
-                  <span class="text-2xl font-bold text-gray-900">{{
+                  <span class="text-xl sm:text-2xl font-bold text-gray-900">{{
                     totalQuantity
                   }}</span>
                   <select
-                    class="border border-gray-300 rounded text-xs px-2 py-1 text-gray-500"
+                    class="border border-gray-300 rounded text-xs px-1 sm:px-2 py-1 text-gray-500"
                   >
                     <option>pcs</option>
                   </select>
@@ -498,48 +762,56 @@
               </div>
 
               <!-- Subtotal -->
-              <div class="flex flex-col items-center justify-center p-4 bg-gray-50 rounded-lg">
-                <label class="text-sm font-medium text-gray-700 mb-2"
+              <div
+                class="flex flex-col items-center justify-center p-3 sm:p-4 bg-gray-50 rounded-lg"
+              >
+                <label class="text-xs sm:text-sm font-medium text-gray-700 mb-2"
                   >Subtotal:</label
                 >
                 <div class="text-center">
-                  <span class="text-2xl font-bold text-gray-900"
+                  <span class="text-xl sm:text-2xl font-bold text-gray-900"
                     >Rs. {{ totalAmount.toFixed(2) }}</span
                   >
                 </div>
               </div>
 
               <!-- Discount Amount -->
-              <div class="flex flex-col items-center justify-center p-4 bg-gray-50 rounded-lg">
-                <label class="text-sm font-medium text-gray-700 mb-2"
+              <div
+                class="flex flex-col items-center justify-center p-3 sm:p-4 bg-gray-50 rounded-lg"
+              >
+                <label class="text-xs sm:text-sm font-medium text-gray-700 mb-2"
                   >Discount:</label
                 >
                 <div class="text-center">
-                  <span class="text-2xl font-bold text-red-600"
+                  <span class="text-xl sm:text-2xl font-bold text-red-600"
                     >- Rs. {{ totalDiscountAmount.toFixed(2) }}</span
                   >
                 </div>
               </div>
 
               <!-- VAT Amount -->
-              <div class="flex flex-col items-center justify-center p-4 bg-gray-50 rounded-lg">
-                <label class="text-sm font-medium text-gray-700 mb-2"
+              <div
+                class="flex flex-col items-center justify-center p-3 sm:p-4 bg-gray-50 rounded-lg"
+              >
+                <label class="text-xs sm:text-sm font-medium text-gray-700 mb-2"
                   >VAT Amount:</label
                 >
                 <div class="text-center">
-                  <span class="text-2xl font-bold text-gray-900"
+                  <span class="text-xl sm:text-2xl font-bold text-gray-900"
                     >Rs. {{ totalTaxAmount.toFixed(2) }}</span
                   >
                 </div>
               </div>
 
               <!-- Grand Total -->
-              <div class="flex flex-col items-center justify-center p-4 bg-blue-50 rounded-lg border-2 border-blue-200">
-                <label class="text-sm font-bold text-gray-900 mb-2"
+              <div
+                class="flex flex-col items-center justify-center p-3 sm:p-4 bg-blue-50 rounded-lg border-2 border-blue-200"
+              >
+                <label class="text-xs sm:text-sm font-bold text-gray-900 mb-2"
                   >Grand Total:</label
                 >
                 <div class="text-center">
-                  <span class="text-3xl font-bold text-blue-600"
+                  <span class="text-2xl sm:text-3xl font-bold text-blue-600"
                     >Rs. {{ grandTotal.toFixed(2) }}</span
                   >
                 </div>
@@ -580,7 +852,7 @@ const getCurrentUser = () => {
       const user = JSON.parse(userData);
       return {
         username: user.username || user.name || user.email || "",
-        id: user.id || ""
+        id: user.id || "",
       };
     } catch (error) {
       console.error("Error parsing user data:", error);
@@ -592,8 +864,12 @@ const getCurrentUser = () => {
     const authStore = useAuthStore();
     if (authStore?.user) {
       return {
-        username: authStore.user.username || authStore.user.name || authStore.user.email || "",
-        id: authStore.user.id || ""
+        username:
+          authStore.user.username ||
+          authStore.user.name ||
+          authStore.user.email ||
+          "",
+        id: authStore.user.id || "",
       };
     }
   } catch (error) {
@@ -608,7 +884,7 @@ const getCurrentUser = () => {
       const payload = JSON.parse(atob(token.split(".")[1]));
       return {
         username: payload.username || payload.name || payload.email || "",
-        id: payload.user_id || payload.id || ""
+        id: payload.user_id || payload.id || "",
       };
     } catch (error) {
       console.error("Error decoding token:", error);
@@ -719,11 +995,11 @@ const calculateRow = (index) => {
   }
   const subtotal = item.qty * item.price;
   item.discountAmount = item.discountCheckbox
-    ? Math.round((subtotal * item.discountPercent) / 100 * 100) / 100
+    ? Math.round(((subtotal * item.discountPercent) / 100) * 100) / 100
     : 0;
   const afterDiscount = subtotal - item.discountAmount;
   item.vatAmount = item.vatCheckbox
-    ? Math.round((afterDiscount * item.vatPercent) / 100 * 100) / 100
+    ? Math.round(((afterDiscount * item.vatPercent) / 100) * 100) / 100
     : 0;
   item.totalPrice = Math.round((afterDiscount + item.vatAmount) * 100) / 100;
 };
@@ -733,20 +1009,34 @@ const totalQuantity = computed(() =>
   items.value.reduce((sum, item) => sum + (item.qty || 0), 0),
 );
 
-const totalAmount = computed(() =>
-  Math.round(items.value.reduce((sum, item) => sum + (item.qty * item.price || 0), 0) * 100) / 100,
+const totalAmount = computed(
+  () =>
+    Math.round(
+      items.value.reduce((sum, item) => sum + (item.qty * item.price || 0), 0) *
+        100,
+    ) / 100,
 );
 
-const totalDiscountAmount = computed(() =>
-  Math.round(items.value.reduce((sum, item) => sum + (item.discountAmount || 0), 0) * 100) / 100,
+const totalDiscountAmount = computed(
+  () =>
+    Math.round(
+      items.value.reduce((sum, item) => sum + (item.discountAmount || 0), 0) *
+        100,
+    ) / 100,
 );
 
-const totalTaxAmount = computed(() =>
-  Math.round(items.value.reduce((sum, item) => sum + (item.vatAmount || 0), 0) * 100) / 100,
+const totalTaxAmount = computed(
+  () =>
+    Math.round(
+      items.value.reduce((sum, item) => sum + (item.vatAmount || 0), 0) * 100,
+    ) / 100,
 );
 
-const grandTotal = computed(() =>
-  Math.round(items.value.reduce((sum, item) => sum + (item.totalPrice || 0), 0) * 100) / 100,
+const grandTotal = computed(
+  () =>
+    Math.round(
+      items.value.reduce((sum, item) => sum + (item.totalPrice || 0), 0) * 100,
+    ) / 100,
 );
 
 // OnSubmit function for form submission
@@ -931,5 +1221,27 @@ input:focus,
 select:focus,
 textarea:focus {
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Enhanced mobile responsiveness */
+@media (max-width: 640px) {
+  .max-w-7xl {
+    max-width: calc(100vw - 1rem);
+  }
+
+  .max-h-\[95vh\] {
+    max-height: 95vh;
+  }
+}
+
+/* Improved scrollbar for mobile */
+@media (max-width: 768px) {
+  .overflow-x-auto::-webkit-scrollbar {
+    height: 4px;
+  }
+
+  .overflow-y-auto::-webkit-scrollbar {
+    width: 4px;
+  }
 }
 </style>

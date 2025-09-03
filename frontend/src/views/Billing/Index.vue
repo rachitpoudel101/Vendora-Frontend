@@ -6,67 +6,168 @@
 
       <!-- Main Content -->
       <main class="flex-1 ml-0 md:ml-64 h-[calc(100vh-4rem)] flex flex-col">
-        <div class="p-4 md:p-8 flex flex-col h-full">
+        <div class="p-2 sm:p-4 md:p-8 flex flex-col h-full">
           <!-- Header Section -->
-          <div class="bg-white rounded-2xl shadow-sm border border-gray-200 mb-6 flex-shrink-0">
-            <div class="p-6 lg:p-8">
-              <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+          <div
+            class="bg-white rounded-xl md:rounded-2xl shadow-sm border border-gray-200 mb-4 md:mb-6 flex-shrink-0"
+          >
+            <div class="p-4 sm:p-6 lg:p-8">
+              <div
+                class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4"
+              >
                 <div>
-                  <h1 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-2 bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
+                  <h1
+                    class="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-2 bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent"
+                  >
                     Billing Management
                   </h1>
-                  <p class="text-gray-600 text-lg">
+                  <p class="text-gray-600 text-sm sm:text-base lg:text-lg">
                     Create and manage customer bills efficiently
                   </p>
                 </div>
-                
+
                 <button
                   @click="openModal = true"
-                  class="inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-medium rounded-xl shadow-sm hover:shadow-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                  class="w-full lg:w-auto inline-flex items-center justify-center px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-medium rounded-lg sm:rounded-xl shadow-sm hover:shadow-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                 >
-                  <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                  <svg
+                    class="w-4 h-4 sm:w-5 sm:h-5 mr-2"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M12 4v16m8-8H4"
+                    />
                   </svg>
-                  Create Bill
+                  <span class="text-sm sm:text-base">Create Bill</span>
                 </button>
               </div>
             </div>
           </div>
 
           <!-- Bills Table -->
-          <div class="bg-white rounded-2xl shadow-sm border border-gray-200 flex-1 flex flex-col overflow-hidden min-h-0">
-            <div class="flex-1 overflow-auto">
-              <table class="w-full divide-y divide-gray-200 text-sm min-w-[800px]">
-                <thead class="bg-gradient-to-r from-gray-50 to-gray-100 sticky top-0">
+          <div
+            class="bg-white rounded-xl md:rounded-2xl shadow-sm border border-gray-200 flex-1 flex flex-col overflow-hidden min-h-0"
+          >
+            <!-- Mobile Cards View -->
+            <div class="block md:hidden flex-1 overflow-y-auto p-4 space-y-4">
+              <div
+                v-for="(b, index) in paginatedBills"
+                :key="b.id"
+                class="bg-white border border-gray-200 rounded-lg p-4 shadow-sm"
+              >
+                <div class="flex justify-between items-start mb-3">
+                  <div class="flex-1">
+                    <h3 class="font-semibold text-gray-900 text-lg">
+                      Bill #{{ (currentPage - 1) * pageSize + index + 1 }}
+                    </h3>
+                    <p class="text-gray-600 text-sm">{{ b.customer_Name }}</p>
+                  </div>
+                  <button
+                    @click="openPrintModal(b)"
+                    class="bg-green-600 text-white px-3 py-1.5 rounded-lg text-sm hover:bg-green-700 transition"
+                  >
+                    Print
+                  </button>
+                </div>
+                <div class="space-y-2 text-sm">
+                  <div class="flex justify-between">
+                    <span class="text-gray-500">Date:</span>
+                    <span class="text-gray-900 font-medium">{{ b.date }}</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="text-gray-500">Payment:</span>
+                    <span class="text-gray-900 font-medium capitalize">{{
+                      b.payment_method
+                    }}</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="text-gray-500">Total:</span>
+                    <span class="text-green-600 font-bold"
+                      >Rs. {{ b.grand_total }}</span
+                    >
+                  </div>
+                  <div class="pt-2 border-t border-gray-100">
+                    <span class="text-gray-500 text-xs">Products:</span>
+                    <p class="text-gray-900 text-sm mt-1">
+                      <span v-if="b.items && b.items.length">
+                        {{
+                          b.items
+                            .map(
+                              (item) =>
+                                productMap[item.product_id] || item.product_id,
+                            )
+                            .join(", ")
+                        }}
+                      </span>
+                      <span v-else>-</span>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Desktop Table View -->
+            <div class="hidden md:block flex-1 overflow-auto">
+              <table
+                class="w-full divide-y divide-gray-200 text-sm min-w-[800px]"
+              >
+                <thead
+                  class="bg-gradient-to-r from-gray-50 to-gray-100 sticky top-0"
+                >
                   <tr>
-                    <th class="px-4 py-4 text-left font-semibold text-gray-800 text-xs uppercase tracking-wider border-r border-gray-200">
+                    <th
+                      class="px-4 py-4 text-left font-semibold text-gray-800 text-xs uppercase tracking-wider border-r border-gray-200"
+                    >
                       SN
                     </th>
-                    <th class="px-4 py-4 text-left font-semibold text-gray-800 text-xs uppercase tracking-wider border-r border-gray-200">
+                    <th
+                      class="px-4 py-4 text-left font-semibold text-gray-800 text-xs uppercase tracking-wider border-r border-gray-200"
+                    >
                       Products
                     </th>
-                    <th class="px-4 py-4 text-left font-semibold text-gray-800 text-xs uppercase tracking-wider border-r border-gray-200">
+                    <th
+                      class="px-4 py-4 text-left font-semibold text-gray-800 text-xs uppercase tracking-wider border-r border-gray-200"
+                    >
                       Quantity
                     </th>
-                    <th class="px-4 py-4 text-left font-semibold text-gray-800 text-xs uppercase tracking-wider border-r border-gray-200">
+                    <th
+                      class="px-4 py-4 text-left font-semibold text-gray-800 text-xs uppercase tracking-wider border-r border-gray-200"
+                    >
                       Customer
                     </th>
-                    <th class="px-4 py-4 text-left font-semibold text-gray-800 text-xs uppercase tracking-wider border-r border-gray-200">
+                    <th
+                      class="px-4 py-4 text-left font-semibold text-gray-800 text-xs uppercase tracking-wider border-r border-gray-200"
+                    >
                       Date
                     </th>
-                    <th class="px-4 py-4 text-left font-semibold text-gray-800 text-xs uppercase tracking-wider border-r border-gray-200">
+                    <th
+                      class="px-4 py-4 text-left font-semibold text-gray-800 text-xs uppercase tracking-wider border-r border-gray-200"
+                    >
                       Payment Method
                     </th>
-                    <th class="px-4 py-4 text-left font-semibold text-gray-800 text-xs uppercase tracking-wider border-r border-gray-200">
+                    <th
+                      class="px-4 py-4 text-left font-semibold text-gray-800 text-xs uppercase tracking-wider border-r border-gray-200"
+                    >
                       Amount
                     </th>
-                    <th class="px-4 py-4 text-center font-semibold text-gray-800 text-xs uppercase tracking-wider">
+                    <th
+                      class="px-4 py-4 text-center font-semibold text-gray-800 text-xs uppercase tracking-wider"
+                    >
                       Actions
                     </th>
                   </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-100">
-                  <tr v-for="(b, index) in paginatedBills" :key="b.id" class="hover:bg-gray-50 transition-colors duration-150">
+                  <tr
+                    v-for="(b, index) in paginatedBills"
+                    :key="b.id"
+                    class="hover:bg-gray-50 transition-colors duration-150"
+                  >
                     <td class="px-4 py-4 whitespace-nowrap">
                       {{ (currentPage - 1) * pageSize + index + 1 }}
                     </td>
@@ -115,15 +216,33 @@
                   </tr>
                   <tr v-if="paginatedBills.length === 0">
                     <td colspan="8" class="text-center py-16 text-gray-500">
-                      <div class="flex flex-col items-center justify-center space-y-4">
-                        <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center">
-                          <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      <div
+                        class="flex flex-col items-center justify-center space-y-4"
+                      >
+                        <div
+                          class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center"
+                        >
+                          <svg
+                            class="w-8 h-8 text-gray-400"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                            />
                           </svg>
                         </div>
                         <div>
-                          <p class="text-lg font-semibold text-gray-900 mb-1">No bills found</p>
-                          <p class="text-sm text-gray-500">Create your first bill to get started</p>
+                          <p class="text-lg font-semibold text-gray-900 mb-1">
+                            No bills found
+                          </p>
+                          <p class="text-sm text-gray-500">
+                            Create your first bill to get started
+                          </p>
                         </div>
                       </div>
                     </td>
@@ -132,9 +251,39 @@
               </table>
             </div>
 
-            <!-- Pagination -->
-            <div v-if="totalPages > 1" class="bg-gradient-to-r from-gray-50 to-white px-6 py-4 border-t border-gray-200 flex-shrink-0">
-              <div class="flex flex-wrap justify-end items-center mt-4 space-x-2">
+            <!-- Mobile Pagination -->
+            <div
+              class="block md:hidden bg-gradient-to-r from-gray-50 to-white px-4 py-3 border-t border-gray-200"
+            >
+              <div class="flex justify-between items-center">
+                <button
+                  class="px-3 py-2 rounded-md text-sm font-medium bg-gray-100 text-gray-700 border border-gray-300 hover:bg-gray-200 disabled:opacity-50"
+                  :disabled="currentPage === 1"
+                  @click="currentPage--"
+                >
+                  Prev
+                </button>
+                <span class="text-sm text-gray-700">
+                  Page {{ currentPage }} of {{ totalPages }}
+                </span>
+                <button
+                  class="px-3 py-2 rounded-md text-sm font-medium bg-gray-100 text-gray-700 border border-gray-300 hover:bg-gray-200 disabled:opacity-50"
+                  :disabled="currentPage === totalPages"
+                  @click="nextPage"
+                >
+                  Next
+                </button>
+              </div>
+            </div>
+
+            <!-- Desktop Pagination -->
+            <div
+              v-if="totalPages > 1"
+              class="hidden md:block bg-gradient-to-r from-gray-50 to-white px-6 py-4 border-t border-gray-200 flex-shrink-0"
+            >
+              <div
+                class="flex flex-wrap justify-end items-center mt-4 space-x-2"
+              >
                 <button
                   class="px-3 py-2 rounded-md text-sm font-medium bg-gray-100 text-gray-700 border border-gray-300 hover:bg-gray-200 transition-all duration-150"
                   :disabled="currentPage === 1"
@@ -210,7 +359,7 @@ onMounted(async () => {
   productMap.value = Object.fromEntries(
     products.value.map((p: any) => [String(p.id), p.name]),
   );
-  
+
   // Create user map for username lookup
   createUserMap();
 });
@@ -229,7 +378,12 @@ const createUserMap = () => {
     if (userData) {
       const user = JSON.parse(userData);
       if (user.id) {
-        const username = user.username || user.name || user.email || user.first_name || `User ${user.id}`;
+        const username =
+          user.username ||
+          user.name ||
+          user.email ||
+          user.first_name ||
+          `User ${user.id}`;
         userMap.value[String(user.id)] = username;
       }
     }
@@ -241,7 +395,12 @@ const createUserMap = () => {
   try {
     if (auth.user) {
       const userId = auth.user.id;
-      const username = auth.user.username || auth.user.name || auth.user.email || auth.user.first_name || `User ${userId}`;
+      const username =
+        auth.user.username ||
+        auth.user.name ||
+        auth.user.email ||
+        auth.user.first_name ||
+        `User ${userId}`;
       if (userId) {
         userMap.value[String(userId)] = username;
       }
@@ -256,7 +415,8 @@ const createUserMap = () => {
     if (token) {
       const payload = JSON.parse(atob(token.split(".")[1]));
       const userId = payload.user_id || payload.id;
-      const username = payload.username || payload.name || payload.email || payload.first_name;
+      const username =
+        payload.username || payload.name || payload.email || payload.first_name;
       if (userId && username) {
         userMap.value[String(userId)] = username;
       }
@@ -380,14 +540,16 @@ function openPrintModal(bill: any) {
   background: linear-gradient(135deg, #cbd5e1, #94a3b8);
 }
 
-/* Mobile responsiveness */
-@media (max-width: 768px) {
+/* Enhanced mobile responsiveness */
+@media (max-width: 767px) {
   main {
     margin-left: 0;
   }
-  
-  .overflow-auto table {
-    min-width: 800px;
+}
+
+@media (max-width: 640px) {
+  .min-h-screen {
+    padding-top: 70px;
   }
 }
 </style>

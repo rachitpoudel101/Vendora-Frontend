@@ -1,25 +1,40 @@
 <template>
   <div
-    class="fixed inset-0 bg-gray-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+    class="fixed inset-0 bg-gray-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-2 sm:p-4"
   >
     <div
-      class="bg-white rounded-lg shadow-2xl w-full max-w-4xl max-h-[90vh] flex flex-col overflow-hidden"
+      class="bg-white rounded-lg shadow-2xl w-full max-w-5xl max-h-[95vh] sm:max-h-[90vh] flex flex-col overflow-hidden"
     >
       <!-- Header -->
       <div
-        class="flex items-center justify-between p-4 border-b border-gray-200"
+        class="flex flex-col sm:flex-row items-start sm:items-center justify-between p-3 sm:p-4 border-b border-gray-200 gap-3 sm:gap-0"
       >
-        <h2 class="text-xl font-semibold text-gray-900">Bill Preview</h2>
-        <div class="flex space-x-2">
+        <h2 class="text-lg sm:text-xl font-semibold text-gray-900">
+          Bill Preview
+        </h2>
+        <div class="flex space-x-2 w-full sm:w-auto">
           <button
             @click="printBill"
-            class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+            class="flex-1 sm:flex-none bg-blue-600 text-white px-3 sm:px-4 py-2 rounded text-sm hover:bg-blue-700 transition"
           >
-            Print Bill
+            <svg
+              class="w-4 h-4 inline mr-1 sm:mr-2"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"
+              />
+            </svg>
+            Print
           </button>
           <button
             @click="$emit('close')"
-            class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition"
+            class="flex-1 sm:flex-none bg-gray-500 text-white px-3 sm:px-4 py-2 rounded text-sm hover:bg-gray-600 transition"
           >
             Close
           </button>
@@ -27,29 +42,33 @@
       </div>
 
       <!-- Print Content -->
-      <div class="flex-1 overflow-y-auto p-6">
-        <div id="printable-bill" class="max-w-3xl mx-auto bg-white">
+      <div class="flex-1 overflow-y-auto p-3 sm:p-6">
+        <div id="printable-bill" class="max-w-4xl mx-auto bg-white">
           <!-- Company Header -->
-          <div class="text-center border-b-2 border-gray-300 pb-4 mb-6">
-            <h1 class="text-2xl font-bold text-gray-800">
+          <div
+            class="text-center border-b-2 border-gray-300 pb-3 sm:pb-4 mb-4 sm:mb-6"
+          >
+            <h1 class="text-xl sm:text-2xl font-bold text-gray-800">
               ABC Stationary Store
             </h1>
-            <p class="text-gray-600">Kathmandu, Nepal</p>
-            <p class="text-gray-600">
+            <p class="text-sm sm:text-base text-gray-600">Kathmandu, Nepal</p>
+            <p class="text-xs sm:text-sm text-gray-600">
               Phone: +977-1-4123456 | Email: info@abcstationary.com
             </p>
-            <div class="mt-2 text-sm text-gray-500">
+            <div class="mt-1 sm:mt-2 text-xs text-gray-500">
               <p>VAT No: 123456789 | PAN No: 987654321</p>
             </div>
           </div>
 
           <!-- Bill Header -->
-          <div class="flex justify-between items-start mb-6">
+          <div
+            class="flex flex-col sm:flex-row justify-between items-start mb-4 sm:mb-6 gap-4 sm:gap-0"
+          >
             <div>
-              <h2 class="text-xl font-semibold text-gray-800 mb-2">
+              <h2 class="text-lg sm:text-xl font-semibold text-gray-800 mb-2">
                 SALES INVOICE
               </h2>
-              <div class="text-sm text-gray-600">
+              <div class="text-xs sm:text-sm text-gray-600 space-y-1">
                 <p><strong>Bill No:</strong> {{ bill.id }}</p>
                 <p><strong>Date:</strong> {{ formatDate(bill.date) }}</p>
                 <p>
@@ -58,85 +77,197 @@
                 </p>
               </div>
             </div>
-            <div class="text-right text-sm text-gray-600">
+            <div
+              class="text-left sm:text-right text-xs sm:text-sm text-gray-600 space-y-1"
+            >
               <p><strong>Customer:</strong> {{ bill.customer_Name }}</p>
-              <p><strong>Billed By:</strong> {{ billedByUsername || bill.billed_by }}</p>
+              <p>
+                <strong>Billed By:</strong>
+                {{ billedByUsername || bill.billed_by }}
+              </p>
             </div>
           </div>
 
-          <!-- Items Table -->
-          <div class="mb-6">
-            <table class="w-full border border-gray-300">
-              <thead>
-                <tr class="bg-gray-100">
-                  <th class="border border-gray-300 px-3 py-2 text-left">SN</th>
-                  <th class="border border-gray-300 px-3 py-2 text-left">
-                    Product
-                  </th>
-                  <th class="border border-gray-300 px-3 py-2 text-center">
-                    Qty
-                  </th>
-                  <th class="border border-gray-300 px-3 py-2 text-right">
-                    Rate
-                  </th>
-                  <th class="border border-gray-300 px-3 py-2 text-right">
-                    Amount
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="(item, index) in bill.items" :key="index">
-                  <td class="border border-gray-300 px-3 py-2">
-                    {{ index + 1 }}
-                  </td>
-                  <td class="border border-gray-300 px-3 py-2">
-                    {{ getProductName(item.product_id) }}
-                  </td>
-                  <td class="border border-gray-300 px-3 py-2 text-center">
-                    {{ safeNumber(item.quantity) }}
-                  </td>
-                  <td class="border border-gray-300 px-3 py-2 text-right">
-                    Rs. {{ formatPrice(item.unit_price) }}
-                  </td>
-                  <td class="border border-gray-300 px-3 py-2 text-right">
+          <!-- Mobile Items Cards -->
+          <div class="block sm:hidden mb-4 sm:mb-6">
+            <h3 class="text-base font-semibold text-gray-800 mb-3">Items</h3>
+            <div class="space-y-3">
+              <div
+                v-for="(item, index) in bill.items"
+                :key="index"
+                class="border border-gray-300 rounded-lg p-3 bg-gray-50"
+              >
+                <div class="flex justify-between items-start mb-2">
+                  <span class="text-sm font-semibold text-gray-800"
+                    >{{ index + 1 }}.
+                    {{ getProductName(item.product_id) }}</span
+                  >
+                  <span class="text-sm font-bold text-blue-600">
                     Rs.
                     {{
                       formatPrice(
                         safeNumber(item.quantity) * safeNumber(item.unit_price),
                       )
                     }}
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+                  </span>
+                </div>
+                <div class="grid grid-cols-2 gap-2 text-xs text-gray-600">
+                  <div>
+                    <span class="font-medium">Qty:</span>
+                    {{ safeNumber(item.quantity) }}
+                  </div>
+                  <div>
+                    <span class="font-medium">Rate:</span> Rs.
+                    {{ formatPrice(item.unit_price) }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Desktop Items Table -->
+          <div class="hidden sm:block mb-4 sm:mb-6">
+            <div class="overflow-x-auto">
+              <table class="w-full border border-gray-300 min-w-[500px]">
+                <thead>
+                  <tr class="bg-gray-100">
+                    <th
+                      class="border border-gray-300 px-2 sm:px-3 py-2 text-left text-xs sm:text-sm"
+                    >
+                      SN
+                    </th>
+                    <th
+                      class="border border-gray-300 px-2 sm:px-3 py-2 text-left text-xs sm:text-sm"
+                    >
+                      Product
+                    </th>
+                    <th
+                      class="border border-gray-300 px-2 sm:px-3 py-2 text-center text-xs sm:text-sm"
+                    >
+                      Qty
+                    </th>
+                    <th
+                      class="border border-gray-300 px-2 sm:px-3 py-2 text-right text-xs sm:text-sm"
+                    >
+                      Rate
+                    </th>
+                    <th
+                      class="border border-gray-300 px-2 sm:px-3 py-2 text-right text-xs sm:text-sm"
+                    >
+                      Amount
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(item, index) in bill.items" :key="index">
+                    <td
+                      class="border border-gray-300 px-2 sm:px-3 py-2 text-xs sm:text-sm"
+                    >
+                      {{ index + 1 }}
+                    </td>
+                    <td
+                      class="border border-gray-300 px-2 sm:px-3 py-2 text-xs sm:text-sm"
+                    >
+                      {{ getProductName(item.product_id) }}
+                    </td>
+                    <td
+                      class="border border-gray-300 px-2 sm:px-3 py-2 text-center text-xs sm:text-sm"
+                    >
+                      {{ safeNumber(item.quantity) }}
+                    </td>
+                    <td
+                      class="border border-gray-300 px-2 sm:px-3 py-2 text-right text-xs sm:text-sm"
+                    >
+                      Rs. {{ formatPrice(item.unit_price) }}
+                    </td>
+                    <td
+                      class="border border-gray-300 px-2 sm:px-3 py-2 text-right text-xs sm:text-sm"
+                    >
+                      Rs.
+                      {{
+                        formatPrice(
+                          safeNumber(item.quantity) *
+                            safeNumber(item.unit_price),
+                        )
+                      }}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
 
           <!-- Bill Summary -->
-          <div class="flex justify-end">
-            <div class="w-64">
+          <!-- Mobile Summary -->
+          <div class="block sm:hidden">
+            <div class="border border-gray-300 rounded-lg overflow-hidden">
+              <div class="bg-gray-100 px-3 py-2 border-b border-gray-300">
+                <h3 class="font-semibold text-gray-800 text-sm">
+                  Bill Summary
+                </h3>
+              </div>
+              <div class="p-3 space-y-2 text-sm">
+                <div class="flex justify-between">
+                  <span class="text-gray-600">Total Quantity:</span>
+                  <span class="font-medium">{{ totalQuantity }}</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-gray-600">Subtotal:</span>
+                  <span class="font-medium"
+                    >Rs. {{ formatPrice(subtotalAmount) }}</span
+                  >
+                </div>
+                <div class="flex justify-between text-red-600">
+                  <span>Discount:</span>
+                  <span class="font-medium"
+                    >- Rs.
+                    {{ formatPrice(safeNumber(bill.bill_discount)) }}</span
+                  >
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-gray-600">VAT Amount:</span>
+                  <span class="font-medium"
+                    >Rs. {{ formatPrice(safeNumber(bill.vat_amount)) }}</span
+                  >
+                </div>
+                <div class="border-t border-gray-300 pt-2 mt-2">
+                  <div class="flex justify-between font-bold text-base">
+                    <span>Grand Total:</span>
+                    <span class="text-blue-600"
+                      >Rs. {{ formatPrice(safeNumber(bill.grand_total)) }}</span
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Desktop Summary -->
+          <div class="hidden sm:flex justify-end">
+            <div class="w-full sm:w-64">
               <div class="border border-gray-300">
                 <div class="bg-gray-100 px-4 py-2 border-b border-gray-300">
                   <h3 class="font-semibold text-gray-800">Bill Summary</h3>
                 </div>
                 <div class="p-4 space-y-2">
-                  <div class="flex justify-between">
+                  <div class="flex justify-between text-sm">
                     <span class="text-gray-600">Total Quantity:</span>
                     <span class="font-medium">{{ totalQuantity }}</span>
                   </div>
-                  <div class="flex justify-between">
+                  <div class="flex justify-between text-sm">
                     <span class="text-gray-600">Subtotal:</span>
                     <span class="font-medium"
                       >Rs. {{ formatPrice(subtotalAmount) }}</span
                     >
                   </div>
-                  <div class="flex justify-between text-red-600">
+                  <div class="flex justify-between text-red-600 text-sm">
                     <span>Discount:</span>
                     <span class="font-medium"
                       >- Rs.
                       {{ formatPrice(safeNumber(bill.bill_discount)) }}</span
                     >
                   </div>
-                  <div class="flex justify-between">
+                  <div class="flex justify-between text-sm">
                     <span class="text-gray-600">VAT Amount:</span>
                     <span class="font-medium"
                       >Rs. {{ formatPrice(safeNumber(bill.vat_amount)) }}</span
@@ -158,7 +289,7 @@
 
           <!-- Footer -->
           <div
-            class="mt-8 pt-4 border-t border-gray-300 text-center text-sm text-gray-500"
+            class="mt-6 sm:mt-8 pt-3 sm:pt-4 border-t border-gray-300 text-center text-xs sm:text-sm text-gray-500"
           >
             <p>Thank you for your business!</p>
           </div>
@@ -208,7 +339,13 @@ const getUsernameFromId = (userId) => {
     if (userData) {
       const user = JSON.parse(userData);
       if (user.id == userId) {
-        return user.username || user.name || user.email || user.first_name || `User ${userId}`;
+        return (
+          user.username ||
+          user.name ||
+          user.email ||
+          user.first_name ||
+          `User ${userId}`
+        );
       }
     }
   } catch (error) {
@@ -221,7 +358,13 @@ const getUsernameFromId = (userId) => {
     if (token) {
       const payload = JSON.parse(atob(token.split(".")[1]));
       if (payload.user_id == userId || payload.id == userId) {
-        return payload.username || payload.name || payload.email || payload.first_name || `User ${userId}`;
+        return (
+          payload.username ||
+          payload.name ||
+          payload.email ||
+          payload.first_name ||
+          `User ${userId}`
+        );
       }
     }
   } catch (error) {
@@ -329,10 +472,60 @@ const printBill = () => {
 </script>
 
 <style scoped>
+/* Enhanced mobile responsiveness */
+@media (max-width: 640px) {
+  .max-w-5xl {
+    max-width: calc(100vw - 1rem);
+  }
+
+  .max-h-\[95vh\] {
+    max-height: 95vh;
+  }
+}
+
+/* Print styles for mobile */
 @media print {
   .fixed,
   .bg-gray-900 {
     display: none !important;
+  }
+
+  #printable-bill {
+    margin: 0;
+    padding: 10px;
+    font-size: 12px;
+  }
+
+  .text-xl {
+    font-size: 18px !important;
+  }
+  .text-lg {
+    font-size: 16px !important;
+  }
+  .text-base {
+    font-size: 14px !important;
+  }
+  .text-sm {
+    font-size: 12px !important;
+  }
+  .text-xs {
+    font-size: 10px !important;
+  }
+}
+
+/* Improved scrollbar for mobile */
+.overflow-x-auto::-webkit-scrollbar {
+  height: 4px;
+}
+
+.overflow-y-auto::-webkit-scrollbar {
+  width: 4px;
+}
+
+@media (max-width: 768px) {
+  .overflow-x-auto::-webkit-scrollbar,
+  .overflow-y-auto::-webkit-scrollbar {
+    display: none;
   }
 }
 </style>

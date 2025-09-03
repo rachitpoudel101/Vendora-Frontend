@@ -3,32 +3,43 @@
     <Navbar />
     <div class="flex">
       <Sidebar />
-      
+
       <!-- Main Content -->
       <main class="flex-1 ml-0 md:ml-64 h-[calc(100vh-4rem)] flex flex-col">
-        <div class="p-4 md:p-8 flex flex-col h-full overflow-hidden">
-          <div class="space-y-8 flex-1 overflow-y-auto">
+        <div class="p-2 sm:p-4 md:p-8 flex flex-col h-full overflow-hidden">
+          <div
+            class="space-y-4 sm:space-y-6 md:space-y-8 flex-1 overflow-y-auto"
+          >
             <!-- Top Products Cards -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div
+              class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6"
+            >
               <div v-if="dashboardStats?.week_top_product" class="group">
-                <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 bg-gradient-to-br from-white to-emerald-50">
-                  <div class="flex items-center justify-between mb-4">
+                <div
+                  class="bg-white rounded-xl sm:rounded-2xl border border-slate-200 p-4 sm:p-6 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 bg-gradient-to-br from-white to-emerald-50"
+                >
+                  <div class="flex items-center justify-between mb-3 sm:mb-4">
                     <div class="flex items-center space-x-2">
-                      <div class="w-3 h-3 bg-emerald-500 rounded-full"></div>
-                      <h3 class="font-semibold text-slate-900">
+                      <div
+                        class="w-2 h-2 sm:w-3 sm:h-3 bg-emerald-500 rounded-full"
+                      ></div>
+                      <h3
+                        class="font-semibold text-slate-900 text-sm sm:text-base"
+                      >
                         Top Product This Week
                       </h3>
                     </div>
                   </div>
-                  <div class="space-y-3">
+                  <div class="space-y-2 sm:space-y-3">
                     <div
-                      class="inline-flex items-center px-4 py-2 bg-slate-900 text-white rounded-full text-sm font-medium"
+                      class="inline-flex items-center px-3 sm:px-4 py-1.5 sm:py-2 bg-slate-900 text-white rounded-full text-xs sm:text-sm font-medium"
                     >
                       {{ dashboardStats.week_top_product.product_name }}
                     </div>
-                    <div class="flex justify-between text-sm">
+                    <div class="flex justify-between text-xs sm:text-sm">
                       <span class="text-emerald-600 font-medium">
-                        Sold: {{ dashboardStats.week_top_product.sold_quantity }}
+                        Sold:
+                        {{ dashboardStats.week_top_product.sold_quantity }}
                       </span>
                       <span class="text-slate-600">
                         Stock: {{ dashboardStats.week_top_product.stock }}
@@ -39,24 +50,31 @@
               </div>
 
               <div v-if="dashboardStats?.month_top_product" class="group">
-                <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 bg-gradient-to-br from-white to-emerald-50">
-                  <div class="flex items-center justify-between mb-4">
+                <div
+                  class="bg-white rounded-xl sm:rounded-2xl border border-slate-200 p-4 sm:p-6 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 bg-gradient-to-br from-white to-emerald-50"
+                >
+                  <div class="flex items-center justify-between mb-3 sm:mb-4">
                     <div class="flex items-center space-x-2">
-                      <div class="w-3 h-3 bg-blue-500 rounded-full"></div>
-                      <h3 class="font-semibold text-slate-900">
+                      <div
+                        class="w-2 h-2 sm:w-3 sm:h-3 bg-blue-500 rounded-full"
+                      ></div>
+                      <h3
+                        class="font-semibold text-slate-900 text-sm sm:text-base"
+                      >
                         Top Product This Month
                       </h3>
                     </div>
                   </div>
-                  <div class="space-y-3">
+                  <div class="space-y-2 sm:space-y-3">
                     <div
-                      class="inline-flex items-center px-4 py-2 bg-slate-900 text-white rounded-full text-sm font-medium"
+                      class="inline-flex items-center px-3 sm:px-4 py-1.5 sm:py-2 bg-slate-900 text-white rounded-full text-xs sm:text-sm font-medium"
                     >
                       {{ dashboardStats.month_top_product.product_name }}
                     </div>
-                    <div class="flex justify-between text-sm">
+                    <div class="flex justify-between text-xs sm:text-sm">
                       <span class="text-emerald-600 font-medium">
-                        Sold: {{ dashboardStats.month_top_product.sold_quantity }}
+                        Sold:
+                        {{ dashboardStats.month_top_product.sold_quantity }}
                       </span>
                       <span class="text-slate-600">
                         Stock: {{ dashboardStats.month_top_product.stock }}
@@ -67,24 +85,31 @@
               </div>
 
               <div v-if="dashboardStats?.year_top_product" class="group">
-                <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 bg-gradient-to-br from-white to-emerald-50">
-                  <div class="flex items-center justify-between mb-4">
+                <div
+                  class="bg-white rounded-xl sm:rounded-2xl border border-slate-200 p-4 sm:p-6 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 bg-gradient-to-br from-white to-emerald-50"
+                >
+                  <div class="flex items-center justify-between mb-3 sm:mb-4">
                     <div class="flex items-center space-x-2">
-                      <div class="w-3 h-3 bg-violet-500 rounded-full"></div>
-                      <h3 class="font-semibold text-slate-900">
+                      <div
+                        class="w-2 h-2 sm:w-3 sm:h-3 bg-violet-500 rounded-full"
+                      ></div>
+                      <h3
+                        class="font-semibold text-slate-900 text-sm sm:text-base"
+                      >
                         Top Product This Year
                       </h3>
                     </div>
                   </div>
-                  <div class="space-y-3">
+                  <div class="space-y-2 sm:space-y-3">
                     <div
-                      class="inline-flex items-center px-4 py-2 bg-slate-900 text-white rounded-full text-sm font-medium"
+                      class="inline-flex items-center px-3 sm:px-4 py-1.5 sm:py-2 bg-slate-900 text-white rounded-full text-xs sm:text-sm font-medium"
                     >
                       {{ dashboardStats.year_top_product.product_name }}
                     </div>
-                    <div class="flex justify-between text-sm">
+                    <div class="flex justify-between text-xs sm:text-sm">
                       <span class="text-emerald-600 font-medium">
-                        Sold: {{ dashboardStats.year_top_product.sold_quantity }}
+                        Sold:
+                        {{ dashboardStats.year_top_product.sold_quantity }}
                       </span>
                       <span class="text-slate-600">
                         Stock: {{ dashboardStats.year_top_product.stock }}
@@ -96,16 +121,22 @@
             </div>
 
             <!-- Analytics Section -->
-            <div class="grid grid-cols-1 xl:grid-cols-4 gap-8">
+            <div
+              class="grid grid-cols-1 xl:grid-cols-4 gap-4 sm:gap-6 md:gap-8"
+            >
               <div v-if="canViewPerformanceAnalytics" class="xl:col-span-3">
-                <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm bg-gradient-to-br from-white to-blue-50">
-                  <div class="flex items-center justify-between mb-6">
-                    <h2 class="text-xl font-bold text-slate-900">
+                <div
+                  class="bg-white rounded-xl sm:rounded-2xl border border-slate-200 p-4 sm:p-6 shadow-sm bg-gradient-to-br from-white to-blue-50"
+                >
+                  <div
+                    class="flex flex-col sm:flex-row sm:items-center justify-between mb-4 sm:mb-6 gap-3"
+                  >
+                    <h2 class="text-lg sm:text-xl font-bold text-slate-900">
                       Performance Analytics
                     </h2>
                     <div class="flex space-x-2">
                       <button
-                        class="px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200"
+                        class="px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg font-medium text-xs sm:text-sm transition-all duration-200"
                         :class="
                           selectedGraphPeriod === 'weekly'
                             ? 'bg-slate-900 text-white shadow-sm'
@@ -116,7 +147,7 @@
                         Weekly
                       </button>
                       <button
-                        class="px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200"
+                        class="px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg font-medium text-xs sm:text-sm transition-all duration-200"
                         :class="
                           selectedGraphPeriod === 'yearly'
                             ? 'bg-slate-900 text-white shadow-sm'
@@ -199,7 +230,7 @@
                       </div>
                     </template>
                   </div>
-                  <div class="h-80">
+                  <div class="h-48 sm:h-64 md:h-80">
                     <Line
                       v-if="profitSalesChartData"
                       :data="profitSalesChartData"
@@ -210,12 +241,19 @@
               </div>
 
               <!-- Pie Charts -->
-              <div class="space-y-6" :class="{ 'xl:col-span-4': !canViewPerformanceAnalytics }">
-                <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm bg-gradient-to-br from-white to-purple-50">
-                  <h3 class="font-bold text-slate-900 text-lg mb-4 text-center">
+              <div
+                class="space-y-4 sm:space-y-6"
+                :class="{ 'xl:col-span-4': !canViewPerformanceAnalytics }"
+              >
+                <div
+                  class="bg-white rounded-xl sm:rounded-2xl border border-slate-200 p-4 sm:p-6 shadow-sm bg-gradient-to-br from-white to-purple-50"
+                >
+                  <h3
+                    class="font-bold text-slate-900 text-base sm:text-lg mb-3 sm:mb-4 text-center"
+                  >
                     Products Sold
                   </h3>
-                  <div class="h-48 flex items-center justify-center">
+                  <div class="h-40 sm:h-48 flex items-center justify-center">
                     <Pie
                       v-if="productsSoldChartData"
                       :data="productsSoldChartData"
@@ -224,11 +262,15 @@
                   </div>
                 </div>
 
-                <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm bg-gradient-to-br from-white to-purple-50">
-                  <h3 class="font-bold text-slate-900 text-lg mb-4 text-center">
+                <div
+                  class="bg-white rounded-xl sm:rounded-2xl border border-slate-200 p-4 sm:p-6 shadow-sm bg-gradient-to-br from-white to-purple-50"
+                >
+                  <h3
+                    class="font-bold text-slate-900 text-base sm:text-lg mb-3 sm:mb-4 text-center"
+                  >
                     Stock Levels
                   </h3>
-                  <div class="h-48 flex items-center justify-center">
+                  <div class="h-40 sm:h-48 flex items-center justify-center">
                     <Pie
                       v-if="productsStockChartData"
                       :data="productsStockChartData"
@@ -582,7 +624,7 @@ const yearlySalesTotal = computed(() =>
 
 // Add role checking computed property
 const canViewPerformanceAnalytics = computed(() => {
-  return auth.user?.role === 'admin' || auth.user?.role === 'superadmin';
+  return auth.user?.role === "admin" || auth.user?.role === "superadmin";
 });
 </script>
 
@@ -612,10 +654,16 @@ const canViewPerformanceAnalytics = computed(() => {
   background: linear-gradient(135deg, #cbd5e1, #94a3b8);
 }
 
-/* Mobile responsiveness */
-@media (max-width: 768px) {
+/* Enhanced mobile responsiveness */
+@media (max-width: 767px) {
   main {
     margin-left: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .h-\[calc\(100vh-4rem\)\] {
+    height: calc(100vh - 5rem);
   }
 }
 </style>

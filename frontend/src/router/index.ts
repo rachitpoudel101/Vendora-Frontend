@@ -31,6 +31,12 @@ const routes = [
     name: "Create",
     component: () => import("@/views/Users/Create.vue"),
   },
+  {
+    path: "/suppliers",
+    name: "Suppliers",
+    component: () => import("@/views/Suppliers/index.vue"),
+    meta: { requiresAuth: true },
+  },
 ];
 
 const router = createRouter({

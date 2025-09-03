@@ -1,31 +1,33 @@
 <template>
   <nav
-    class="bg-[#6A89A7] shadow flex flex-col md:flex-row items-center justify-between px-4 md:px-8 py-3 md:py-4 fixed top-0 left-0 right-0 z-20"
+    class="bg-[#102b46] shadow flex flex-col sm:flex-row items-center justify-between px-3 sm:px-4 md:px-8 py-2 sm:py-3 md:py-4 fixed top-0 left-0 right-0 z-20"
   >
-    <div class="flex items-center gap-3 mb-2 md:mb-0">
+    <div class="flex items-center gap-2 sm:gap-3 mb-1 sm:mb-0">
       <!-- Logo -->
-      <div class="w-8 h-8 md:w-10 md:h-10 bg-white rounded-lg flex items-center justify-center">
+      <div
+        class="w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 bg-white rounded-lg flex items-center justify-center"
+      >
         <img
           src="@/assets/Vendora-.png"
           alt="Vendora Logo"
           class="w-full h-full object-contain"
         />
-       
       </div>
-      <span class="text-white font-bold text-xl md:text-2xl tracking-wide"
+      <span
+        class="text-white font-bold text-lg sm:text-xl md:text-2xl tracking-wide"
         >Vendora</span
       >
     </div>
-    <div class="flex items-center gap-4 relative">
+    <div class="flex items-center gap-3 sm:gap-4 relative">
       <!-- Profile dropdown -->
       <div class="relative" ref="dropdownRef">
         <button
-          class="mx-2 text-white hover:text-blue-200 font-medium transition flex items-center gap-2 focus:outline-none"
+          class="mx-1 sm:mx-2 text-white hover:text-blue-200 font-medium transition flex items-center gap-1 sm:gap-2 focus:outline-none text-sm sm:text-base"
           @click="toggleDropdown"
         >
           Profile
           <svg
-            class="w-4 h-4"
+            class="w-3 h-3 sm:w-4 sm:h-4"
             fill="none"
             stroke="currentColor"
             stroke-width="2"
@@ -40,14 +42,16 @@
         </button>
         <div
           v-if="dropdownOpen && user"
-          class="absolute right-0 mt-2 w-48 bg-white border rounded shadow-lg py-2 z-20"
+          class="absolute right-0 mt-2 w-40 sm:w-48 bg-white border rounded shadow-lg py-2 z-20"
         >
-          <div class="px-4 py-2 text-blue-700 font-semibold border-b">
+          <div
+            class="px-3 sm:px-4 py-2 text-blue-700 font-semibold border-b text-sm sm:text-base"
+          >
             {{ user.username }}
           </div>
           <button
             @click="handleLogout"
-            class="w-full text-left px-4 py-2 text-red-600 hover:bg-blue-50 font-medium"
+            class="w-full text-left px-3 sm:px-4 py-2 text-red-600 hover:bg-blue-50 font-medium text-sm sm:text-base"
           >
             Logout
           </button>
@@ -55,7 +59,11 @@
       </div>
     </div>
   </nav>
-  <div v-if="logoutMsg" class="w-full text-center py-2 mt-16" :class="logoutMsgType">
+  <div
+    v-if="logoutMsg"
+    class="w-full text-center py-2 mt-14 sm:mt-16"
+    :class="logoutMsgType"
+  >
     {{ logoutMsg }}
   </div>
 </template>
