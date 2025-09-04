@@ -1,7 +1,27 @@
 import axios from "axios";
 import { InventoryApi } from "@/core/endpoints/inventory";
+import { suppliersAPI } from "@/core/endpoints/suppliers";
 
 const token = localStorage.getItem("token");
+
+///////////////////////////////////////////////////////////////    FOR SUPPLIERS  //////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Fetch All Suppliers
+export async function fetchSuppliers() {
+  try {
+    const res = await axios.get(suppliersAPI.list, {
+      headers: {
+        Authorization: token ? `Bearer ${token}` : "",
+      },
+    });
+    return res.data;
+  } catch (e) {
+    console.error("Error fetching Suppliers:", e);
+    return [];
+  }
+}
 ///////////////////////////////////////////////////////////////    FOR CATEGORY  //////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -23,10 +43,9 @@ export async function fetchCategory() {
 }
 
 // FetchAll Category BY ID
-
 export async function fetchCategoryById(id: number | string) {
   try {
-    const res = await axios.get(InventoryApi.getProduct(id), {
+    const res = await axios.get(InventoryApi.getCatagory(id), {
       headers: {
         Authorization: token ? `Bearer ${token}` : "",
       },
@@ -42,7 +61,8 @@ export async function fetchCategoryById(id: number | string) {
 export async function createCatyregory(
   category: {
     name: string;
-    description: string;
+    description?: string;
+    is_expired_applicable?: boolean;
   },
   tokenOverride?: string,
 ) {
@@ -52,6 +72,7 @@ export async function createCatyregory(
       {
         name: category.name,
         description: category.description,
+        is_expired_applicable: category.is_expired_applicable || false,
       },
       {
         headers: {
@@ -69,12 +90,13 @@ export async function createCatyregory(
   }
 }
 
-// ✅ Update CAtegory by ID (partial update using PATCH)
+// ✅ Update Category by ID (partial update using PATCH)
 export async function updateCategory(
   id: number | string,
   updates: {
-    name: string;
-    description: string;
+    name?: string;
+    description?: string;
+    is_expired_applicable?: boolean;
   },
 ) {
   try {
@@ -88,6 +110,21 @@ export async function updateCategory(
   } catch (e) {
     console.error(`Error updating Category with id ${id}:`, e);
     throw new Error("Failed to update Category");
+  }
+}
+
+// ✅ Delete Category by ID
+export async function deleteCategory(id: number | string) {
+  try {
+    const res = await axios.delete(InventoryApi.getCatagory(id), {
+      headers: {
+        Authorization: token ? `Bearer ${token}` : "",
+      },
+    });
+    return res.data;
+  } catch (e) {
+    console.error(`Error deleting Category with id ${id}:`, e);
+    throw new Error("Failed to delete Category");
   }
 }
 
@@ -132,22 +169,44 @@ export async function createProduct(
   product: {
     name: string;
     category: string;
+    supliers: number;
+    serial_number?: string;
     cost_price: number;
     margin: number;
     stock: number;
+    expires_at?: string;
+    description?: string;
   },
   tokenOverride?: string,
 ) {
   try {
+    const productData: any = {
+      name: product.name,
+      category: product.category,
+      supliers: product.supliers,
+      cost_price: product.cost_price,
+      margin: product.margin,
+      stock: product.stock,
+    };
+
+    // Only include serial_number if provided
+    if (product.serial_number && product.serial_number.trim()) {
+      productData.serial_number = product.serial_number;
+    }
+
+    // Only include expires_at if provided
+    if (product.expires_at) {
+      productData.expires_at = product.expires_at;
+    }
+
+    // Only include description if provided
+    if (product.description && product.description.trim()) {
+      productData.description = product.description;
+    }
+
     const res = await axios.post(
       InventoryApi.fetchProduct,
-      {
-        name: product.name,
-        category: product.category,
-        cost_price: product.cost_price,
-        margin: product.margin,
-        stock: product.stock,
-      },
+      productData,
       {
         headers: {
           "Content-Type": "application/json",
@@ -165,15 +224,19 @@ export async function createProduct(
 }
 
 // ✅ Update Product by ID (partial update using PATCH)
-
 export async function updateProduct(
   id: number | string,
   updates: {
-    name: string;
-    category: string;
-    cost_price: number;
-    margin: number;
-    stock: number;
+    name?: string;
+    category?: string;
+    supliers?: number;
+    batch_number?: string;
+    serial_number?: string;
+    cost_price?: number;
+    margin?: number;
+    stock?: number;
+    expires_at?: string;
+    description?: string;
   },
 ) {
   try {

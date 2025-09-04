@@ -218,10 +218,8 @@ const handleSubmit = async () => {
       address: form.address.trim(),
     };
 
-    console.log("📝 Creating supplier:", createData);
 
     const result = await createSupplier(createData);
-    console.log("✅ Supplier created successfully:", result);
 
     toast.success("Supplier created successfully!", {
       position: "top-right",
