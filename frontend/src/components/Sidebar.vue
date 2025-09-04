@@ -1,6 +1,7 @@
 <template>
   <!-- Hamburger for mobile -->
   <button
+    v-if="!showSidebar"
     class="md:hidden fixed top-4 left-4 z-30 bg-[#6A89A7] text-white rounded-lg p-2.5 shadow-lg hover:bg-[#5a7a94] transition-colors duration-200"
     @click="showSidebar = true"
     aria-label="Open sidebar"
@@ -47,9 +48,10 @@
             src="@/assets/Vendora-.png"
             alt="Vendora Logo"
             class="w-full h-full object-contain"
+            style="display: block;"
           />
         </div>
-        <span class="text-white font-bold text-xl">Vendora</span>
+        <span class="text-white font-bold text-xl" style="display: block;">Vendora</span>
       </div>
       <button
         @click="showSidebar = false"
@@ -166,6 +168,14 @@ nav::-webkit-scrollbar-thumb:hover {
 
   .sidebar.translate-x-0 {
     transform: translateX(0);
+  }
+
+  /* Ensure logo and text are always visible in mobile sidebar */
+  .sidebar .flex.items-center.gap-3 > div,
+  .sidebar .flex.items-center.gap-3 > span {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
   }
 }
 

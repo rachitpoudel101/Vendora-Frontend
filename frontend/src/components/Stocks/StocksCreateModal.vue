@@ -146,12 +146,7 @@
               </div>
               <div v-if="isExpiryRequired">
                 <label class="block text-sm font-medium text-gray-700 mb-2">
-                  Expiry Date *
-                  <span
-                    v-if="!canEditExpiry"
-                    class="text-xs text-amber-600 font-normal ml-1"
-                    >(Admin/Superuser only)</span
-                  >
+                  Expiry Date * >
                 </label>
                 <input
                   v-model="form.expires_at"

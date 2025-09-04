@@ -1,7 +1,11 @@
 <template>
-  <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+  <div
+    class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden"
+  >
     <!-- Header -->
-    <div class="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-4 sm:px-6 py-3 sm:py-4">
+    <div
+      class="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-4 sm:px-6 py-3 sm:py-4"
+    >
       <h3 class="font-semibold text-base sm:text-lg flex items-center">
         <svg
           class="w-4 h-4 sm:w-5 sm:h-5 mr-2"
@@ -20,7 +24,9 @@
     <div class="p-4 sm:p-6">
       <div class="grid grid-cols-2 md:grid-cols-5 gap-4 sm:gap-6">
         <!-- Total Quantity -->
-        <div class="flex flex-col items-center justify-center p-3 sm:p-4 bg-gray-50 rounded-lg border">
+        <div
+          class="flex flex-col items-center justify-center p-3 sm:p-4 bg-gray-50 rounded-lg border"
+        >
           <label class="text-xs sm:text-sm font-medium text-gray-700 mb-2">
             Total Quantity:
           </label>
@@ -38,7 +44,9 @@
         </div>
 
         <!-- Subtotal -->
-        <div class="flex flex-col items-center justify-center p-3 sm:p-4 bg-gray-50 rounded-lg border">
+        <div
+          class="flex flex-col items-center justify-center p-3 sm:p-4 bg-gray-50 rounded-lg border"
+        >
           <label class="text-xs sm:text-sm font-medium text-gray-700 mb-2">
             Subtotal:
           </label>
@@ -50,7 +58,9 @@
         </div>
 
         <!-- Discount -->
-        <div class="flex flex-col items-center justify-center p-3 sm:p-4 bg-gray-50 rounded-lg border">
+        <div
+          class="flex flex-col items-center justify-center p-3 sm:p-4 bg-gray-50 rounded-lg border"
+        >
           <label class="text-xs sm:text-sm font-medium text-gray-700 mb-2">
             Discount:
           </label>
@@ -62,7 +72,9 @@
         </div>
 
         <!-- VAT Amount -->
-        <div class="flex flex-col items-center justify-center p-3 sm:p-4 bg-gray-50 rounded-lg border">
+        <div
+          class="flex flex-col items-center justify-center p-3 sm:p-4 bg-gray-50 rounded-lg border"
+        >
           <label class="text-xs sm:text-sm font-medium text-gray-700 mb-2">
             VAT Amount:
           </label>
@@ -74,7 +86,9 @@
         </div>
 
         <!-- Grand Total -->
-        <div class="col-span-2 md:col-span-1 flex flex-col items-center justify-center p-3 sm:p-4 bg-blue-50 rounded-lg border-2 border-blue-200">
+        <div
+          class="col-span-2 md:col-span-1 flex flex-col items-center justify-center p-3 sm:p-4 bg-blue-50 rounded-lg border-2 border-blue-200"
+        >
           <label class="text-xs sm:text-sm font-bold text-gray-900 mb-2">
             Grand Total:
           </label>
@@ -90,34 +104,34 @@
 </template>
 
 <script setup>
-import { defineProps } from 'vue'
+import { defineProps } from "vue";
 
 const props = defineProps({
   totalQuantity: {
     type: Number,
-    default: 0
+    default: 0,
   },
   subtotal: {
     type: Number,
-    default: 0.00
+    default: 0.0,
   },
   discount: {
     type: Number,
-    default: 0.00
+    default: 0.0,
   },
   vatAmount: {
     type: Number,
-    default: 0.00
+    default: 0.0,
   },
   grandTotal: {
     type: Number,
-    default: 0.00
+    default: 0.0,
   },
   unitLabel: {
     type: String,
-    default: ''
-  }
-})
+    default: "",
+  },
+});
 </script>
 
 <style scoped>
@@ -132,7 +146,7 @@ const props = defineProps({
   .md\:grid-cols-5 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-  
+
   .col-span-2.md\:col-span-1 {
     grid-column: span 2 / span 2;
   }

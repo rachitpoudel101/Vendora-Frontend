@@ -18,7 +18,7 @@
         >Vendora</span
       >
     </div>
-    <div class="flex items-center gap-3 sm:gap-4 relative">
+    <div class="flex items-center gap-3 sm:gap-4 relative w-full sm:w-auto justify-end">
       <!-- Profile dropdown -->
       <div class="relative" ref="dropdownRef">
         <button
@@ -40,22 +40,24 @@
             />
           </svg>
         </button>
-        <div
-          v-if="dropdownOpen && user"
-          class="absolute right-0 mt-2 w-40 sm:w-48 bg-white border rounded shadow-lg py-2 z-20"
-        >
+        <transition name="dropdown-fade">
           <div
-            class="px-3 sm:px-4 py-2 text-blue-700 font-semibold border-b text-sm sm:text-base"
+            v-if="dropdownOpen && user"
+            class="absolute right-0 mt-2 w-40 sm:w-48 bg-white border rounded shadow-lg py-2 z-20 dropdown-menu"
           >
-            {{ user.username }}
+            <div
+              class="px-3 sm:px-4 py-2 text-blue-700 font-semibold border-b text-sm sm:text-base"
+            >
+              {{ user.username }}
+            </div>
+            <button
+              @click="handleLogout"
+              class="w-full text-left px-3 sm:px-4 py-2 text-red-600 hover:bg-blue-50 font-medium text-sm sm:text-base"
+            >
+              Logout
+            </button>
           </div>
-          <button
-            @click="handleLogout"
-            class="w-full text-left px-3 sm:px-4 py-2 text-red-600 hover:bg-blue-50 font-medium text-sm sm:text-base"
-          >
-            Logout
-          </button>
-        </div>
+        </transition>
       </div>
     </div>
   </nav>
@@ -113,3 +115,74 @@ async function handleLogout() {
   }
 }
 </script>
+
+<style scoped>
+/* Responsive adjustments for navbar and dropdown */
+nav {
+  min-width: 0;
+  width: 100vw;
+  box-sizing: border-box;
+}
+
+@media (max-width: 640px) {
+  nav {
+    flex-direction: column;
+    align-items: stretch;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+  .dropdown-menu {
+    right: 0;
+    left: auto;
+    min-width: 80vw;
+    max-width: 95vw;
+    margin-right: 0.5rem;
+    font-size: 1rem;
+  }
+  .flex.items-center.gap-3.sm\:gap-4.relative.w-full.sm\:w-auto.justify-end {
+    justify-content: flex-end;
+    width: 100%;
+  }
+  .flex.items-center.gap-2.sm\:gap-3.mb-1.sm\:mb-0 {
+    margin-bottom: 0.5rem;
+  }
+}
+
+@media (max-width: 400px) {
+  .dropdown-menu {
+    min-width: 98vw;
+    max-width: 98vw;
+    margin-right: 0.1rem;
+    font-size: 0.95rem;
+  }
+}
+
+/* Dropdown transition */
+.dropdown-fade-enter-active,
+.dropdown-fade-leave-active {
+  transition: opacity 0.25s cubic-bezier(0.4, 0.0, 0.2, 1),
+    transform 0.25s cubic-bezier(0.4, 0.0, 0.2, 1);
+}
+.dropdown-fade-enter-from,
+.dropdown-fade-leave-to {
+  opacity: 0;
+  transform: translateY(-10px) scale(0.98);
+}
+.dropdown-fade-enter-to,
+.dropdown-fade-leave-from {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* Dropdown menu styling for all devices */
+.dropdown-menu {
+  min-width: 10rem;
+  max-width: 16rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08),
+    0 1.5px 4px rgba(0, 0, 0, 0.04);
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  padding: 0.5rem 0;
+}
+</style>
