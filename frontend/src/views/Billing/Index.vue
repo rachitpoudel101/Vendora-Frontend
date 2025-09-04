@@ -91,7 +91,7 @@
                       >Rs. {{ b.grand_total }}</span
                     >
                   </div>
-                  <div class="pt-2 border-t border-gray-100">
+                  <!-- <div class="pt-2 border-t border-gray-100">
                     <span class="text-gray-500 text-xs">Products:</span>
                     <p class="text-gray-900 text-sm mt-1">
                       <span v-if="b.items && b.items.length">
@@ -106,7 +106,7 @@
                       </span>
                       <span v-else>-</span>
                     </p>
-                  </div>
+                  </div> -->
                 </div>
               </div>
             </div>
@@ -125,16 +125,16 @@
                     >
                       SN
                     </th>
-                    <th
+                    <!-- <th
                       class="px-4 py-4 text-left font-semibold text-gray-800 text-xs uppercase tracking-wider border-r border-gray-200"
                     >
                       Products
-                    </th>
-                    <th
+                    </th> -->
+                    <!-- <th
                       class="px-4 py-4 text-left font-semibold text-gray-800 text-xs uppercase tracking-wider border-r border-gray-200"
                     >
                       Quantity
-                    </th>
+                    </th> -->
                     <th
                       class="px-4 py-4 text-left font-semibold text-gray-800 text-xs uppercase tracking-wider border-r border-gray-200"
                     >
@@ -171,7 +171,7 @@
                     <td class="px-4 py-4 whitespace-nowrap">
                       {{ (currentPage - 1) * pageSize + index + 1 }}
                     </td>
-                    <td class="px-4 py-4 whitespace-nowrap">
+                    <!-- <td class="px-4 py-4 whitespace-nowrap">
                       <span v-if="b.items && b.items.length">
                         {{
                           b.items
@@ -183,13 +183,13 @@
                         }}
                       </span>
                       <span v-else>-</span>
-                    </td>
-                    <td class="px-4 py-4 whitespace-nowrap">
+                    </td> 
+                     <td class="px-4 py-4 whitespace-nowrap">
                       <span v-if="b.items && b.items.length">
                         {{ b.items.map((item) => item.quantity).join(", ") }}
                       </span>
                       <span v-else>-</span>
-                    </td>
+                    </td> -->
                     <td class="px-4 py-4 whitespace-nowrap">
                       {{ b.customer_Name }}
                     </td>
@@ -205,13 +205,15 @@
                       {{ b.grand_total }}
                     </td>
                     <td class="px-4 py-4 whitespace-nowrap text-center">
-                      <button
-                        @click="openPrintModal(b)"
-                        class="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700 transition"
-                        title="Print Bill"
-                      >
-                        Print
-                      </button>
+                      <div class="flex justify-center gap-2">
+                        <button
+                          @click="openPrintModal(b)"
+                          class="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700 transition"
+                          title="Print Bill"
+                        >
+                          Print
+                        </button>
+                      </div>
                     </td>
                   </tr>
                   <tr v-if="paginatedBills.length === 0">

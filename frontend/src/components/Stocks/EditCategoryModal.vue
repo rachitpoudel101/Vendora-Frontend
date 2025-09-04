@@ -5,7 +5,9 @@
       class="fixed inset-0 bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
       @click.self="$emit('close')"
     >
-      <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[80vh] overflow-y-auto border border-gray-200">
+      <div
+        class="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[80vh] overflow-y-auto border border-gray-200"
+      >
         <div class="p-6">
           <div class="flex items-center justify-between mb-6">
             <h3 class="text-2xl font-bold text-gray-900">Edit Category</h3>
@@ -18,7 +20,9 @@
           </div>
           <form @submit.prevent="handleSubmit" class="space-y-4">
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Category Name *</label>
+              <label class="block text-sm font-medium text-gray-700 mb-2"
+                >Category Name *</label
+              >
               <input
                 v-model="localForm.name"
                 type="text"
@@ -28,7 +32,9 @@
               />
             </div>
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Description</label>
+              <label class="block text-sm font-medium text-gray-700 mb-2"
+                >Description</label
+              >
               <textarea
                 v-model="localForm.description"
                 rows="3"
@@ -43,7 +49,10 @@
                 type="checkbox"
                 class="h-4 w-4 text-emerald-600 focus:ring-emerald-500 border-gray-300 rounded"
               />
-              <label for="edit_is_expired_applicable" class="ml-2 block text-sm text-gray-700">
+              <label
+                for="edit_is_expired_applicable"
+                class="ml-2 block text-sm text-gray-700"
+              >
                 Products in this category require expiry dates
               </label>
             </div>
@@ -70,7 +79,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, watch } from "vue";
 
 interface EditCategoryForm {
   id: number | null;
@@ -84,23 +93,27 @@ interface Props {
   editCategoryForm: EditCategoryForm;
 }
 
-const props = defineProps<Props>()
+const props = defineProps<Props>();
 
 const emit = defineEmits<{
-  close: []
-  submit: [form: EditCategoryForm]
-}>()
+  close: [];
+  submit: [form: EditCategoryForm];
+}>();
 
-const localForm = ref<EditCategoryForm>({ ...props.editCategoryForm })
+const localForm = ref<EditCategoryForm>({ ...props.editCategoryForm });
 
 const handleSubmit = () => {
-  emit('submit', { ...localForm.value })
-}
+  emit("submit", { ...localForm.value });
+};
 
 // Update local form when props change
-watch(() => props.editCategoryForm, (newForm) => {
-  localForm.value = { ...newForm }
-}, { deep: true })
+watch(
+  () => props.editCategoryForm,
+  (newForm) => {
+    localForm.value = { ...newForm };
+  },
+  { deep: true },
+);
 </script>
 
 <style scoped>

@@ -240,7 +240,6 @@ const handleSubmit = async () => {
       address: form.address.trim(),
     };
 
-
     const result = await updateSupplier(props.supplier.id, updateData);
 
     toast.success("Supplier updated successfully!", {

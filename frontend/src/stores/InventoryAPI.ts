@@ -207,18 +207,14 @@ export async function createProduct(
       productData.description = product.description;
     }
 
-    const res = await axios.post(
-      InventoryApi.fetchProduct,
-      productData,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          ...(tokenOverride || token
-            ? { Authorization: `Bearer ${tokenOverride || token}` }
-            : {}),
-        },
+    const res = await axios.post(InventoryApi.fetchProduct, productData, {
+      headers: {
+        "Content-Type": "application/json",
+        ...(tokenOverride || token
+          ? { Authorization: `Bearer ${tokenOverride || token}` }
+          : {}),
       },
-    );
+    });
     return res.data;
   } catch (e) {
     console.error("Error creating Product:", e);
