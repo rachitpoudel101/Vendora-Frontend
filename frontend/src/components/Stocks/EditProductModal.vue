@@ -280,7 +280,16 @@ const isEditExpiryRequired = computed(() => {
 });
 
 const handleSubmit = () => {
-  emit("submit", { ...localForm.value });
+  // Find the selected unit object
+  const selectedUnitObj = props.units.find(u => u.unit === localForm.value.unit);
+  // Ensure correct types before emitting
+  const payload: EditProductForm = {
+    ...localForm.value,
+    category: String(localForm.value.category),
+    supliers: Number(localForm.value.supliers),
+    unit: selectedUnitObj ? selectedUnitObj.id : localForm.value.unit, // pk value if found, else fallback
+  };
+  emit("submit", payload);
 };
 
 // Update local form when props change

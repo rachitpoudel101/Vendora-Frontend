@@ -98,7 +98,7 @@
 
     <!-- Footer Section -->
     <div class="p-4 border-t border-white/10">
-      <div class="text-xs text-white/60 text-center">© 2024 StationaryApp</div>
+      <div class="text-xs text-white/60 text-center">© 2025 Vendora</div>
     </div>
   </div>
 </template>

@@ -291,7 +291,16 @@ const isExpiryRequired = computed(() => {
 });
 
 const handleSubmit = () => {
-  emit("submit", { ...form.value });
+  // Find the selected unit object
+  const selectedUnitObj = props.units.find(u => u.unit === form.value.unit);
+  // Ensure correct types before emitting
+  const payload: CreateProductForm = {
+    ...form.value,
+    category: String(form.value.category),
+    supliers: Number(form.value.supliers),
+    unit: selectedUnitObj ? selectedUnitObj.id : form.value.unit, // pk value if found, else fallback
+  };
+  emit("submit", payload);
 };
 
 // Reset form when modal is closed
