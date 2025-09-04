@@ -29,12 +29,18 @@ const routes = [
   {
     path: "/users/create",
     name: "Create",
-    component: () => import("@/views/Users/Create.vue"),
+    component: () => import("@/components/Users/CreateUserModel.vue"),
   },
   {
     path: "/suppliers",
     name: "Suppliers",
     component: () => import("@/views/Suppliers/index.vue"),
+    meta: { requiresAuth: true },
+  },
+    {
+    path: "/configurations",
+    name: "Configurations",
+    component: () => import("@/views/Configurations/Index.vue"),
     meta: { requiresAuth: true },
   },
 ];

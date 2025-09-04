@@ -117,6 +117,8 @@ const allNavItems = [
   { label: "Billing", path: "/billing", icon: "📝" },
   { label: "Users", path: "/users", icon: "👤", adminOnly: true },
   { label: "Suppliers", path: "/suppliers", icon: "🏭", adminOnly: true },
+  { label: "Unit Configurations", path: "/configurations", icon: "⚙️", adminOnly: true },
+
 ];
 
 const navItems = computed(() => {

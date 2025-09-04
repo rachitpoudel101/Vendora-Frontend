@@ -17,7 +17,7 @@
               >
                 <div>
                   <h1
-                    class="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-2 bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent"
+                    class="text-2xl sm:text-3xl lg:text-4xl font-bold  mb-2 bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent"
                   >
                     Stocks Management
                   </h1>
@@ -254,6 +254,12 @@
                             {{ (item.cost_price || 0) + (item.margin || 0) }}
                           </span>
                         </div>
+                        <div>
+                          <span class="text-gray-500 block">Unit</span>
+                          <span class="font-semibold text-gray-900 mt-1 block">
+                            {{ getUnit(item) }}
+                          </span>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -292,6 +298,11 @@
                               class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
                             >
                               Stock Level
+                            </th>
+                            <th
+                              class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
+                            >
+                              Unit
                             </th>
                             <th
                               class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
@@ -355,6 +366,11 @@
                                         : "Critical"
                                   }}
                                 </span>
+                              </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                              <div class="text-sm font-medium text-gray-900">
+                                {{ getUnit(item) }}
                               </div>
                             </td>
                             <td
@@ -683,7 +699,6 @@
       </main>
     </div>
 
-    <!-- Responsive Modals -->
     <!-- View Modal -->
     <transition name="modal-fade">
       <div
@@ -749,6 +764,7 @@
                   <div class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-xl">
                     <div class="flex items-center">
                       <span class="text-gray-900 font-semibold mr-2">{{ selectedStock?.stock || 0 }}</span>
+                      <span class="text-gray-600 mr-2">{{ getUnit(selectedStock) }}</span>
                       <span
                         class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium"
                         :class="
@@ -821,483 +837,51 @@
       </div>
     </transition>
 
-    <!-- Edit Modal -->
-    <transition name="modal-fade">
-      <div
-        v-if="showEditModal"
-        class="fixed inset-0   bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
-        @click.self="showEditModal = false"
-      >
-        <div
-          class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto border border-gray-200"
-        >
-          <div class="p-6">
-            <div class="flex items-center justify-between mb-6">
-              <h3 class="text-2xl font-bold text-gray-900">Edit Product</h3>
-              <button
-                @click="showEditModal = false"
-                class="text-gray-400 hover:text-gray-600 transition-colors duration-150"
-              >
-                <span class="material-icons">close</span>
-              </button>
-            </div>
-            <form @submit.prevent="handleEdit" class="space-y-4">
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div class="md:col-span-2">
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Product Name *</label>
-                  <input
-                    v-model="editForm.name"
-                    type="text"
-                    required
-                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-150"
-                    placeholder="Enter product name"
-                  />
-                </div>
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Category *</label>
-                  <select
-                    v-model="editForm.category"
-                    required
-                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-150"
-                  >
-                    <option value="" disabled>Select Category</option>
-                    <option v-for="cat in categories" :key="cat.id" :value="cat.id">
-                      {{ cat.name }}
-                    </option>
-                  </select>
-                </div>
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Supplier *</label>
-                  <select
-                    v-model="editForm.supliers"
-                    required
-                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-150"
-                  >
-                    <option value="" disabled>Select Supplier</option>
-                    <option v-for="supplier in suppliers" :key="supplier.id" :value="supplier.id">
-                      {{ supplier.name }}
-                    </option>
-                  </select>
-                </div>
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Serial Number</label>
-                  <input
-                    v-model="editForm.serial_number"
-                    type="text"
-                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-150"
-                    placeholder="Serial number (optional)"
-                  />
-                  <p class="text-xs text-gray-500 mt-1">Leave empty if not applicable</p>
-                </div>
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Stock Quantity *</label>
-                  <input
-                    v-model="editForm.stock"
-                    type="number"
-                    min="0"
-                    required
-                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-150"
-                    placeholder="0"
-                  />
-                </div>
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Cost Price *</label>
-                  <input
-                    v-model="editForm.cost_price"
-                    type="number"
-                    min="0"
-                    step="0.01"
-                    required
-                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-150"
-                    placeholder="0.00"
-                  />
-                </div>
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Margin *</label>
-                  <input
-                    v-model="editForm.margin"
-                    type="number"
-                    min="0"
-                    step="0.01"
-                    required
-                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-150"
-                    placeholder="0.00"
-                  />
-                </div>
-                <div v-if="isEditExpiryRequired">
-                  <label class="block text-sm font-medium text-gray-700 mb-2">
-                    Expiry Date *
-                    <span v-if="!canEditExpiry" class="text-xs text-amber-600 font-normal ml-1">(Admin/Superuser only)</span>
-                  </label>
-                  <input
-                    v-model="editForm.expires_at"
-                    type="datetime-local"
-                    :required="isEditExpiryRequired"
-                    :disabled="!canEditExpiry"
-                    :class="[
-                      'w-full px-4 py-3 border border-gray-300 rounded-xl transition-all duration-150',
-                      canEditExpiry 
-                        ? 'focus:ring-2 focus:ring-blue-500 focus:border-transparent' 
-                        : 'bg-gray-100 cursor-not-allowed text-gray-500'
-                    ]"
-                  />
-                  <p v-if="!canEditExpiry" class="text-xs text-amber-600 mt-1">
-                    Only administrators can modify expiry dates
-                  </p>
-                </div>
-                <div class="md:col-span-2">
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Description</label>
-                  <textarea
-                    v-model="editForm.description"
-                    rows="3"
-                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-150"
-                    placeholder="Enter product description"
-                  ></textarea>
-                </div>
-              </div>
-              
-              <div class="bg-blue-50 p-4 rounded-xl mt-4">
-                <div class="flex justify-between items-center">
-                  <span class="font-medium text-gray-700">Selling Price:</span>
-                  <span class="text-xl font-bold text-blue-600">Rs. {{ editSellingPrice }}</span>
-                </div>
-              </div>
-              
-              <div class="flex space-x-3 pt-6 border-t border-gray-200">
-                <button
-                  type="button"
-                  @click="showEditModal = false"
-                  class="flex-1 px-4 py-3 border border-gray-300 text-gray-700 rounded-xl font-medium hover:bg-gray-50 transition-colors duration-150"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  class="flex-1 px-4 py-3 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 transition-colors duration-150"
-                >
-                  Save Changes
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-    </transition>
+    <!-- Component Modals -->
+    <StocksCreateModal
+      :show="showCreateModal"
+      :categories="categories"
+      :suppliers="suppliers"
+      :units="units"
+      :can-edit-expiry="canEditExpiry"
+      @close="showCreateModal = false"
+      @submit="handleCreate"
+    />
 
-    <!-- Create Product Modal -->
-    <transition name="modal-fade">
-      <div
-        v-if="showCreateModal"
-        class="fixed inset-0   bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
-        @click.self="showCreateModal = false"
-      >
-        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto border border-gray-200">
-          <div class="p-6">
-            <div class="flex items-center justify-between mb-6">
-              <h3 class="text-2xl font-bold text-gray-900">Add New Product</h3>
-              <button
-                @click="showCreateModal = false"
-                class="text-gray-400 hover:text-gray-600 transition-colors duration-150"
-              >
-                <span class="material-icons">close</span>
-              </button>
-            </div>
-            <form @submit.prevent="handleCreate" class="space-y-4">
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div class="md:col-span-2">
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Product Name *</label>
-                  <input
-                    v-model="createForm.name"
-                    type="text"
-                    required
-                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-150"
-                    placeholder="Enter product name"
-                  />
-                </div>
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Category *</label>
-                  <select
-                    v-model="createForm.category"
-                    required
-                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-150"
-                  >
-                    <option value="" disabled>Select Category</option>
-                    <option v-for="cat in categories" :key="cat.id" :value="cat.id">
-                      {{ cat.name }}
-                    </option>
-                  </select>
-                </div>
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Supplier *</label>
-                  <select
-                    v-model="createForm.supliers"
-                    required
-                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-150"
-                  >
-                    <option value="" disabled>Select Supplier</option>
-                    <option v-for="supplier in suppliers" :key="supplier.id" :value="supplier.id">
-                      {{ supplier.name }}
-                    </option>
-                  </select>
-                </div>
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Serial Number</label>
-                  <input
-                    v-model="createForm.serial_number"
-                    type="text"
-                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-150"
-                    placeholder="Serial number (optional)"
-                  />
-                  <p class="text-xs text-gray-500 mt-1">Leave empty if not applicable</p>
-                </div>
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Stock Quantity *</label>
-                  <input
-                    v-model.number="createForm.stock"
-                    type="number"
-                    min="0"
-                    required
-                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-150"
-                    placeholder="0"
-                  />
-                </div>
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Cost Price *</label>
-                  <input
-                    v-model.number="createForm.cost_price"
-                    type="number"
-                    min="0"
-                    step="0.01"
-                    required
-                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-150"
-                    placeholder="0.00"
-                  />
-                </div>
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Margin *</label>
-                  <input
-                    v-model.number="createForm.margin"
-                    type="number"
-                    min="0"
-                    step="0.01"
-                    required
-                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-150"
-                    placeholder="0.00"
-                  />
-                </div>
-                <div v-if="isExpiryRequired">
-                  <label class="block text-sm font-medium text-gray-700 mb-2">
-                    Expiry Date *
-                    <span v-if="!canEditExpiry" class="text-xs text-amber-600 font-normal ml-1">(Admin/Superuser only)</span>
-                  </label>
-                  <input
-                    v-model="createForm.expires_at"
-                    type="datetime-local"
-                    :required="isExpiryRequired"
-                    :disabled="!canEditExpiry"
-                    :class="[
-                      'w-full px-4 py-3 border border-gray-300 rounded-xl transition-all duration-150',
-                      canEditExpiry 
-                        ? 'focus:ring-2 focus:ring-blue-500 focus:border-transparent' 
-                        : 'bg-gray-100 cursor-not-allowed text-gray-500'
-                    ]"
-                  />
-                  <p v-if="!canEditExpiry" class="text-xs text-amber-600 mt-1">
-                    Only administrators can set expiry dates for products
-                  </p>
-                </div>
-                <div class="md:col-span-2">
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Description</label>
-                  <textarea
-                    v-model="createForm.description"
-                    rows="3"
-                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-150"
-                    placeholder="Enter product description"
-                  ></textarea>
-                </div>
-              </div>
-              
-              <div class="bg-blue-50 p-4 rounded-xl mt-4">
-                <div class="flex justify-between items-center">
-                  <span class="font-medium text-gray-700">Selling Price:</span>
-                  <span class="text-xl font-bold text-blue-600">Rs. {{ sellingPrice }}</span>
-                </div>
-              </div>
-              
-              <div class="bg-gray-50 p-4 rounded-xl">
-                <div class="flex items-center text-sm text-gray-600">
-                  <span class="material-icons text-16 mr-2">info</span>
-                  <span>Batch number will be auto-generated after creation</span>
-                </div>
-              </div>
-              
-              <div class="flex space-x-3 pt-6 border-t border-gray-200">
-                <button
-                  type="button"
-                  @click="showCreateModal = false"
-                  class="flex-1 px-4 py-3 border border-gray-300 text-gray-700 rounded-xl font-medium hover:bg-gray-50 transition-colors duration-150"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  class="flex-1 px-4 py-3 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 transition-colors duration-150"
-                >
-                  Create Product
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-    </transition>
+    <EditProductModal
+      :show="showEditModal"
+      :categories="categories"
+      :suppliers="suppliers"
+      :units="units"
+      :can-edit-expiry="canEditExpiry"
+      :edit-form="editForm"
+      @close="showEditModal = false"
+      @submit="handleEdit"
+    />
 
-    <!-- Create Category Modal -->
-    <transition name="modal-fade">
-      <div
-        v-if="showCreateCategoryModal"
-        class="fixed inset-0   bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
-        @click.self="showCreateCategoryModal = false"
-      >
-        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[80vh] overflow-y-auto border border-gray-200">
-          <div class="p-6">
-            <div class="flex items-center justify-between mb-6">
-              <h3 class="text-2xl font-bold text-gray-900">Add New Category</h3>
-              <button
-                @click="showCreateCategoryModal = false"
-                class="text-gray-400 hover:text-gray-600 transition-colors duration-150"
-              >
-                <span class="material-icons">close</span>
-              </button>
-            </div>
-            <form @submit.prevent="handleCreateCategory" class="space-y-4">
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Category Name *</label>
-                <input
-                  v-model="createCategoryForm.name"
-                  type="text"
-                  required
-                  class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-150"
-                  placeholder="Enter category name"
-                />
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Description</label>
-                <textarea
-                  v-model="createCategoryForm.description"
-                  rows="3"
-                  class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-150"
-                  placeholder="Enter category description"
-                ></textarea>
-              </div>
-              <div class="flex items-center">
-                <input
-                  id="is_expired_applicable"
-                  v-model="createCategoryForm.is_expired_applicable"
-                  type="checkbox"
-                  class="h-4 w-4 text-emerald-600 focus:ring-emerald-500 border-gray-300 rounded"
-                />
-                <label for="is_expired_applicable" class="ml-2 block text-sm text-gray-700">
-                  Products in this category require expiry dates
-                </label>
-              </div>
-              <div class="flex space-x-3 pt-6">
-                <button
-                  type="button"
-                  @click="showCreateCategoryModal = false"
-                  class="flex-1 px-4 py-3 border border-gray-300 text-gray-700 rounded-xl font-medium hover:bg-gray-50 transition-colors duration-150"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  class="flex-1 px-4 py-3 bg-emerald-600 text-white rounded-xl font-medium hover:bg-emerald-700 transition-colors duration-150"
-                >
-                  Create Category
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-    </transition>
+    <CreateCategoryModal
+      :show="showCreateCategoryModal"
+      @close="showCreateCategoryModal = false"
+      @submit="handleCreateCategory"
+    />
 
-    <!-- Edit Category Modal -->
-    <transition name="modal-fade">
-      <div
-        v-if="showEditCategoryModal"
-        class="fixed inset-0   bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
-        @click.self="showEditCategoryModal = false"
-      >
-        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[80vh] overflow-y-auto border border-gray-200">
-          <div class="p-6">
-            <div class="flex items-center justify-between mb-6">
-              <h3 class="text-2xl font-bold text-gray-900">Edit Category</h3>
-              <button
-                @click="showEditCategoryModal = false"
-                class="text-gray-400 hover:text-gray-600 transition-colors duration-150"
-              >
-                <span class="material-icons">close</span>
-              </button>
-            </div>
-            <form @submit.prevent="handleEditCategory" class="space-y-4">
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Category Name *</label>
-                <input
-                  v-model="editCategoryForm.name"
-                  type="text"
-                  required
-                  class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-150"
-                  placeholder="Enter category name"
-                />
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Description</label>
-                <textarea
-                  v-model="editCategoryForm.description"
-                  rows="3"
-                  class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-150"
-                  placeholder="Enter category description"
-                ></textarea>
-              </div>
-              <div class="flex items-center">
-                <input
-                  id="edit_is_expired_applicable"
-                  v-model="editCategoryForm.is_expired_applicable"
-                  type="checkbox"
-                  class="h-4 w-4 text-emerald-600 focus:ring-emerald-500 border-gray-300 rounded"
-                />
-                <label for="edit_is_expired_applicable" class="ml-2 block text-sm text-gray-700">
-                  Products in this category require expiry dates
-                </label>
-              </div>
-              <div class="flex space-x-3 pt-6">
-                <button
-                  type="button"
-                  @click="showEditCategoryModal = false"
-                  class="flex-1 px-4 py-3 border border-gray-300 text-gray-700 rounded-xl font-medium hover:bg-gray-50 transition-colors duration-150"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  class="flex-1 px-4 py-3 bg-emerald-600 text-white rounded-xl font-medium hover:bg-emerald-700 transition-colors duration-150"
-                >
-                  Save Changes
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-    </transition>
+    <EditCategoryModal
+      :show="showEditCategoryModal"
+      :edit-category-form="editCategoryForm"
+      @close="showEditCategoryModal = false"
+      @submit="handleEditCategory"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, computed, onUnmounted, watch } from "vue";
+import { onMounted, ref, computed } from "vue";
 import Sidebar from "@/components/Sidebar.vue";
 import Navbar from "@/components/Navbar.vue";
+import StocksCreateModal from "@/components/Stocks/StocksCreateModal.vue";
+import EditProductModal from "@/components/Stocks/EditProductModal.vue";
+import CreateCategoryModal from "@/components/Stocks/CreateCategoryModal.vue";
+import EditCategoryModal from "@/components/Stocks/EditCategoryModal.vue";
 import { useAuthStore } from "@/stores/auth";
 import { useToast } from "vue-toast-notification";
 import {
@@ -1310,6 +894,7 @@ import {
   deleteProduct,
   deleteCategory,
   fetchSuppliers,
+  fetchUnits,
 } from "@/stores/InventoryAPI";
 
 // Type definitions
@@ -1325,6 +910,8 @@ interface Stock {
   cost_price: number;
   margin: number;
   stock: number;
+  unit: string | number;
+  unit_name?: string;
   expires_at?: string;
   description?: string;
   is_expired?: boolean;
@@ -1344,6 +931,12 @@ interface Supplier {
   name: string;
 }
 
+interface Unit {
+  id: number;
+  unit: string;
+  label?: string;
+}
+
 interface CreateProductForm {
   name: string;
   category: string | number;
@@ -1352,6 +945,7 @@ interface CreateProductForm {
   cost_price: number | null;
   margin: number | null;
   stock: number | null;
+  unit: string | number;
   expires_at: string;
   description: string;
 }
@@ -1365,6 +959,7 @@ interface EditProductForm {
   cost_price: number | null;
   margin: number | null;
   stock: number | null;
+  unit: string | number;
   expires_at: string;
   description: string;
 }
@@ -1411,6 +1006,7 @@ const $toast = useToast();
 const stocks = ref<Stock[]>([]);
 const categories = ref<Category[]>([]);
 const suppliers = ref<Supplier[]>([]);
+const units = ref<Unit[]>([]);
 const loading = ref<boolean>(false);
 const dropdownOpen = ref<number | null>(null);
 const showViewModal = ref<boolean>(false);
@@ -1430,6 +1026,7 @@ const editForm = ref<EditProductForm>({
   cost_price: null,
   margin: null,
   stock: null,
+  unit: "",
   expires_at: "",
   description: "",
 });
@@ -1442,6 +1039,7 @@ const createForm = ref<CreateProductForm>({
   cost_price: null,
   margin: null,
   stock: null,
+  unit: "",
   expires_at: "",
   description: "",
 });
@@ -1485,23 +1083,23 @@ const categoryNameMap = computed(() => {
   return map;
 });
 
-const supplierNameMap = computed(() => {
-  const map: Record<number, string> = {};
-  suppliers.value.forEach((supplier) => {
-    map[supplier.id] = supplier.name;
-  });
-  return map;
-});
+// const supplierNameMap = computed(() => {
+//   const map: Record<number, string> = {};
+//   suppliers.value.forEach((supplier) => {
+//     map[supplier.id] = supplier.name;
+//   });
+//   return map;
+// });
 
 // Computed properties for expiry requirements
-const selectedCategory = computed(() => {
-  const categoryId = createForm.value.category;
-  return categories.value.find(cat => cat.id == categoryId) || null;
+const selectedCategory = computed((): Category | null => {
+  const categoryId = Number(createForm.value.category);
+  return categories.value.find(cat => cat.id === categoryId) || null;
 });
 
-const selectedEditCategory = computed(() => {
-  const categoryId = editForm.value.category;
-  return categories.value.find(cat => cat.id == categoryId) || null;
+const selectedEditCategory = computed((): Category | null => {
+  const categoryId = Number(editForm.value.category);
+  return categories.value.find(cat => cat.id === categoryId) || null;
 });
 
 const isExpiryRequired = computed(() => {
@@ -1516,7 +1114,14 @@ async function loadStocks() {
   loading.value = true;
   try {
     const data = await fetchProduct();
-    stocks.value = Array.isArray(data) ? data : [];
+    stocks.value = Array.isArray(data) ? data as Stock[] : [];
+    
+    // Debug: Log the first stock item to see what unit data we have
+    if (stocks.value.length > 0) {
+      console.log("First stock item:", stocks.value[0]);
+      console.log("Unit field:", stocks.value[0].unit);
+      console.log("Unit_name field:", stocks.value[0].unit_name);
+    }
   } catch (e) {
     $toast.error("Failed to fetch stocks.", {
       position: "top-right",
@@ -1531,7 +1136,7 @@ async function loadStocks() {
 async function loadCategories() {
   try {
     const data = await fetchCategory();
-    categories.value = Array.isArray(data) ? data : [];
+    categories.value = Array.isArray(data) ? data as Category[] : [];
   } catch (e) {
     $toast.error("Failed to fetch categories.", {
       position: "top-right",
@@ -1544,13 +1149,47 @@ async function loadCategories() {
 async function loadSuppliers() {
   try {
     const data = await fetchSuppliers();
-    suppliers.value = Array.isArray(data) ? data : [];
+    suppliers.value = Array.isArray(data) ? data as Supplier[] : [];
   } catch (e) {
     $toast.error("Failed to fetch suppliers.", {
       position: "top-right",
       duration: 3000,
       dismissible: true,
     });
+  }
+}
+
+async function loadUnits() {
+  try {
+    const data = await fetchUnits();
+    units.value = Array.isArray(data) ? data as Unit[] : [];
+    console.log("Units loaded:", units.value);
+    
+    if (units.value.length === 0) {
+      $toast.warning("No units found in database.", {
+        position: "top-right",
+        duration: 3000,
+        dismissible: true,
+      });
+    }
+  } catch (e) {
+    console.error("Failed to fetch units:", e);
+    $toast.error("Failed to fetch units from database.", {
+      position: "top-right",
+      duration: 3000,
+      dismissible: true,
+    });
+    // Fix: Update fallback units to match API structure
+    units.value = [
+      { id: 1, unit: "pieces" },
+      { id: 2, unit: "kg" },
+      { id: 3, unit: "liter" },
+      { id: 4, unit: "meter" },
+      { id: 5, unit: "box" },
+      { id: 6, unit: "packet" },
+      { id: 7, unit: "bottle" },
+      { id: 8, unit: "dozen" },
+    ];
   }
 }
 
@@ -1616,9 +1255,11 @@ function openEditModal(id: number) {
   selectedStockId.value = id;
   const stock = stocks.value.find((s) => s.id === id);
   if (stock) {
+    // Find the unit string from the unit_name field for the dropdown
+    const unitString = stock.unit_name || String(stock.unit);
     editForm.value = { 
       ...stock,
-      expires_at: stock.expires_at ? new Date(stock.expires_at).toISOString().slice(0, 16) : ""
+      unit: unitString // Use the unit string for the dropdown
     };
   }
   showEditModal.value = true;
@@ -1634,14 +1275,148 @@ function openEditCategoryModal(cat: Category) {
   showEditCategoryModal.value = true;
 }
 
-// Edit category handler
-async function handleEditCategory() {
+async function handleCreate(formData: CreateProductForm) {
   loading.value = true;
   try {
-    await updateCategory(editCategoryForm.value.id, {
-      name: editCategoryForm.value.name,
-      description: editCategoryForm.value.description,
-      is_expired_applicable: editCategoryForm.value.is_expired_applicable,
+    const data = { ...formData };
+    
+    // Only allow admin/superuser to set expiry dates
+    if (data.expires_at && !canEditExpiry.value) {
+      $toast.error("Only administrators can set expiry dates.", {
+        position: "top-right",
+        duration: 3000,
+        dismissible: true,
+      });
+      return;
+    }
+    
+    // Convert datetime-local to ISO format if expiry is set
+    if (data.expires_at) {
+      data.expires_at = new Date(data.expires_at).toISOString();
+    }
+    
+    // Remove empty serial number to let backend handle it
+    if (!data.serial_number || !data.serial_number.trim()) {
+      const { serial_number, ...dataWithoutSerial } = data;
+      Object.assign(data, dataWithoutSerial);
+    }
+    
+    // Convert unit string to unit ID
+    const selectedUnit = units.value.find(u => u.unit === String(data.unit));
+    if (selectedUnit) {
+      data.unit = selectedUnit.id;
+    }
+    
+    await createProduct(data);
+    showCreateModal.value = false;
+    await loadStocks();
+    $toast.success("Product created successfully!", {
+      position: "top-right",
+      duration: 3000,
+    });
+  } catch (e) {
+    console.error(e);
+    $toast.error("Failed to create product.", {
+      position: "top-right",
+      duration: 3000,
+    });
+  } finally {
+    loading.value = false;
+  }
+}
+
+async function handleEdit(formData: EditProductForm) {
+  if (!selectedStockId.value) {
+    $toast.error("No product selected for editing.", {
+      position: "top-right",
+      duration: 3000,
+      dismissible: true,
+    });
+    return;
+  }
+
+  loading.value = true;
+  try {
+    const data = { ...formData };
+    
+    // Only allow admin/superuser to modify expiry dates
+    if (data.expires_at && !canEditExpiry.value) {
+      $toast.error("Only administrators can modify expiry dates.", {
+        position: "top-right",
+        duration: 3000,
+        dismissible: true,
+      });
+      return;
+    }
+    
+    // Convert datetime-local to ISO format if expiry is set
+    if (data.expires_at) {
+      data.expires_at = new Date(data.expires_at).toISOString();
+    }
+    
+    // Convert unit string to unit ID
+    const selectedUnit = units.value.find(u => u.unit === String(data.unit));
+    if (selectedUnit) {
+      data.unit = selectedUnit.id;
+    }
+    
+    await updateProduct(selectedStockId.value, data);
+    showEditModal.value = false;
+    await loadStocks();
+    $toast.success("Product updated successfully!", {
+      position: "top-right",
+      duration: 5000,
+    });
+  } catch (e) {
+    console.error(e);
+    $toast.error("Failed to update product.", {
+      position: "top-right",
+      duration: 500,
+    });
+  } finally {
+    loading.value = false;
+  }
+}
+
+async function handleCreateCategory(formData: CreateCategoryForm) {
+  loading.value = true;
+  try {
+    await createCatyregory({ ...formData });
+    showCreateCategoryModal.value = false;
+    await loadCategories();
+    $toast.success("Category created successfully!", {
+      position: "top-right",
+      duration: 3000,
+      dismissible: true,
+    });
+  } catch (e) {
+    console.error(e);
+    $toast.error("Failed to create category.", {
+      position: "top-right",
+      duration: 3000,
+      dismissible: true,
+    });
+  } finally {
+    loading.value = false;
+  }
+}
+
+async function handleEditCategory(formData: EditCategoryForm) {
+  loading.value = true;
+  try {
+    if (!formData.id) {
+      $toast.error("Category ID is required for editing.", {
+        position: "top-right",
+        duration: 3000,
+        dismissible: true,
+      });
+      return;
+    }
+    
+    await updateCategory(formData.id, {
+      name: formData.name,
+      description: formData.description,
+      is_expired_applicable: formData.is_expired_applicable,
     });
     showEditCategoryModal.value = false;
     await loadCategories();
@@ -1661,105 +1436,31 @@ async function handleEditCategory() {
   }
 }
 
-async function handleEdit() {
-  loading.value = true;
-  try {
-    const formData = { ...editForm.value };
-    
-    // Convert datetime-local to ISO format if expiry is set
-    if (formData.expires_at) {
-      formData.expires_at = new Date(formData.expires_at).toISOString();
-    }
-    
-    await updateProduct(selectedStockId.value, formData);
-    showEditModal.value = false;
-    await loadStocks();
-    $toast.success("Product updated successfully!", {
-      position: "top-right",
-      duration: 5000,
-    });
-  } catch (e) {
-    console.error(e);
-    $toast.error("Failed to update product.", {
-      position: "top-right",
-      duration: 500,
-    });
-  } finally {
-    loading.value = false;
+// Add a helper function to get unit display
+const getUnit = (item: Stock | null): string => {
+  if (!item) return 'N/A';
+  
+  // Check unit_name first since it contains the actual unit string from the serializer
+  if (item.unit_name && typeof item.unit_name === 'string' && item.unit_name.trim()) {
+    return item.unit_name;
   }
-}
-
-async function handleCreate() {
-  loading.value = true;
-  try {
-    const formData = { ...createForm.value };
-    
-    // Convert datetime-local to ISO format if expiry is set
-    if (formData.expires_at) {
-      formData.expires_at = new Date(formData.expires_at).toISOString();
+  
+  // Fallback to unit field, but check if it's a string first
+  if (item.unit) {
+    if (typeof item.unit === 'string' && item.unit.trim()) {
+      return item.unit;
     }
-    
-    // Remove empty serial number to let backend handle it
-    if (!formData.serial_number || !formData.serial_number.trim()) {
-      delete formData.serial_number;
+    // If unit is a number (ID), try to find the corresponding unit name
+    if (typeof item.unit === 'number') {
+      const unitObj = units.value.find(u => u.id === item.unit);
+      if (unitObj) {
+        return unitObj.unit;
+      }
     }
-    
-    await createProduct(formData);
-    showCreateModal.value = false;
-    createForm.value = {
-      name: "",
-      category: "",
-      supliers: "",
-      serial_number: "",
-      cost_price: null,
-      margin: null,
-      stock: null,
-      expires_at: "",
-      description: "",
-    };
-    await loadStocks();
-    $toast.success("Product created successfully!", {
-      position: "top-right",
-      duration: 3000,
-    });
-  } catch (e) {
-    console.error(e);
-    $toast.error("Failed to create product.", {
-      position: "top-right",
-      duration: 3000,
-    });
-  } finally {
-    loading.value = false;
   }
-}
-
-async function handleCreateCategory() {
-  loading.value = true;
-  try {
-    await createCatyregory({ ...createCategoryForm.value });
-    showCreateCategoryModal.value = false;
-    createCategoryForm.value = { 
-      name: "", 
-      description: "", 
-      is_expired_applicable: false 
-    };
-    await loadCategories();
-    $toast.success("Category created successfully!", {
-      position: "top-right",
-      duration: 3000,
-      dismissible: true,
-    });
-  } catch (e) {
-    console.error(e);
-    $toast.error("Failed to create category.", {
-      position: "top-right",
-      duration: 3000,
-      dismissible: true,
-    });
-  } finally {
-    loading.value = false;
-  }
-}
+  
+  return 'N/A';
+};
 
 // Close dropdown on outside click
 const handleClickOutside = (event: Event) => {
@@ -1788,38 +1489,6 @@ const handleKeyDown = (event: KeyboardEvent) => {
     dropdownOpen.value = null;
   }
 };
-
-onMounted(async () => {
-  if (!auth.user) {
-    await auth.self();
-  }
-  await Promise.all([loadStocks(), loadCategories(), loadSuppliers()]);
-});
-
-onMounted(() => {
-  window.addEventListener("click", handleClickOutside);
-  window.addEventListener("keydown", handleKeyDown);
-});
-
-onUnmounted(() => {
-  window.removeEventListener("click", handleClickOutside);
-  window.removeEventListener("keydown", handleKeyDown);
-});
-
-// Watch for category changes
-watch(() => createForm.value.category, (newCategoryId) => {
-  const category = categories.value.find(cat => cat.id == newCategoryId);
-  if (category && !category.is_expired_applicable) {
-    createForm.value.expires_at = "";
-  }
-});
-
-watch(() => editForm.value.category, (newCategoryId) => {
-  const category = categories.value.find(cat => cat.id == newCategoryId);
-  if (category && !category.is_expired_applicable) {
-    editForm.value.expires_at = "";
-  }
-});
 
 // Helper function with proper type
 function formatDate(dateString: string | undefined): string {
@@ -1850,6 +1519,17 @@ function handleCreateCategoryClick() {
   }
   showCreateCategoryModal.value = true;
 }
+
+onMounted(async () => {
+  if (!auth.user) {
+    await auth.self();
+  }
+  await Promise.all([loadStocks(), loadCategories(), loadSuppliers(), loadUnits()]);
+  
+  // Add event listeners for better UX
+  document.addEventListener("click", handleClickOutside);
+  document.addEventListener("keydown", handleKeyDown);
+});
 </script>
 
 <style scoped>
@@ -1868,6 +1548,26 @@ function handleCreateCategoryClick() {
   font-size: 12px;
 }
 
+/* Unit dropdown styling */
+select option {
+  color: #000000 !important;
+  background-color: #ffffff !important;
+}
+
+select {
+  color: #000000 !important;
+}
+
+select:focus {
+  color: #000000 !important;
+}
+
+/* Ensure dropdown options are visible and readable */
+select option:hover {
+  background-color: #f3f4f6 !important;
+  color: #000000 !important;
+}
+
 /* Unified scrollbar styling for all elements */
 .overflow-auto::-webkit-scrollbar,
 .overflow-x-auto::-webkit-scrollbar,
@@ -1876,15 +1576,7 @@ function handleCreateCategoryClick() {
   width: 8px;
 }
 
-.overflow-auto::-webkit-scrollbar-track,
-.overflow-x-auto::-webkit-scrollbar-track,
-.overflow-y-auto::-webkit-scrollbar-track {
-  background: #f8fafc;
-  border-radius: 4px;
-}
-
-.overflow-auto::-webkit-scrollbar-thumb,
-.overflow-x-auto::-webkit-scrollbar-thumb,
+.overflow-auto
 .overflow-y-auto::-webkit-scrollbar-thumb {
   background: linear-gradient(135deg, #e2e8f0, #cbd5e1);
   border-radius: 4px;

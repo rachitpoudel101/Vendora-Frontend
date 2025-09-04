@@ -19,7 +19,7 @@
               >
                 <div>
                   <h1
-                    class="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-2 bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent"
+                    class="text-2xl sm:text-3xl lg:text-4xl font-bold  mb-2 bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent"
                   >
                     Users Management
                   </h1>
@@ -544,8 +544,8 @@ import { useToast } from "vue-toast-notification";
 import { useAuthStore } from "@/stores/auth";
 import Sidebar from "@/components/Sidebar.vue";
 import Navbar from "@/components/Navbar.vue";
-import UserEditModal from "@/components/UserEditModal.vue";
-import UserEditRole from "@/components/UserEditRole.vue";
+import UserEditModal from "@/components/Users/UserEditModal.vue";
+import UserEditRole from "@/components/Users/UserEditRole.vue";
 import { fetchUsers, deleteUser, restoreUser } from "@/stores/usersAPI";
 
 const router = useRouter();

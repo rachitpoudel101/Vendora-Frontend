@@ -668,156 +668,13 @@
 
         <!-- Bill Summary Section -->
         <div class="mt-4 sm:mt-6">
-          <div
-            class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden"
-          >
-            <div
-              class="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-4 sm:px-6 py-3 sm:py-4"
-            >
-              <h3 class="font-semibold text-base sm:text-lg flex items-center">
-                <svg
-                  class="w-4 h-4 sm:w-5 sm:h-5 mr-2"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4zM18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z"
-                  />
-                </svg>
-                Bill Summary
-              </h3>
-            </div>
-
-            <!-- Mobile Summary Cards -->
-            <div class="block sm:hidden p-4 space-y-3">
-              <div
-                class="flex justify-between items-center p-3 bg-gray-50 rounded-lg"
-              >
-                <span class="text-sm font-medium text-gray-700"
-                  >Total Quantity:</span
-                >
-                <span class="text-lg font-bold text-gray-900">{{
-                  totalQuantity
-                }}</span>
-              </div>
-              <div
-                class="flex justify-between items-center p-3 bg-gray-50 rounded-lg"
-              >
-                <span class="text-sm font-medium text-gray-700">Subtotal:</span>
-                <span class="text-lg font-bold text-gray-900"
-                  >Rs. {{ totalAmount.toFixed(2) }}</span
-                >
-              </div>
-              <div
-                class="flex justify-between items-center p-3 bg-gray-50 rounded-lg"
-              >
-                <span class="text-sm font-medium text-gray-700">Discount:</span>
-                <span class="text-lg font-bold text-red-600"
-                  >- Rs. {{ totalDiscountAmount.toFixed(2) }}</span
-                >
-              </div>
-              <div
-                class="flex justify-between items-center p-3 bg-gray-50 rounded-lg"
-              >
-                <span class="text-sm font-medium text-gray-700"
-                  >VAT Amount:</span
-                >
-                <span class="text-lg font-bold text-gray-900"
-                  >Rs. {{ totalTaxAmount.toFixed(2) }}</span
-                >
-              </div>
-              <div
-                class="flex justify-between items-center p-3 bg-blue-50 rounded-lg border-2 border-blue-200"
-              >
-                <span class="text-sm font-bold text-gray-900"
-                  >Grand Total:</span
-                >
-                <span class="text-xl font-bold text-blue-600"
-                  >Rs. {{ grandTotal.toFixed(2) }}</span
-                >
-              </div>
-            </div>
-
-            <!-- Desktop Summary Grid -->
-            <div
-              class="hidden sm:block p-4 sm:p-6 grid grid-cols-2 lg:grid-cols-5 gap-4 sm:gap-6"
-            >
-              <!-- Total Quantity -->
-              <div
-                class="flex flex-col items-center justify-center p-3 sm:p-4 bg-gray-50 rounded-lg"
-              >
-                <label class="text-xs sm:text-sm font-medium text-gray-700 mb-2"
-                  >Total Quantity:</label
-                >
-                <div class="flex items-center space-x-2">
-                  <span class="text-xl sm:text-2xl font-bold text-gray-900">{{
-                    totalQuantity
-                  }}</span>
-                  <select
-                    class="border border-gray-300 rounded text-xs px-1 sm:px-2 py-1 text-gray-500"
-                  >
-                    <option>pcs</option>
-                  </select>
-                </div>
-              </div>
-
-              <!-- Subtotal -->
-              <div
-                class="flex flex-col items-center justify-center p-3 sm:p-4 bg-gray-50 rounded-lg"
-              >
-                <label class="text-xs sm:text-sm font-medium text-gray-700 mb-2"
-                  >Subtotal:</label
-                >
-                <div class="text-center">
-                  <span class="text-xl sm:text-2xl font-bold text-gray-900"
-                    >Rs. {{ totalAmount.toFixed(2) }}</span
-                  >
-                </div>
-              </div>
-
-              <!-- Discount Amount -->
-              <div
-                class="flex flex-col items-center justify-center p-3 sm:p-4 bg-gray-50 rounded-lg"
-              >
-                <label class="text-xs sm:text-sm font-medium text-gray-700 mb-2"
-                  >Discount:</label
-                >
-                <div class="text-center">
-                  <span class="text-xl sm:text-2xl font-bold text-red-600"
-                    >- Rs. {{ totalDiscountAmount.toFixed(2) }}</span
-                  >
-                </div>
-              </div>
-
-              <!-- VAT Amount -->
-              <div
-                class="flex flex-col items-center justify-center p-3 sm:p-4 bg-gray-50 rounded-lg"
-              >
-                <label class="text-xs sm:text-sm font-medium text-gray-700 mb-2"
-                  >VAT Amount:</label
-                >
-                <div class="text-center">
-                  <span class="text-xl sm:text-2xl font-bold text-gray-900"
-                    >Rs. {{ totalTaxAmount.toFixed(2) }}</span
-                  >
-                </div>
-              </div>
-
-              <!-- Grand Total -->
-              <div
-                class="flex flex-col items-center justify-center p-3 sm:p-4 bg-blue-50 rounded-lg border-2 border-blue-200"
-              >
-                <label class="text-xs sm:text-sm font-bold text-gray-900 mb-2"
-                  >Grand Total:</label
-                >
-                <div class="text-center">
-                  <span class="text-2xl sm:text-3xl font-bold text-blue-600"
-                    >Rs. {{ grandTotal.toFixed(2) }}</span
-                  >
-                </div>
-              </div>
-            </div>
-          </div>
+          <BillSummary
+            :totalQuantity="totalQuantity"
+            :subtotal="totalAmount"
+            :discount="totalDiscountAmount"
+            :vatAmount="totalTaxAmount"
+            :grandTotal="grandTotal"
+          />
         </div>
       </div>
     </div>
@@ -830,6 +687,7 @@ import { useRouter } from "vue-router";
 import { createBills } from "@/stores/billsAPI";
 import { fetchProduct } from "@/stores/InventoryAPI";
 import { useAuthStore } from "@/stores/auth";
+import BillSummary from "@/components/Bill/BillSummary.vue";
 
 // Form data
 const customerName = ref("");
@@ -1180,6 +1038,71 @@ const onSubmit = async () => {
 };
 </script>
 
+<style scoped>
+/* Custom scrollbar for webkit browsers */
+.overflow-x-auto::-webkit-scrollbar {
+  height: 6px;
+}
+
+.overflow-x-auto::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 3px;
+}
+
+.overflow-x-auto::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+.overflow-x-auto::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Hide number input spinners */
+.no-spinner::-webkit-outer-spin-button,
+.no-spinner::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.no-spinner[type="number"] {
+  -moz-appearance: textfield;
+}
+
+/* Smooth transitions */
+* {
+  transition: all 0.2s ease-in-out;
+}
+
+/* Focus styles */
+input:focus,
+select:focus,
+textarea:focus {
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Enhanced mobile responsiveness */
+@media (max-width: 640px) {
+  .max-w-7xl {
+    max-width: calc(100vw - 1rem);
+  }
+
+  .max-h-\[95vh\] {
+    max-height: 95vh;
+  }
+}
+
+/* Improved scrollbar for mobile */
+@media (max-width: 768px) {
+  .overflow-x-auto::-webkit-scrollbar {
+    height: 4px;
+  }
+
+  .overflow-y-auto::-webkit-scrollbar {
+    width: 4px;
+  }
+}
+</style>
 <style scoped>
 /* Custom scrollbar for webkit browsers */
 .overflow-x-auto::-webkit-scrollbar {
