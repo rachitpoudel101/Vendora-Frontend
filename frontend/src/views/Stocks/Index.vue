@@ -242,6 +242,12 @@
                           </div>
                         </div>
                         <div>
+                          <span class="text-gray-500 block">Supplier</span>
+                          <span class="font-semibold text-gray-900 mt-1 block">
+                            {{ item.supliers_name || 'N/A' }}
+                          </span>
+                        </div>
+                        <div>
                           <span class="text-gray-500 block">Selling Price</span>
                           <span class="font-semibold text-blue-600 mt-1 block">
                             Rs.
@@ -265,7 +271,7 @@
                             <th
                               class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
                             >
-                              #
+                              S.N.
                             </th>
                             <th
                               class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
@@ -276,6 +282,11 @@
                               class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
                             >
                               Category
+                            </th>
+                            <th
+                              class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
+                            >
+                              Supplier
                             </th>
                             <th
                               class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
@@ -314,6 +325,11 @@
                                   item.category_name
                                 }}
                               </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                              <div class="text-sm font-medium text-gray-900">
+                                {{ item.supliers_name || 'N/A' }}
+                              </div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                               <div class="flex items-center">
@@ -511,16 +527,24 @@
                         <p class="text-gray-600 text-sm mt-1">
                           {{ cat.description || "No description" }}
                         </p>
+                        <div class="flex items-center mt-2" v-if="cat.is_expired_applicable">
+                          <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-amber-100 text-amber-800">
+                            <span class="material-icons text-12 mr-1">schedule</span>
+                            Expiry Required
+                          </span>
+                        </div>
                       </div>
                       <div class="flex space-x-2 ml-4">
                         <button
+                          v-if="!isStaff"
                           @click="openEditCategoryModal(cat)"
                           class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                         >
                           <span class="material-icons text-18">edit</span>
                         </button>
                         <button
-                          @click="deleteCategory(cat.id)"
+                          v-if="!isStaff"
+                          @click="deleteCategoryHandler(cat.id)"
                           class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                         >
                           <span class="material-icons text-18">delete</span>
@@ -540,7 +564,7 @@
                         <th
                           class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
                         >
-                          #
+                          S.N.
                         </th>
                         <th
                           class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
@@ -551,6 +575,11 @@
                           class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
                         >
                           Description
+                        </th>
+                        <th
+                          class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
+                        >
+                          Expiry Required
                         </th>
                         <th
                           class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
@@ -580,11 +609,28 @@
                             {{ cat.description || "No description" }}
                           </div>
                         </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                          <span
+                            v-if="cat.is_expired_applicable"
+                            class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-amber-100 text-amber-800"
+                          >
+                            <span class="material-icons text-12 mr-1">schedule</span>
+                            Yes
+                          </span>
+                          <span
+                            v-else
+                            class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800"
+                          >
+                            <span class="material-icons text-12 mr-1">block</span>
+                            No
+                          </span>
+                        </td>
                         <td
                           class="px-6 py-4 whitespace-nowrap text-sm font-medium"
                         >
                           <div class="flex space-x-3">
                             <button
+                              v-if="!isStaff"
                               @click="openEditCategoryModal(cat)"
                               class="text-blue-600 hover:text-blue-900 transition-colors duration-150"
                               title="Edit Category"
@@ -592,18 +638,25 @@
                               <span class="material-icons text-18">edit</span>
                             </button>
                             <button
-                              @click="deleteCategory(cat.id)"
+                              v-if="!isStaff"
+                              @click="deleteCategoryHandler(cat.id)"
                               class="text-red-600 hover:text-red-900 transition-colors duration-150"
                               title="Delete Category"
                             >
                               <span class="material-icons text-18">delete</span>
                             </button>
+                            <span
+                              v-if="isStaff"
+                              class="text-gray-400 text-sm font-medium"
+                            >
+                              View Only
+                            </span>
                           </div>
                         </td>
                       </tr>
                       <tr v-if="categories.length === 0">
                         <td
-                          colspan="4"
+                          colspan="5"
                           class="px-6 py-12 text-center text-gray-500"
                         >
                           <div class="flex flex-col items-center">
@@ -635,11 +688,11 @@
     <transition name="modal-fade">
       <div
         v-if="showViewModal"
-        class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+        class="fixed inset-0  bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
         @click.self="showViewModal = false"
       >
         <div
-          class="bg-white rounded-xl sm:rounded-2xl shadow-2xl w-full max-w-sm sm:max-w-md max-h-90vh overflow-y-auto border border-gray-200"
+          class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto border border-gray-200"
         >
           <div class="p-6">
             <div class="flex items-center justify-between mb-6">
@@ -651,63 +704,117 @@
                 <span class="material-icons">close</span>
               </button>
             </div>
+            
             <div class="space-y-4">
-              <div
-                class="flex justify-between items-center py-3 border-b border-gray-100"
-              >
-                <span class="font-medium text-gray-600">Product Name</span>
-                <span class="text-gray-900 font-semibold">{{
-                  selectedStock?.name
-                }}</span>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="md:col-span-2">
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Product Name</label>
+                  <div class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-xl text-gray-900 font-semibold">
+                    {{ selectedStock?.name || 'N/A' }}
+                  </div>
+                </div>
+                
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Category</label>
+                  <div class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-xl">
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">
+                      {{ selectedStock?.category_name || 'N/A' }}
+                    </span>
+                  </div>
+                </div>
+                
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Supplier</label>
+                  <div class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-xl text-gray-900 font-semibold">
+                    {{ selectedStock?.supliers_name || 'N/A' }}
+                  </div>
+                </div>
+                
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Batch Number</label>
+                  <div class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-xl text-gray-900 font-semibold">
+                    {{ selectedStock?.batch_number || 'Auto-generated' }}
+                  </div>
+                </div>
+                
+                <div v-if="selectedStock?.serial_number">
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Serial Number</label>
+                  <div class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-xl text-gray-900 font-semibold">
+                    {{ selectedStock?.serial_number }}
+                  </div>
+                </div>
+                
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Stock Quantity</label>
+                  <div class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-xl">
+                    <div class="flex items-center">
+                      <span class="text-gray-900 font-semibold mr-2">{{ selectedStock?.stock || 0 }}</span>
+                      <span
+                        class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium"
+                        :class="
+                          (selectedStock?.stock || 0) > 10
+                            ? 'bg-green-100 text-green-800'
+                            : (selectedStock?.stock || 0) > 5
+                              ? 'bg-yellow-100 text-yellow-800'
+                              : 'bg-red-100 text-red-800'
+                        "
+                      >
+                        {{
+                          (selectedStock?.stock || 0) > 10
+                            ? "In Stock"
+                            : (selectedStock?.stock || 0) > 5
+                              ? "Low Stock"
+                              : "Critical"
+                        }}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Cost Price</label>
+                  <div class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-xl text-gray-900 font-semibold">
+                    Rs. {{ selectedStock?.cost_price || 0 }}
+                  </div>
+                </div>
+                
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Margin</label>
+                  <div class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-xl text-gray-900 font-semibold">
+                    Rs. {{ selectedStock?.margin || 0 }}
+                  </div>
+                </div>
+                
+                <div v-if="selectedStock?.expires_at">
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Expiry Date</label>
+                  <div class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-xl text-gray-900 font-semibold">
+                    {{ formatDate(selectedStock?.expires_at) }}
+                  </div>
+                </div>
+                
+                <div v-if="selectedStock?.description" class="md:col-span-2">
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                  <div class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-xl text-gray-900">
+                    {{ selectedStock?.description }}
+                  </div>
+                </div>
               </div>
-              <div
-                class="flex justify-between items-center py-3 border-b border-gray-100"
-              >
-                <span class="font-medium text-gray-600">Category</span>
-                <span
-                  class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800"
+              
+              <div class="bg-blue-50 p-4 rounded-xl mt-4">
+                <div class="flex justify-between items-center">
+                  <span class="font-medium text-gray-700">Selling Price:</span>
+                  <span class="text-xl font-bold text-blue-600">Rs. {{ viewSellingPrice }}</span>
+                </div>
+              </div>
+              
+              <div class="flex space-x-3 pt-6 border-t border-gray-200">
+                <button
+                  @click="showViewModal = false"
+                  class="flex-1 px-4 py-3 bg-gray-100 text-gray-700 rounded-xl font-medium hover:bg-gray-200 transition-colors duration-150"
                 >
-                  {{ selectedStock?.category_name }}
-                </span>
+                  Close
+                </button>
               </div>
-              <div
-                class="flex justify-between items-center py-3 border-b border-gray-100"
-              >
-                <span class="font-medium text-gray-600">Stock Quantity</span>
-                <span class="text-gray-900 font-semibold">{{
-                  selectedStock?.stock
-                }}</span>
-              </div>
-              <div
-                class="flex justify-between items-center py-3 border-b border-gray-100"
-              >
-                <span class="font-medium text-gray-600">Cost Price</span>
-                <span class="text-gray-900 font-semibold"
-                  >Rs. {{ selectedStock?.cost_price }}</span
-                >
-              </div>
-              <div
-                class="flex justify-between items-center py-3 border-b border-gray-100"
-              >
-                <span class="font-medium text-gray-600">Margin</span>
-                <span class="text-gray-900 font-semibold"
-                  >Rs. {{ selectedStock?.margin }}</span
-                >
-              </div>
-              <div class="flex justify-between items-center py-3">
-                <span class="font-medium text-gray-600">Selling Price</span>
-                <span class="text-blue-600 font-bold text-lg"
-                  >Rs. {{ viewSellingPrice }}</span
-                >
-              </div>
-            </div>
-            <div class="mt-6 pt-6 border-t border-gray-200">
-              <button
-                @click="showViewModal = false"
-                class="w-full px-4 py-3 bg-gray-100 text-gray-700 rounded-xl font-medium hover:bg-gray-200 transition-colors duration-150"
-              >
-                Close
-              </button>
             </div>
           </div>
         </div>
@@ -718,11 +825,11 @@
     <transition name="modal-fade">
       <div
         v-if="showEditModal"
-        class="fixed inset-0 bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+        class="fixed inset-0   bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
         @click.self="showEditModal = false"
       >
         <div
-          class="bg-white rounded-2xl shadow-2xl max-w-md w-full max-h-90vh overflow-y-auto border border-gray-200"
+          class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto border border-gray-200"
         >
           <div class="p-6">
             <div class="flex items-center justify-between mb-6">
@@ -735,69 +842,128 @@
               </button>
             </div>
             <form @submit.prevent="handleEdit" class="space-y-4">
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2"
-                  >Product Name</label
-                >
-                <input
-                  v-model="editForm.name"
-                  type="text"
-                  class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-150"
-                  placeholder="Enter product name"
-                />
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2"
-                  >Category</label
-                >
-                <select
-                  v-model="editForm.category"
-                  class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-150"
-                >
-                  <option value="" disabled>Select Category</option>
-                  <option
-                    v-for="cat in categories"
-                    :key="cat.id"
-                    :value="cat.id"
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="md:col-span-2">
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Product Name *</label>
+                  <input
+                    v-model="editForm.name"
+                    type="text"
+                    required
+                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-150"
+                    placeholder="Enter product name"
+                  />
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Category *</label>
+                  <select
+                    v-model="editForm.category"
+                    required
+                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-150"
                   >
-                    {{ cat.name }}
-                  </option>
-                </select>
+                    <option value="" disabled>Select Category</option>
+                    <option v-for="cat in categories" :key="cat.id" :value="cat.id">
+                      {{ cat.name }}
+                    </option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Supplier *</label>
+                  <select
+                    v-model="editForm.supliers"
+                    required
+                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-150"
+                  >
+                    <option value="" disabled>Select Supplier</option>
+                    <option v-for="supplier in suppliers" :key="supplier.id" :value="supplier.id">
+                      {{ supplier.name }}
+                    </option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Serial Number</label>
+                  <input
+                    v-model="editForm.serial_number"
+                    type="text"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-150"
+                    placeholder="Serial number (optional)"
+                  />
+                  <p class="text-xs text-gray-500 mt-1">Leave empty if not applicable</p>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Stock Quantity *</label>
+                  <input
+                    v-model="editForm.stock"
+                    type="number"
+                    min="0"
+                    required
+                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-150"
+                    placeholder="0"
+                  />
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Cost Price *</label>
+                  <input
+                    v-model="editForm.cost_price"
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    required
+                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-150"
+                    placeholder="0.00"
+                  />
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Margin *</label>
+                  <input
+                    v-model="editForm.margin"
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    required
+                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-150"
+                    placeholder="0.00"
+                  />
+                </div>
+                <div v-if="isEditExpiryRequired">
+                  <label class="block text-sm font-medium text-gray-700 mb-2">
+                    Expiry Date *
+                    <span v-if="!canEditExpiry" class="text-xs text-amber-600 font-normal ml-1">(Admin/Superuser only)</span>
+                  </label>
+                  <input
+                    v-model="editForm.expires_at"
+                    type="datetime-local"
+                    :required="isEditExpiryRequired"
+                    :disabled="!canEditExpiry"
+                    :class="[
+                      'w-full px-4 py-3 border border-gray-300 rounded-xl transition-all duration-150',
+                      canEditExpiry 
+                        ? 'focus:ring-2 focus:ring-blue-500 focus:border-transparent' 
+                        : 'bg-gray-100 cursor-not-allowed text-gray-500'
+                    ]"
+                  />
+                  <p v-if="!canEditExpiry" class="text-xs text-amber-600 mt-1">
+                    Only administrators can modify expiry dates
+                  </p>
+                </div>
+                <div class="md:col-span-2">
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                  <textarea
+                    v-model="editForm.description"
+                    rows="3"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-150"
+                    placeholder="Enter product description"
+                  ></textarea>
+                </div>
               </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2"
-                  >Cost Price</label
-                >
-                <input
-                  v-model="editForm.cost_price"
-                  type="number"
-                  class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-150"
-                  placeholder="0.00"
-                />
+              
+              <div class="bg-blue-50 p-4 rounded-xl mt-4">
+                <div class="flex justify-between items-center">
+                  <span class="font-medium text-gray-700">Selling Price:</span>
+                  <span class="text-xl font-bold text-blue-600">Rs. {{ editSellingPrice }}</span>
+                </div>
               </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2"
-                  >Margin</label
-                >
-                <input
-                  v-model="editForm.margin"
-                  type="number"
-                  class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-150"
-                  placeholder="0.00"
-                />
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2"
-                  >Stock Quantity</label
-                >
-                <input
-                  v-model="editForm.stock"
-                  type="number"
-                  class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-150"
-                  placeholder="0"
-                />
-              </div>
-              <div class="flex space-x-3 pt-6">
+              
+              <div class="flex space-x-3 pt-6 border-t border-gray-200">
                 <button
                   type="button"
                   @click="showEditModal = false"
@@ -822,12 +988,10 @@
     <transition name="modal-fade">
       <div
         v-if="showCreateModal"
-        class="fixed inset-0 bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+        class="fixed inset-0   bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
         @click.self="showCreateModal = false"
       >
-        <div
-          class="bg-white rounded-2xl shadow-2xl max-w-md w-full max-h-90vh overflow-y-auto border border-gray-200"
-        >
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto border border-gray-200">
           <div class="p-6">
             <div class="flex items-center justify-between mb-6">
               <h3 class="text-2xl font-bold text-gray-900">Add New Product</h3>
@@ -839,80 +1003,135 @@
               </button>
             </div>
             <form @submit.prevent="handleCreate" class="space-y-4">
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2"
-                  >Product Name</label
-                >
-                <input
-                  v-model="createForm.name"
-                  type="text"
-                  class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-150"
-                  placeholder="Enter product name"
-                />
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2"
-                  >Category</label
-                >
-                <select
-                  v-model="createForm.category"
-                  class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-150"
-                >
-                  <option value="" disabled>Select Category</option>
-                  <option
-                    v-for="cat in categories"
-                    :key="cat.id"
-                    :value="cat.id"
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="md:col-span-2">
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Product Name *</label>
+                  <input
+                    v-model="createForm.name"
+                    type="text"
+                    required
+                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-150"
+                    placeholder="Enter product name"
+                  />
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Category *</label>
+                  <select
+                    v-model="createForm.category"
+                    required
+                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-150"
                   >
-                    {{ cat.name }}
-                  </option>
-                </select>
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2"
-                  >Cost Price</label
-                >
-                <input
-                  v-model.number="createForm.cost_price"
-                  type="number"
-                  min="0"
-                  class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-150"
-                  placeholder="0.00"
-                />
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2"
-                  >Margin</label
-                >
-                <input
-                  v-model.number="createForm.margin"
-                  type="number"
-                  min="0"
-                  class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-150"
-                  placeholder="0.00"
-                />
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2"
-                  >Stock Quantity</label
-                >
-                <input
-                  v-model.number="createForm.stock"
-                  type="number"
-                  min="0"
-                  class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-150"
-                  placeholder="0"
-                />
-              </div>
-              <div class="bg-blue-50 p-4 rounded-xl">
-                <div class="flex justify-between items-center">
-                  <span class="font-medium text-gray-700">Selling Price:</span>
-                  <span class="text-xl font-bold text-blue-600"
-                    >Rs. {{ sellingPrice }}</span
+                    <option value="" disabled>Select Category</option>
+                    <option v-for="cat in categories" :key="cat.id" :value="cat.id">
+                      {{ cat.name }}
+                    </option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Supplier *</label>
+                  <select
+                    v-model="createForm.supliers"
+                    required
+                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-150"
                   >
+                    <option value="" disabled>Select Supplier</option>
+                    <option v-for="supplier in suppliers" :key="supplier.id" :value="supplier.id">
+                      {{ supplier.name }}
+                    </option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Serial Number</label>
+                  <input
+                    v-model="createForm.serial_number"
+                    type="text"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-150"
+                    placeholder="Serial number (optional)"
+                  />
+                  <p class="text-xs text-gray-500 mt-1">Leave empty if not applicable</p>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Stock Quantity *</label>
+                  <input
+                    v-model.number="createForm.stock"
+                    type="number"
+                    min="0"
+                    required
+                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-150"
+                    placeholder="0"
+                  />
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Cost Price *</label>
+                  <input
+                    v-model.number="createForm.cost_price"
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    required
+                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-150"
+                    placeholder="0.00"
+                  />
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Margin *</label>
+                  <input
+                    v-model.number="createForm.margin"
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    required
+                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-150"
+                    placeholder="0.00"
+                  />
+                </div>
+                <div v-if="isExpiryRequired">
+                  <label class="block text-sm font-medium text-gray-700 mb-2">
+                    Expiry Date *
+                    <span v-if="!canEditExpiry" class="text-xs text-amber-600 font-normal ml-1">(Admin/Superuser only)</span>
+                  </label>
+                  <input
+                    v-model="createForm.expires_at"
+                    type="datetime-local"
+                    :required="isExpiryRequired"
+                    :disabled="!canEditExpiry"
+                    :class="[
+                      'w-full px-4 py-3 border border-gray-300 rounded-xl transition-all duration-150',
+                      canEditExpiry 
+                        ? 'focus:ring-2 focus:ring-blue-500 focus:border-transparent' 
+                        : 'bg-gray-100 cursor-not-allowed text-gray-500'
+                    ]"
+                  />
+                  <p v-if="!canEditExpiry" class="text-xs text-amber-600 mt-1">
+                    Only administrators can set expiry dates for products
+                  </p>
+                </div>
+                <div class="md:col-span-2">
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                  <textarea
+                    v-model="createForm.description"
+                    rows="3"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-150"
+                    placeholder="Enter product description"
+                  ></textarea>
                 </div>
               </div>
-              <div class="flex space-x-3 pt-6">
+              
+              <div class="bg-blue-50 p-4 rounded-xl mt-4">
+                <div class="flex justify-between items-center">
+                  <span class="font-medium text-gray-700">Selling Price:</span>
+                  <span class="text-xl font-bold text-blue-600">Rs. {{ sellingPrice }}</span>
+                </div>
+              </div>
+              
+              <div class="bg-gray-50 p-4 rounded-xl">
+                <div class="flex items-center text-sm text-gray-600">
+                  <span class="material-icons text-16 mr-2">info</span>
+                  <span>Batch number will be auto-generated after creation</span>
+                </div>
+              </div>
+              
+              <div class="flex space-x-3 pt-6 border-t border-gray-200">
                 <button
                   type="button"
                   @click="showCreateModal = false"
@@ -937,12 +1156,10 @@
     <transition name="modal-fade">
       <div
         v-if="showCreateCategoryModal"
-        class="fixed inset-0 bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+        class="fixed inset-0   bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
         @click.self="showCreateCategoryModal = false"
       >
-        <div
-          class="bg-white rounded-2xl shadow-2xl max-w-md w-full border border-gray-200"
-        >
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[80vh] overflow-y-auto border border-gray-200">
           <div class="p-6">
             <div class="flex items-center justify-between mb-6">
               <h3 class="text-2xl font-bold text-gray-900">Add New Category</h3>
@@ -955,26 +1172,34 @@
             </div>
             <form @submit.prevent="handleCreateCategory" class="space-y-4">
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2"
-                  >Category Name</label
-                >
+                <label class="block text-sm font-medium text-gray-700 mb-2">Category Name *</label>
                 <input
                   v-model="createCategoryForm.name"
                   type="text"
+                  required
                   class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-150"
                   placeholder="Enter category name"
                 />
               </div>
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2"
-                  >Description</label
-                >
+                <label class="block text-sm font-medium text-gray-700 mb-2">Description</label>
                 <textarea
                   v-model="createCategoryForm.description"
                   rows="3"
                   class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-150"
                   placeholder="Enter category description"
                 ></textarea>
+              </div>
+              <div class="flex items-center">
+                <input
+                  id="is_expired_applicable"
+                  v-model="createCategoryForm.is_expired_applicable"
+                  type="checkbox"
+                  class="h-4 w-4 text-emerald-600 focus:ring-emerald-500 border-gray-300 rounded"
+                />
+                <label for="is_expired_applicable" class="ml-2 block text-sm text-gray-700">
+                  Products in this category require expiry dates
+                </label>
               </div>
               <div class="flex space-x-3 pt-6">
                 <button
@@ -1001,12 +1226,10 @@
     <transition name="modal-fade">
       <div
         v-if="showEditCategoryModal"
-        class="fixed inset-0 bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+        class="fixed inset-0   bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
         @click.self="showEditCategoryModal = false"
       >
-        <div
-          class="bg-white rounded-2xl shadow-2xl max-w-md w-full border border-gray-200"
-        >
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[80vh] overflow-y-auto border border-gray-200">
           <div class="p-6">
             <div class="flex items-center justify-between mb-6">
               <h3 class="text-2xl font-bold text-gray-900">Edit Category</h3>
@@ -1019,26 +1242,34 @@
             </div>
             <form @submit.prevent="handleEditCategory" class="space-y-4">
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2"
-                  >Category Name</label
-                >
+                <label class="block text-sm font-medium text-gray-700 mb-2">Category Name *</label>
                 <input
                   v-model="editCategoryForm.name"
                   type="text"
+                  required
                   class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-150"
                   placeholder="Enter category name"
                 />
               </div>
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2"
-                  >Description</label
-                >
+                <label class="block text-sm font-medium text-gray-700 mb-2">Description</label>
                 <textarea
                   v-model="editCategoryForm.description"
                   rows="3"
                   class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-150"
                   placeholder="Enter category description"
                 ></textarea>
+              </div>
+              <div class="flex items-center">
+                <input
+                  id="edit_is_expired_applicable"
+                  v-model="editCategoryForm.is_expired_applicable"
+                  type="checkbox"
+                  class="h-4 w-4 text-emerald-600 focus:ring-emerald-500 border-gray-300 rounded"
+                />
+                <label for="edit_is_expired_applicable" class="ml-2 block text-sm text-gray-700">
+                  Products in this category require expiry dates
+                </label>
               </div>
               <div class="flex space-x-3 pt-6">
                 <button
@@ -1064,10 +1295,9 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, computed, onUnmounted } from "vue";
+import { onMounted, ref, computed, onUnmounted, watch } from "vue";
 import Sidebar from "@/components/Sidebar.vue";
 import Navbar from "@/components/Navbar.vue";
-// import Modal from "@/components/Modal.vue";
 import { useAuthStore } from "@/stores/auth";
 import { useToast } from "vue-toast-notification";
 import {
@@ -1078,7 +1308,80 @@ import {
   createCatyregory,
   updateCategory,
   deleteProduct,
+  deleteCategory,
+  fetchSuppliers,
 } from "@/stores/InventoryAPI";
+
+// Type definitions
+interface Stock {
+  id: number;
+  name: string;
+  category: number;
+  category_name: string;
+  supliers: number;
+  supliers_name: string;
+  batch_number: string;
+  serial_number?: string;
+  cost_price: number;
+  margin: number;
+  stock: number;
+  expires_at?: string;
+  description?: string;
+  is_expired?: boolean;
+}
+
+interface Category {
+  id: number;
+  name: string;
+  description?: string;
+  is_expired_applicable: boolean;
+  supliers?: number;
+  supliers_name?: string;
+}
+
+interface Supplier {
+  id: number;
+  name: string;
+}
+
+interface CreateProductForm {
+  name: string;
+  category: string | number;
+  supliers: string | number;
+  serial_number: string;
+  cost_price: number | null;
+  margin: number | null;
+  stock: number | null;
+  expires_at: string;
+  description: string;
+}
+
+interface EditProductForm {
+  name: string;
+  category: string | number;
+  supliers: string | number;
+  batch_number: string;
+  serial_number: string;
+  cost_price: number | null;
+  margin: number | null;
+  stock: number | null;
+  expires_at: string;
+  description: string;
+}
+
+interface CreateCategoryForm {
+  name: string;
+  description: string;
+  is_expired_applicable: boolean;
+}
+
+interface EditCategoryForm {
+  id: number | null;
+  name: string;
+  description: string;
+  is_expired_applicable: boolean;
+}
+
 const currentPage = ref(1);
 const itemsPerPage = ref(8);
 const totalPages = computed(() =>
@@ -1105,40 +1408,55 @@ function prevPage() {
 }
 const auth = useAuthStore();
 const $toast = useToast();
-const stocks = ref([]);
-const categories = ref([]);
-const loading = ref(false);
-// const error = ref("");
-const dropdownOpen = ref(null);
-const showViewModal = ref(false);
-const showEditModal = ref(false);
-const showCreateModal = ref(false);
-const showCreateCategoryModal = ref(false);
-const showEditCategoryModal = ref(false);
-const selectedStockId = ref(null);
-const selectedStock = ref(null);
-const editForm = ref({
+const stocks = ref<Stock[]>([]);
+const categories = ref<Category[]>([]);
+const suppliers = ref<Supplier[]>([]);
+const loading = ref<boolean>(false);
+const dropdownOpen = ref<number | null>(null);
+const showViewModal = ref<boolean>(false);
+const showEditModal = ref<boolean>(false);
+const showCreateModal = ref<boolean>(false);
+const showCreateCategoryModal = ref<boolean>(false);
+const showEditCategoryModal = ref<boolean>(false);
+const selectedStockId = ref<number | null>(null);
+const selectedStock = ref<Stock | null>(null);
+
+const editForm = ref<EditProductForm>({
   name: "",
   category: "",
+  supliers: "",
+  batch_number: "",
+  serial_number: "",
   cost_price: null,
   margin: null,
   stock: null,
-});
-const createForm = ref({
-  name: "",
-  category: "",
-  cost_price: null,
-  margin: null,
-  stock: null,
-});
-const createCategoryForm = ref({
-  name: "",
+  expires_at: "",
   description: "",
 });
-const editCategoryForm = ref({
+
+const createForm = ref<CreateProductForm>({
+  name: "",
+  category: "",
+  supliers: "",
+  serial_number: "",
+  cost_price: null,
+  margin: null,
+  stock: null,
+  expires_at: "",
+  description: "",
+});
+
+const createCategoryForm = ref<CreateCategoryForm>({
+  name: "",
+  description: "",
+  is_expired_applicable: false,
+});
+
+const editCategoryForm = ref<EditCategoryForm>({
   id: null,
   name: "",
   description: "",
+  is_expired_applicable: false,
 });
 const sellingPrice = computed(() => {
   const cp = Number(createForm.value.cost_price) || 0;
@@ -1150,15 +1468,48 @@ const viewSellingPrice = computed(() => {
   const margin = Number(selectedStock.value?.margin) || 0;
   return cp + margin;
 });
+const editSellingPrice = computed(() => {
+  const cp = Number(editForm.value.cost_price) || 0;
+  const margin = Number(editForm.value.margin) || 0;
+  return cp + margin;
+});
 const isStaff = computed(() => auth.user?.role === "staff");
+const canEditExpiry = computed(() => auth.user?.role === "admin" || auth.user?.role === "superuser");
 const tab = ref("products");
 
 const categoryNameMap = computed(() => {
-  const map: Record<string, string> = {};
+  const map: Record<number, string> = {};
   categories.value.forEach((cat) => {
     map[cat.id] = cat.name;
   });
   return map;
+});
+
+const supplierNameMap = computed(() => {
+  const map: Record<number, string> = {};
+  suppliers.value.forEach((supplier) => {
+    map[supplier.id] = supplier.name;
+  });
+  return map;
+});
+
+// Computed properties for expiry requirements
+const selectedCategory = computed(() => {
+  const categoryId = createForm.value.category;
+  return categories.value.find(cat => cat.id == categoryId) || null;
+});
+
+const selectedEditCategory = computed(() => {
+  const categoryId = editForm.value.category;
+  return categories.value.find(cat => cat.id == categoryId) || null;
+});
+
+const isExpiryRequired = computed(() => {
+  return selectedCategory.value?.is_expired_applicable || false;
+});
+
+const isEditExpiryRequired = computed(() => {
+  return selectedEditCategory.value?.is_expired_applicable || false;
 });
 
 async function loadStocks() {
@@ -1190,7 +1541,20 @@ async function loadCategories() {
   }
 }
 
-async function deleteProducts(id) {
+async function loadSuppliers() {
+  try {
+    const data = await fetchSuppliers();
+    suppliers.value = Array.isArray(data) ? data : [];
+  } catch (e) {
+    $toast.error("Failed to fetch suppliers.", {
+      position: "top-right",
+      duration: 3000,
+      dismissible: true,
+    });
+  }
+}
+
+async function deleteProducts(id: number) {
   const confirmed = confirm("Are you sure you want to delete this product?");
   if (!confirmed) return;
 
@@ -1218,58 +1582,10 @@ async function deleteProducts(id) {
   }
 }
 
-function openViewModal(id) {
-  selectedStockId.value = id;
-  selectedStock.value = stocks.value.find((s) => s.id === id);
-  showViewModal.value = true;
-}
-function openEditModal(id) {
-  selectedStockId.value = id;
-  const stock = stocks.value.find((s) => s.id === id);
-  editForm.value = { ...stock };
-  showEditModal.value = true;
-}
-
-// Open edit modal for category
-function openEditCategoryModal(cat) {
-  editCategoryForm.value = {
-    id: cat.id,
-    name: cat.name,
-    description: cat.description,
-  };
-  showEditCategoryModal.value = true;
-}
-
-// Edit category handler
-async function handleEditCategory() {
-  loading.value = true;
-  try {
-    await updateCategory(editCategoryForm.value.id, {
-      name: editCategoryForm.value.name,
-      description: editCategoryForm.value.description,
-    });
-    showEditCategoryModal.value = false;
-    await loadCategories();
-    $toast.success("Category updated successfully!", {
-      position: "top-right",
-      duration: 3000,
-      dismissible: true,
-    });
-  } catch (e) {
-    $toast.error("Failed to update category.", {
-      position: "top-right",
-      duration: 3000,
-      dismissible: true,
-    });
-  } finally {
-    loading.value = false;
-  }
-}
-
-// Delete category handler
-async function deleteCategory(id) {
+async function deleteCategoryHandler(id: number) {
   const confirmed = confirm("Are you sure you want to delete this category?");
   if (!confirmed) return;
+  
   loading.value = true;
   try {
     await deleteCategory(id);
@@ -1290,19 +1606,81 @@ async function deleteCategory(id) {
   }
 }
 
+function openViewModal(id: number) {
+  selectedStockId.value = id;
+  selectedStock.value = stocks.value.find((s) => s.id === id) || null;
+  showViewModal.value = true;
+}
+
+function openEditModal(id: number) {
+  selectedStockId.value = id;
+  const stock = stocks.value.find((s) => s.id === id);
+  if (stock) {
+    editForm.value = { 
+      ...stock,
+      expires_at: stock.expires_at ? new Date(stock.expires_at).toISOString().slice(0, 16) : ""
+    };
+  }
+  showEditModal.value = true;
+}
+
+function openEditCategoryModal(cat: Category) {
+  editCategoryForm.value = {
+    id: cat.id,
+    name: cat.name,
+    description: cat.description || "",
+    is_expired_applicable: cat.is_expired_applicable || false,
+  };
+  showEditCategoryModal.value = true;
+}
+
+// Edit category handler
+async function handleEditCategory() {
+  loading.value = true;
+  try {
+    await updateCategory(editCategoryForm.value.id, {
+      name: editCategoryForm.value.name,
+      description: editCategoryForm.value.description,
+      is_expired_applicable: editCategoryForm.value.is_expired_applicable,
+    });
+    showEditCategoryModal.value = false;
+    await loadCategories();
+    $toast.success("Category updated successfully!", {
+      position: "top-right",
+      duration: 3000,
+      dismissible: true,
+    });
+  } catch (e) {
+    $toast.error("Failed to update category.", {
+      position: "top-right",
+      duration: 3000,
+      dismissible: true,
+    });
+  } finally {
+    loading.value = false;
+  }
+}
+
 async function handleEdit() {
   loading.value = true;
   try {
-    await updateProduct(selectedStockId.value, { ...editForm.value });
+    const formData = { ...editForm.value };
+    
+    // Convert datetime-local to ISO format if expiry is set
+    if (formData.expires_at) {
+      formData.expires_at = new Date(formData.expires_at).toISOString();
+    }
+    
+    await updateProduct(selectedStockId.value, formData);
     showEditModal.value = false;
     await loadStocks();
-    $toast.success("Stock updated successfully!", {
+    $toast.success("Product updated successfully!", {
       position: "top-right",
       duration: 5000,
     });
   } catch (e) {
     console.error(e);
-    $toast.error("Failed to update stock.", {
+    $toast.error("Failed to update product.", {
       position: "top-right",
       duration: 500,
     });
@@ -1314,23 +1692,39 @@ async function handleEdit() {
 async function handleCreate() {
   loading.value = true;
   try {
-    await createProduct({ ...createForm.value });
+    const formData = { ...createForm.value };
+    
+    // Convert datetime-local to ISO format if expiry is set
+    if (formData.expires_at) {
+      formData.expires_at = new Date(formData.expires_at).toISOString();
+    }
+    
+    // Remove empty serial number to let backend handle it
+    if (!formData.serial_number || !formData.serial_number.trim()) {
+      delete formData.serial_number;
+    }
+    
+    await createProduct(formData);
     showCreateModal.value = false;
     createForm.value = {
       name: "",
       category: "",
-      cost_price: 0,
-      margin: 0,
-      stock: 0,
+      supliers: "",
+      serial_number: "",
+      cost_price: null,
+      margin: null,
+      stock: null,
+      expires_at: "",
+      description: "",
     };
     await loadStocks();
-    $toast.success("Stock created successfully!", {
+    $toast.success("Product created successfully!", {
       position: "top-right",
       duration: 3000,
     });
   } catch (e) {
     console.error(e);
-    $toast.error("Failed to create stock.", {
+    $toast.error("Failed to create product.", {
       position: "top-right",
       duration: 3000,
     });
@@ -1344,7 +1738,11 @@ async function handleCreateCategory() {
   try {
     await createCatyregory({ ...createCategoryForm.value });
     showCreateCategoryModal.value = false;
-    createCategoryForm.value = { name: "", description: "" };
+    createCategoryForm.value = { 
+      name: "", 
+      description: "", 
+      is_expired_applicable: false 
+    };
     await loadCategories();
     $toast.success("Category created successfully!", {
       position: "top-right",
@@ -1363,39 +1761,16 @@ async function handleCreateCategory() {
   }
 }
 
-function handleCreateStockClick() {
-  if (auth.user?.role === "staff") {
-    $toast.error("You are not able to create users.", {
-      position: "top-right",
-      duration: 3000,
-      dismissible: true,
-    });
-    return;
-  }
-  showCreateModal.value = true;
-}
-
-function handleCreateCategoryClick() {
-  if (auth.user?.role === "staff") {
-    $toast.error("You are not able to create users.", {
-      position: "top-right",
-      duration: 3000,
-      dismissible: true,
-    });
-    return;
-  }
-  showCreateCategoryModal.value = true;
-}
-
 // Close dropdown on outside click
-const handleClickOutside = (event) => {
-  if (!event.target.closest(".dropdown-container")) {
+const handleClickOutside = (event: Event) => {
+  const target = event.target as Element;
+  if (!target.closest(".dropdown-container")) {
     dropdownOpen.value = null;
   }
 };
 
 // Close modals on ESC key press
-const handleKeyDown = (event) => {
+const handleKeyDown = (event: KeyboardEvent) => {
   if (event.key === "Escape") {
     // Close any open modal
     if (showViewModal.value) {
@@ -1410,7 +1785,6 @@ const handleKeyDown = (event) => {
       showEditCategoryModal.value = false;
     }
 
-    // Also close dropdown if open
     dropdownOpen.value = null;
   }
 };
@@ -1419,7 +1793,7 @@ onMounted(async () => {
   if (!auth.user) {
     await auth.self();
   }
-  await Promise.all([loadStocks(), loadCategories()]);
+  await Promise.all([loadStocks(), loadCategories(), loadSuppliers()]);
 });
 
 onMounted(() => {
@@ -1431,6 +1805,51 @@ onUnmounted(() => {
   window.removeEventListener("click", handleClickOutside);
   window.removeEventListener("keydown", handleKeyDown);
 });
+
+// Watch for category changes
+watch(() => createForm.value.category, (newCategoryId) => {
+  const category = categories.value.find(cat => cat.id == newCategoryId);
+  if (category && !category.is_expired_applicable) {
+    createForm.value.expires_at = "";
+  }
+});
+
+watch(() => editForm.value.category, (newCategoryId) => {
+  const category = categories.value.find(cat => cat.id == newCategoryId);
+  if (category && !category.is_expired_applicable) {
+    editForm.value.expires_at = "";
+  }
+});
+
+// Helper function with proper type
+function formatDate(dateString: string | undefined): string {
+  if (!dateString) return 'N/A';
+  return new Date(dateString).toLocaleDateString();
+}
+
+function handleCreateStockClick() {
+  if (auth.user?.role === "staff") {
+    $toast.error("You are not able to create products.", {
+      position: "top-right",
+      duration: 3000,
+      dismissible: true,
+    });
+    return;
+  }
+  showCreateModal.value = true;
+}
+
+function handleCreateCategoryClick() {
+  if (auth.user?.role === "staff") {
+    $toast.error("You are not able to create categories.", {
+      position: "top-right",
+      duration: 3000,
+      dismissible: true,
+    });
+    return;
+  }
+  showCreateCategoryModal.value = true;
+}
 </script>
 
 <style scoped>
@@ -1444,6 +1863,9 @@ onUnmounted(() => {
 }
 .text-20 {
   font-size: 20px;
+}
+.text-12 {
+  font-size: 12px;
 }
 
 /* Unified scrollbar styling for all elements */
@@ -1473,6 +1895,28 @@ onUnmounted(() => {
 .overflow-x-auto::-webkit-scrollbar-thumb:hover,
 .overflow-y-auto::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(135deg, #cbd5e1, #94a3b8);
+}
+
+/* Modal transition styles */
+.modal-fade-enter-active,
+.modal-fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.modal-fade-enter-from,
+.modal-fade-leave-to {
+  opacity: 0;
+}
+
+/* Improved responsive design for modals */
+@media (max-width: 768px) {
+  .grid-cols-1.md\\:grid-cols-2 {
+    grid-template-columns: 1fr;
+  }
+  
+  .md\\:col-span-2 {
+    grid-column: span 1;
+  }
 }
 
 /* Enhanced mobile responsiveness */

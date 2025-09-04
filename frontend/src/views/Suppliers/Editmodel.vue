@@ -240,10 +240,8 @@ const handleSubmit = async () => {
       address: form.address.trim(),
     };
 
-    console.log("📝 Updating supplier:", props.supplier.id, updateData);
 
     const result = await updateSupplier(props.supplier.id, updateData);
-    console.log("✅ Supplier updated successfully:", result);
 
     toast.success("Supplier updated successfully!", {
       position: "top-right",

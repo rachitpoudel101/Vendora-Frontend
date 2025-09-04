@@ -102,19 +102,29 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { useRoute } from "vue-router";
+import { useAuthStore } from "@/stores/auth";
+
 const $route = useRoute();
+const auth = useAuthStore();
 
 const showSidebar = ref(false);
 
-const navItems = [
+const allNavItems = [
   { label: "Dashboard", path: "/dashboard", icon: "🏠" },
   { label: "Stocks", path: "/stocks", icon: "📦" },
   { label: "Billing", path: "/billing", icon: "📝" },
-  { label: "Users", path: "/users", icon: "👤" },
-  { label: "Suppliers", path: "/suppliers", icon: "🏭" },
+  { label: "Users", path: "/users", icon: "👤", adminOnly: true },
+  { label: "Suppliers", path: "/suppliers", icon: "🏭", adminOnly: true },
 ];
+
+const navItems = computed(() => {
+  if (auth.user?.role === "staff") {
+    return allNavItems.filter(item => !item.adminOnly);
+  }
+  return allNavItems;
+});
 </script>
 
 <style scoped>

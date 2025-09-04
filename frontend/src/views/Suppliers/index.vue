@@ -192,7 +192,7 @@
                             <th
                               class="py-4 px-6 text-left font-semibold text-gray-900 text-xs uppercase tracking-wider"
                             >
-                              #
+                              S.N.
                             </th>
                             <th
                               class="py-4 px-6 text-left font-semibold text-gray-900 text-xs uppercase tracking-wider"
@@ -498,20 +498,14 @@ const handleSupplierCreated = async () => {
 };
 
 const loadSuppliers = async () => {
-  console.log("🔄 Starting to load suppliers...");
   loading.value = true;
   error.value = null;
 
   try {
-    console.log("📞 Calling fetchSuppliers API...");
     const result = await fetchSuppliers();
-    console.log("✅ API Response:", result);
 
     suppliers.value = result || [];
-    console.log(`📊 Loaded ${suppliers.value.length} suppliers`);
-
     if (suppliers.value.length === 0) {
-      console.log("⚠️ No suppliers found in response");
     }
   } catch (err) {
     console.error("❌ Failed to fetch suppliers:", err);
@@ -531,7 +525,6 @@ const loadSuppliers = async () => {
     });
   } finally {
     loading.value = false;
-    console.log("🏁 Finished loading suppliers");
   }
 };
 
@@ -558,9 +551,7 @@ const confirmDelete = async () => {
   if (!supplierToDelete.value) return;
 
   try {
-    console.log("🗑️ Deleting supplier:", supplierToDelete.value.id);
     await deleteSupplier(supplierToDelete.value.id);
-    console.log("✅ Supplier deleted successfully");
 
     // Close modal and reload suppliers
     showDeleteModal.value = false;
@@ -595,10 +586,6 @@ const handleClickOutside = (event) => {
 };
 
 onMounted(async () => {
-  console.log("🚀 Component mounted, loading suppliers...");
-  console.log("👤 Current user:", auth.user);
-  console.log("🔑 Auth token:", auth.token ? "Present" : "Missing");
-
   await loadSuppliers();
 
   document.addEventListener("click", handleClickOutside);
