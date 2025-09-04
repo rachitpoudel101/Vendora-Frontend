@@ -28,6 +28,12 @@
             <span class="text-xl sm:text-2xl font-bold text-gray-900">
               {{ totalQuantity }}
             </span>
+            <span
+              v-if="unitLabel"
+              class="text-gray-500 font-normal text-sm sm:text-base"
+            >
+              ({{ unitLabel }})
+            </span>
           </div>
         </div>
 
@@ -106,6 +112,10 @@ const props = defineProps({
   grandTotal: {
     type: Number,
     default: 0.00
+  },
+  unitLabel: {
+    type: String,
+    default: ''
   }
 })
 </script>

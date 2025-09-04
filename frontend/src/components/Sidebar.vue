@@ -117,13 +117,17 @@ const allNavItems = [
   { label: "Billing", path: "/billing", icon: "📝" },
   { label: "Users", path: "/users", icon: "👤", adminOnly: true },
   { label: "Suppliers", path: "/suppliers", icon: "🏭", adminOnly: true },
-  { label: "Unit Configurations", path: "/configurations", icon: "⚙️", adminOnly: true },
-
+  {
+    label: "Unit Configurations",
+    path: "/configurations",
+    icon: "⚙️",
+    adminOnly: true,
+  },
 ];
 
 const navItems = computed(() => {
   if (auth.user?.role === "staff") {
-    return allNavItems.filter(item => !item.adminOnly);
+    return allNavItems.filter((item) => !item.adminOnly);
   }
   return allNavItems;
 });

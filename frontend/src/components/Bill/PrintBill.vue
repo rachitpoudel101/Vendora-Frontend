@@ -121,6 +121,14 @@
                     {{ formatPrice(item.unit_price) }}
                   </div>
                 </div>
+                <div class="mt-2 text-xs text-gray-500 space-y-1">
+                  <div v-if="getProductBatch(item)">
+                    <span class="font-medium">Batch No:</span> {{ getProductBatch(item) }}
+                  </div>
+                  <div v-if="getProductSerial(item)">
+                    <span class="font-medium">Serial No:</span> {{ getProductSerial(item) }}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -131,65 +139,43 @@
               <table class="w-full border border-gray-300 min-w-[500px]">
                 <thead>
                   <tr class="bg-gray-100">
+                    <th class="border border-gray-300 px-2 sm:px-3 py-2 text-left text-xs sm:text-sm">SN</th>
+                    <th class="border border-gray-300 px-2 sm:px-3 py-2 text-left text-xs sm:text-sm">Product</th>
+                    <th class="border border-gray-300 px-2 sm:px-3 py-2 text-left text-xs sm:text-sm">Batch No</th>
+                    <th class="border border-gray-300 px-2 sm:px-3 py-2 text-left text-xs sm:text-sm">Serial No</th>
                     <th
+                      v-if="products.some(p => p.code)"
                       class="border border-gray-300 px-2 sm:px-3 py-2 text-left text-xs sm:text-sm"
                     >
-                      SN
+                      Code
                     </th>
-                    <th
-                      class="border border-gray-300 px-2 sm:px-3 py-2 text-left text-xs sm:text-sm"
-                    >
-                      Product
-                    </th>
-                    <th
-                      class="border border-gray-300 px-2 sm:px-3 py-2 text-center text-xs sm:text-sm"
-                    >
-                      Qty
-                    </th>
-                    <th
-                      class="border border-gray-300 px-2 sm:px-3 py-2 text-right text-xs sm:text-sm"
-                    >
-                      Rate
-                    </th>
-                    <th
-                      class="border border-gray-300 px-2 sm:px-3 py-2 text-right text-xs sm:text-sm"
-                    >
-                      Amount
-                    </th>
+                    <th class="border border-gray-300 px-2 sm:px-3 py-2 text-center text-xs sm:text-sm">Qty</th>
+                    <th class="border border-gray-300 px-2 sm:px-3 py-2 text-center text-xs sm:text-sm">Unit</th>
+                    <th class="border border-gray-300 px-2 sm:px-3 py-2 text-right text-xs sm:text-sm">Rate</th>
+                    <th class="border border-gray-300 px-2 sm:px-3 py-2 text-right text-xs sm:text-sm">Amount</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr v-for="(item, index) in bill.items" :key="index">
+                    <td class="border border-gray-300 px-2 sm:px-3 py-2 text-xs sm:text-sm">{{ index + 1 }}</td>
+                    <td class="border border-gray-300 px-2 sm:px-3 py-2 text-xs sm:text-sm">{{ getProductName(item.product_id) }}</td>
+                    <td class="border border-gray-300 px-2 sm:px-3 py-2 text-xs sm:text-sm">
+                      {{ item.batch_number || item.batch || getProductBatch(item) }}
+                    </td>
+                    <td class="border border-gray-300 px-2 sm:px-3 py-2 text-xs sm:text-sm">{{ getProductSerial(item) }}</td>
                     <td
+                      v-if="products.find(p => p.id === item.product_id && p.code)"
                       class="border border-gray-300 px-2 sm:px-3 py-2 text-xs sm:text-sm"
                     >
-                      {{ index + 1 }}
+                      {{ getProductCode(item) }}
                     </td>
-                    <td
-                      class="border border-gray-300 px-2 sm:px-3 py-2 text-xs sm:text-sm"
-                    >
-                      {{ getProductName(item.product_id) }}
+                    <td class="border border-gray-300 px-2 sm:px-3 py-2 text-center text-xs sm:text-sm">{{ safeNumber(item.quantity) }}</td>
+                    <td class="border border-gray-300 px-2 sm:px-3 py-2 text-center text-xs sm:text-sm">
+                      {{ getProductUnit(item.product_id) }}
                     </td>
-                    <td
-                      class="border border-gray-300 px-2 sm:px-3 py-2 text-center text-xs sm:text-sm"
-                    >
-                      {{ safeNumber(item.quantity) }}
-                    </td>
-                    <td
-                      class="border border-gray-300 px-2 sm:px-3 py-2 text-right text-xs sm:text-sm"
-                    >
-                      Rs. {{ formatPrice(item.unit_price) }}
-                    </td>
-                    <td
-                      class="border border-gray-300 px-2 sm:px-3 py-2 text-right text-xs sm:text-sm"
-                    >
-                      Rs.
-                      {{
-                        formatPrice(
-                          safeNumber(item.quantity) *
-                            safeNumber(item.unit_price),
-                        )
-                      }}
+                    <td class="border border-gray-300 px-2 sm:px-3 py-2 text-right text-xs sm:text-sm">Rs. {{ formatPrice(item.unit_price) }}</td>
+                    <td class="border border-gray-300 px-2 sm:px-3 py-2 text-right text-xs sm:text-sm">
+                      Rs. {{ formatPrice(safeNumber(item.quantity) * safeNumber(item.unit_price)) }}
                     </td>
                   </tr>
                 </tbody>
@@ -411,6 +397,18 @@ const formatPrice = (value) => {
 const getProductName = (productId) => {
   const product = props.products.find((p) => p.id === productId);
   return product ? product.name : `Product ${productId}`;
+};
+
+// Update getProductBatch to support batch_number field
+const getProductBatch = (item) => item.batch_number || item.batch || (props.products.find(p => p.id === item.product_id)?.batch_number) || '';
+const getProductSerial = (item) => item.serial_number || (props.products.find(p => p.id === item.product_id)?.serial_number) || '';
+const getProductCode = (item) => {
+  const product = props.products.find((p) => p.id === item.product_id);
+  return product && product.code ? product.code : '';
+};
+const getProductUnit = (productId) => {
+  const product = props.products.find((p) => p.id === productId);
+  return product ? (product.unit_name || product.unit || 'pcs') : 'pcs';
 };
 
 // Calculate total quantity

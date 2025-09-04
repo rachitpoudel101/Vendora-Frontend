@@ -3,7 +3,7 @@
     class="fixed inset-0 bg-gray-900/50 backdrop-blur-sm z-40 flex items-center justify-center p-2 sm:p-4"
   >
     <div
-      class="bg-white rounded-lg sm:rounded-xl shadow-2xl w-full max-w-7xl max-h-[95vh] sm:max-h-[90vh] flex flex-col overflow-hidden"
+      class="bg-white rounded-lg sm:rounded-xl shadow-2xl w-full max-w-[90vw] max-h-[95vh] sm:max-h-[90vh] flex flex-col overflow-hidden"
     >
       <!-- Toast Notification -->
       <div
@@ -317,6 +317,12 @@
                             </svg>
                           </button>
                         </div>
+                        <span
+                          v-if="item.product_id"
+                          class="text-xs text-gray-500 mt-1 block"
+                        >
+                          Unit: {{ getProductUnit(item.product_id) }}
+                        </span>
                       </div>
 
                       <!-- Quantity and Stock -->
@@ -441,7 +447,7 @@
 
               <!-- Desktop Table View -->
               <div class="hidden md:block overflow-x-auto">
-                <table class="w-full min-w-[800px] text-sm">
+                <table class="w-full min-w-[1200px] text-sm">
                   <thead class="bg-gray-50 border-b border-gray-200">
                     <tr>
                       <th
@@ -451,6 +457,27 @@
                       </th>
                       <th class="px-4 py-3 text-left font-medium text-gray-700">
                         Item
+                      </th>
+                      <th
+                        class="px-4 py-3 text-left font-medium text-gray-700 w-28"
+                      >
+                        Batch No
+                      </th>
+                      <th
+                        class="px-4 py-3 text-left font-medium text-gray-700 w-28"
+                      >
+                        Serial No
+                      </th>
+                      <th
+                        v-if="products.some((p) => p.code)"
+                        class="px-4 py-3 text-left font-medium text-gray-700 w-28"
+                      >
+                        Code
+                      </th>
+                      <th
+                        class="px-4 py-3 text-left font-medium text-gray-700 w-20"
+                      >
+                        Unit
                       </th>
                       <th
                         class="px-4 py-3 text-left font-medium text-gray-700 w-24"
@@ -532,6 +559,29 @@
                           </button>
                         </div>
                       </td>
+                      <td class="px-4 py-3 text-gray-600 text-sm">
+                        {{ getProductBatch(item.product_id) }}
+                      </td>
+                      <td class="px-4 py-3 text-gray-600 text-sm">
+                        {{ getProductSerial(item.product_id) }}
+                      </td>
+                      <td
+                        v-if="
+                          products.find(
+                            (p) => p.id === item.product_id && p.code,
+                          )
+                        "
+                        class="px-4 py-3 text-gray-600 text-sm"
+                      >
+                        {{ getProductCode(item.product_id) }}
+                      </td>
+                      <td class="px-4 py-3 text-gray-600 text-sm">
+                        {{
+                          item.product_id
+                            ? getProductUnit(item.product_id)
+                            : "-"
+                        }}
+                      </td>
                       <td class="px-4 py-3">
                         <div>
                           <input
@@ -595,7 +645,10 @@
                         <div
                           class="text-right text-sm font-medium text-gray-900 mt-1"
                         >
-                          Rs. {{ item.discountAmount.toFixed(2) }}
+                          <!-- Only show if discountAmount > 0 -->
+                          <template v-if="item.discountAmount > 0">
+                            Rs. {{ item.discountAmount.toFixed(2) }}
+                          </template>
                         </div>
                       </td>
                       <td class="px-4 py-3">
@@ -628,7 +681,10 @@
                         <div
                           class="text-right text-sm font-medium text-gray-900 mt-1"
                         >
-                          Rs. {{ item.vatAmount.toFixed(2) }}
+                          <!-- Only show if vatAmount > 0 -->
+                          <template v-if="item.vatAmount > 0">
+                            Rs. {{ item.vatAmount.toFixed(2) }}
+                          </template>
                         </div>
                       </td>
                       <td
@@ -674,6 +730,7 @@
             :discount="totalDiscountAmount"
             :vatAmount="totalTaxAmount"
             :grandTotal="grandTotal"
+            :unitLabel="unitLabel"
           />
         </div>
       </div>
@@ -793,6 +850,37 @@ const getProductPrice = (productId) => {
   const product = products.value.find((p) => p.id === productId);
   return product ? Number(product.cost_price) + Number(product.margin || 0) : 0;
 };
+
+// Helper to get unit for a product
+const getProductUnit = (productId) => {
+  const product = products.value.find((p) => p.id === productId);
+  return product ? product.unit_name || product.unit || "pcs" : "pcs";
+};
+
+// Helper to get batch number and serial number for a product
+const getProductBatch = (productId) => {
+  const product = products.value.find((p) => p.id === productId);
+  return product ? product.batch_number || "" : "";
+};
+const getProductSerial = (productId) => {
+  const product = products.value.find((p) => p.id === productId);
+  return product ? product.serial_number || "" : "";
+};
+// Add missing helper for product code
+const getProductCode = (productId) => {
+  const product = products.value.find((p) => p.id === productId);
+  return product && product.code ? product.code : "";
+};
+
+// Compute the most common unit in the bill items, or "Mixed" if more than one
+const unitLabel = computed(() => {
+  const units = items.value
+    .filter((item) => item.product_id)
+    .map((item) => getProductUnit(item.product_id));
+  if (units.length === 0) return "";
+  const uniqueUnits = [...new Set(units)];
+  return uniqueUnits.length === 1 ? uniqueUnits[0] : "Mixed";
+});
 
 // Watch for product selection and update price accordingly
 const updateItemPrice = (index) => {
@@ -991,6 +1079,9 @@ const onSubmit = async () => {
       unit_price: item.price,
       discount_amount: item.discountAmount,
       unit_total: item.totalPrice,
+      batch: getProductBatch(item.product_id),
+      serial_number: getProductSerial(item.product_id),
+      code: getProductCode(item.product_id),
     }));
 
     const payload = {

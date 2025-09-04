@@ -1,18 +1,38 @@
 <template>
-  <div class="fixed inset-0 backdrop-blur-sm  overflow-y-auto h-full w-full z-50">
-    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+  <div
+    class="fixed inset-0 backdrop-blur-sm overflow-y-auto h-full w-full z-50"
+  >
+    <div
+      class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white"
+    >
       <div class="flex justify-between items-center mb-4">
         <h3 class="text-lg font-medium text-gray-900">Edit Unit</h3>
-        <button @click="$emit('close')" class="text-gray-400 hover:text-gray-600">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        <button
+          @click="$emit('close')"
+          class="text-gray-400 hover:text-gray-600"
+        >
+          <svg
+            class="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            ></path>
           </svg>
         </button>
       </div>
 
       <form @submit.prevent="handleSubmit">
         <div class="mb-4">
-          <label for="unit" class="block text-sm font-medium text-gray-700 mb-2">
+          <label
+            for="unit"
+            class="block text-sm font-medium text-gray-700 mb-2"
+          >
             Unit Name *
           </label>
           <input
@@ -23,7 +43,9 @@
             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Enter unit name (e.g., kg, liter, piece)"
           />
-          <p v-if="errors.unit" class="mt-1 text-sm text-red-600">{{ errors.unit }}</p>
+          <p v-if="errors.unit" class="mt-1 text-sm text-red-600">
+            {{ errors.unit }}
+          </p>
         </div>
 
         <div class="flex justify-end space-x-3">
@@ -39,7 +61,7 @@
             :disabled="loading"
             class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50"
           >
-            {{ loading ? 'Updating...' : 'Update Unit' }}
+            {{ loading ? "Updating..." : "Update Unit" }}
           </button>
         </div>
       </form>
@@ -48,63 +70,63 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted } from 'vue'
-import { updateunit } from '@/stores/UnitAPI'
+import { ref, reactive, onMounted } from "vue";
+import { updateunit } from "@/stores/UnitAPI";
 
 interface Unit {
-  id: number
-  unit: string
+  id: number;
+  unit: string;
 }
 
 const props = defineProps<{
-  unit: Unit
-}>()
+  unit: Unit;
+}>();
 
-const emit = defineEmits(['close', 'updated'])
+const emit = defineEmits(["close", "updated"]);
 
-const loading = ref(false)
+const loading = ref(false);
 const form = reactive({
-  unit: ''
-})
+  unit: "",
+});
 
 const errors = reactive({
-  unit: ''
-})
+  unit: "",
+});
 
 const validateForm = () => {
-  errors.unit = ''
-  
+  errors.unit = "";
+
   if (!form.unit.trim()) {
-    errors.unit = 'Unit name is required'
-    return false
+    errors.unit = "Unit name is required";
+    return false;
   }
-  
+
   if (form.unit.trim().length < 2) {
-    errors.unit = 'Unit name must be at least 2 characters'
-    return false
+    errors.unit = "Unit name must be at least 2 characters";
+    return false;
   }
-  
-  return true
-}
+
+  return true;
+};
 
 const handleSubmit = async () => {
-  if (!validateForm()) return
-  
+  if (!validateForm()) return;
+
   try {
-    loading.value = true
-    await updateunit(props.unit.id, { unit: form.unit.trim() })
-    emit('updated')
+    loading.value = true;
+    await updateunit(props.unit.id, { unit: form.unit.trim() });
+    emit("updated");
   } catch (error) {
-    console.error('Error updating unit:', error)
-    errors.unit = 'Failed to update unit. Please try again.'
+    console.error("Error updating unit:", error);
+    errors.unit = "Failed to update unit. Please try again.";
   } finally {
-    loading.value = false
+    loading.value = false;
   }
-}
+};
 
 onMounted(() => {
   if (props.unit) {
-    form.unit = props.unit.unit
+    form.unit = props.unit.unit;
   }
-})
+});
 </script>

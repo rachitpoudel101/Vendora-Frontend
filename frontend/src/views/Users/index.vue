@@ -19,7 +19,7 @@
               >
                 <div>
                   <h1
-                    class="text-2xl sm:text-3xl lg:text-4xl font-bold  mb-2 bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent"
+                    class="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2 bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent"
                   >
                     Users Management
                   </h1>

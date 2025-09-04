@@ -32,8 +32,18 @@
                     @click="openCreateModal"
                     class="w-full sm:w-auto inline-flex items-center justify-center px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-medium rounded-lg sm:rounded-xl shadow-sm hover:shadow-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                   >
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                    <svg
+                      class="w-5 h-5 mr-2"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M12 4v16m8-8H4"
+                      ></path>
                     </svg>
                     <span class="text-sm sm:text-base">Add Unit</span>
                   </button>
@@ -47,10 +57,7 @@
             class="bg-white rounded-xl md:rounded-2xl shadow-sm border border-gray-200 flex-1 flex flex-col overflow-hidden min-h-0"
           >
             <!-- Loading State -->
-            <div
-              v-if="loading"
-              class="flex items-center justify-center flex-1"
-            >
+            <div v-if="loading" class="flex items-center justify-center flex-1">
               <div class="flex items-center space-x-3">
                 <div
                   class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"
@@ -64,9 +71,7 @@
             <!-- Content when not loading -->
             <div v-else class="h-full flex flex-col">
               <!-- Mobile Cards View -->
-              <div
-                class="block md:hidden p-4 flex-1 overflow-y-auto space-y-4"
-              >
+              <div class="block md:hidden p-4 flex-1 overflow-y-auto space-y-4">
                 <div
                   v-for="unit in units"
                   :key="unit.id"
@@ -77,23 +82,45 @@
                       <h3 class="font-semibold text-gray-900 text-lg">
                         {{ unit.unit }}
                       </h3>
-                      <p class="text-gray-500 text-sm mt-1">ID: {{ unit.id }}</p>
+                      <p class="text-gray-500 text-sm mt-1">
+                        ID: {{ unit.id }}
+                      </p>
                     </div>
                     <div class="flex space-x-2 ml-4">
                       <button
                         @click="openEditModal(unit)"
                         class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                       >
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                        <svg
+                          class="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                          ></path>
                         </svg>
                       </button>
                       <button
                         @click="confirmDelete(unit)"
                         class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                       >
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                        <svg
+                          class="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                          ></path>
                         </svg>
                       </button>
                     </div>
@@ -102,11 +129,25 @@
 
                 <div v-if="units.length === 0" class="text-center py-8">
                   <div class="flex flex-col items-center">
-                    <svg class="w-12 h-12 text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                    <svg
+                      class="w-12 h-12 text-gray-300 mb-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"
+                      ></path>
                     </svg>
-                    <p class="text-lg font-medium text-gray-500">No units found</p>
-                    <p class="text-sm text-gray-400">Add your first unit to get started</p>
+                    <p class="text-lg font-medium text-gray-500">
+                      No units found
+                    </p>
+                    <p class="text-sm text-gray-400">
+                      Add your first unit to get started
+                    </p>
                   </div>
                 </div>
               </div>
@@ -163,8 +204,18 @@
                               class="text-blue-600 hover:text-blue-900 transition-colors duration-150"
                               title="Edit Unit"
                             >
-                              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                              <svg
+                                class="w-4 h-4"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  stroke-width="2"
+                                  d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                                ></path>
                               </svg>
                             </button>
                             <button
@@ -172,8 +223,18 @@
                               class="text-red-600 hover:text-red-900 transition-colors duration-150"
                               title="Delete Unit"
                             >
-                              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                              <svg
+                                class="w-4 h-4"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  stroke-width="2"
+                                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                                ></path>
                               </svg>
                             </button>
                           </div>
@@ -185,11 +246,23 @@
                           class="px-6 py-12 text-center text-gray-500"
                         >
                           <div class="flex flex-col items-center">
-                            <svg class="w-12 h-12 text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                            <svg
+                              class="w-12 h-12 text-gray-300 mb-4"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"
+                              ></path>
                             </svg>
                             <p class="text-lg font-medium">No units found</p>
-                            <p class="text-sm">Create your first unit to get started</p>
+                            <p class="text-sm">
+                              Create your first unit to get started
+                            </p>
                           </div>
                         </td>
                       </tr>
@@ -220,8 +293,13 @@
 
     <!-- Delete Confirmation Modal -->
     <transition name="modal-fade">
-      <div v-if="showDeleteModal" class="fixed inset-0 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md border border-gray-200">
+      <div
+        v-if="showDeleteModal"
+        class="fixed inset-0 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+      >
+        <div
+          class="bg-white rounded-2xl shadow-2xl w-full max-w-md border border-gray-200"
+        >
           <div class="p-6">
             <div class="flex items-center justify-between mb-4">
               <h3 class="text-xl font-bold text-gray-900">Confirm Delete</h3>
@@ -229,14 +307,27 @@
                 @click="closeDeleteModal"
                 class="text-gray-400 hover:text-gray-600 transition-colors duration-150"
               >
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                <svg
+                  class="w-6 h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M6 18L18 6M6 6l12 12"
+                  ></path>
                 </svg>
               </button>
             </div>
             <div class="mb-6">
               <p class="text-gray-600">
-                Are you sure you want to delete "<span class="font-semibold">{{ unitToDelete?.unit }}</span>"? This action cannot be undone.
+                Are you sure you want to delete "<span class="font-semibold">{{
+                  unitToDelete?.unit
+                }}</span
+                >"? This action cannot be undone.
               </p>
             </div>
             <div class="flex space-x-3">
@@ -261,91 +352,91 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { fetchUnit, deleteUnit } from '@/stores/UnitAPI'
-import CreateUnitModel from '@/components/Unit/CreateUnitModel.vue'
-import EditUnitModel from '@/components/Unit/EditUnitModel.vue'
-import Navbar from '@/components/Navbar.vue'
-import Sidebar from '@/components/Sidebar.vue'
+import { ref, onMounted } from "vue";
+import { fetchUnit, deleteUnit } from "@/stores/UnitAPI";
+import CreateUnitModel from "@/components/Unit/CreateUnitModel.vue";
+import EditUnitModel from "@/components/Unit/EditUnitModel.vue";
+import Navbar from "@/components/Navbar.vue";
+import Sidebar from "@/components/Sidebar.vue";
 
 interface Unit {
-  id: number
-  unit: string
+  id: number;
+  unit: string;
 }
 
-const units = ref<Unit[]>([])
-const showCreateModal = ref(false)
-const showEditModal = ref(false)
-const showDeleteModal = ref(false)
-const selectedUnit = ref<Unit | null>(null)
-const unitToDelete = ref<Unit | null>(null)
-const loading = ref(false)
+const units = ref<Unit[]>([]);
+const showCreateModal = ref(false);
+const showEditModal = ref(false);
+const showDeleteModal = ref(false);
+const selectedUnit = ref<Unit | null>(null);
+const unitToDelete = ref<Unit | null>(null);
+const loading = ref(false);
 
 const loadUnits = async () => {
   try {
-    loading.value = true
-    const data = await fetchUnit()
-    units.value = data
+    loading.value = true;
+    const data = await fetchUnit();
+    units.value = data;
   } catch (error) {
-    console.error('Error loading units:', error)
+    console.error("Error loading units:", error);
   } finally {
-    loading.value = false
+    loading.value = false;
   }
-}
+};
 
 const openCreateModal = () => {
-  showCreateModal.value = true
-}
+  showCreateModal.value = true;
+};
 
 const closeCreateModal = () => {
-  showCreateModal.value = false
-}
+  showCreateModal.value = false;
+};
 
 const openEditModal = (unit: Unit) => {
-  selectedUnit.value = unit
-  showEditModal.value = true
-}
+  selectedUnit.value = unit;
+  showEditModal.value = true;
+};
 
 const closeEditModal = () => {
-  showEditModal.value = false
-  selectedUnit.value = null
-}
+  showEditModal.value = false;
+  selectedUnit.value = null;
+};
 
 const confirmDelete = (unit: Unit) => {
-  unitToDelete.value = unit
-  showDeleteModal.value = true
-}
+  unitToDelete.value = unit;
+  showDeleteModal.value = true;
+};
 
 const closeDeleteModal = () => {
-  showDeleteModal.value = false
-  unitToDelete.value = null
-}
+  showDeleteModal.value = false;
+  unitToDelete.value = null;
+};
 
 const handleDelete = async () => {
-  if (!unitToDelete.value) return
-  
+  if (!unitToDelete.value) return;
+
   try {
-    await deleteUnit(unitToDelete.value.id)
-    await loadUnits()
-    closeDeleteModal()
+    await deleteUnit(unitToDelete.value.id);
+    await loadUnits();
+    closeDeleteModal();
   } catch (error) {
-    console.error('Error deleting unit:', error)
+    console.error("Error deleting unit:", error);
   }
-}
+};
 
 const handleUnitCreated = () => {
-  loadUnits()
-  closeCreateModal()
-}
+  loadUnits();
+  closeCreateModal();
+};
 
 const handleUnitUpdated = () => {
-  loadUnits()
-  closeEditModal()
-}
+  loadUnits();
+  closeEditModal();
+};
 
 onMounted(() => {
-  loadUnits()
-})
+  loadUnits();
+});
 </script>
 
 <style scoped>

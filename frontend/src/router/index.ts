@@ -37,7 +37,7 @@ const routes = [
     component: () => import("@/views/Suppliers/index.vue"),
     meta: { requiresAuth: true },
   },
-    {
+  {
     path: "/configurations",
     name: "Configurations",
     component: () => import("@/views/Configurations/Index.vue"),

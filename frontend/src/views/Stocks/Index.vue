@@ -17,7 +17,7 @@
               >
                 <div>
                   <h1
-                    class="text-2xl sm:text-3xl lg:text-4xl font-bold  mb-2 bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent"
+                    class="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2 bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent"
                   >
                     Stocks Management
                   </h1>
@@ -244,7 +244,7 @@
                         <div>
                           <span class="text-gray-500 block">Supplier</span>
                           <span class="font-semibold text-gray-900 mt-1 block">
-                            {{ item.supliers_name || 'N/A' }}
+                            {{ item.supliers_name || "N/A" }}
                           </span>
                         </div>
                         <div>
@@ -339,7 +339,7 @@
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                               <div class="text-sm font-medium text-gray-900">
-                                {{ item.supliers_name || 'N/A' }}
+                                {{ item.supliers_name || "N/A" }}
                               </div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
@@ -543,9 +543,16 @@
                         <p class="text-gray-600 text-sm mt-1">
                           {{ cat.description || "No description" }}
                         </p>
-                        <div class="flex items-center mt-2" v-if="cat.is_expired_applicable">
-                          <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-amber-100 text-amber-800">
-                            <span class="material-icons text-12 mr-1">schedule</span>
+                        <div
+                          class="flex items-center mt-2"
+                          v-if="cat.is_expired_applicable"
+                        >
+                          <span
+                            class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-amber-100 text-amber-800"
+                          >
+                            <span class="material-icons text-12 mr-1"
+                              >schedule</span
+                            >
                             Expiry Required
                           </span>
                         </div>
@@ -630,14 +637,18 @@
                             v-if="cat.is_expired_applicable"
                             class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-amber-100 text-amber-800"
                           >
-                            <span class="material-icons text-12 mr-1">schedule</span>
+                            <span class="material-icons text-12 mr-1"
+                              >schedule</span
+                            >
                             Yes
                           </span>
                           <span
                             v-else
                             class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800"
                           >
-                            <span class="material-icons text-12 mr-1">block</span>
+                            <span class="material-icons text-12 mr-1"
+                              >block</span
+                            >
                             No
                           </span>
                         </td>
@@ -703,7 +714,7 @@
     <transition name="modal-fade">
       <div
         v-if="showViewModal"
-        class="fixed inset-0  bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+        class="fixed inset-0 bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
         @click.self="showViewModal = false"
       >
         <div
@@ -719,52 +730,82 @@
                 <span class="material-icons">close</span>
               </button>
             </div>
-            
+
             <div class="space-y-4">
               <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div class="md:col-span-2">
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Product Name</label>
-                  <div class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-xl text-gray-900 font-semibold">
-                    {{ selectedStock?.name || 'N/A' }}
+                  <label class="block text-sm font-medium text-gray-700 mb-2"
+                    >Product Name</label
+                  >
+                  <div
+                    class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-xl text-gray-900 font-semibold"
+                  >
+                    {{ selectedStock?.name || "N/A" }}
                   </div>
                 </div>
-                
+
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Category</label>
-                  <div class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-xl">
-                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">
-                      {{ selectedStock?.category_name || 'N/A' }}
+                  <label class="block text-sm font-medium text-gray-700 mb-2"
+                    >Category</label
+                  >
+                  <div
+                    class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-xl"
+                  >
+                    <span
+                      class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800"
+                    >
+                      {{ selectedStock?.category_name || "N/A" }}
                     </span>
                   </div>
                 </div>
-                
+
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Supplier</label>
-                  <div class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-xl text-gray-900 font-semibold">
-                    {{ selectedStock?.supliers_name || 'N/A' }}
+                  <label class="block text-sm font-medium text-gray-700 mb-2"
+                    >Supplier</label
+                  >
+                  <div
+                    class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-xl text-gray-900 font-semibold"
+                  >
+                    {{ selectedStock?.supliers_name || "N/A" }}
                   </div>
                 </div>
-                
+
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Batch Number</label>
-                  <div class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-xl text-gray-900 font-semibold">
-                    {{ selectedStock?.batch_number || 'Auto-generated' }}
+                  <label class="block text-sm font-medium text-gray-700 mb-2"
+                    >Batch Number</label
+                  >
+                  <div
+                    class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-xl text-gray-900 font-semibold"
+                  >
+                    {{ selectedStock?.batch_number || "Auto-generated" }}
                   </div>
                 </div>
-                
+
                 <div v-if="selectedStock?.serial_number">
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Serial Number</label>
-                  <div class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-xl text-gray-900 font-semibold">
+                  <label class="block text-sm font-medium text-gray-700 mb-2"
+                    >Serial Number</label
+                  >
+                  <div
+                    class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-xl text-gray-900 font-semibold"
+                  >
                     {{ selectedStock?.serial_number }}
                   </div>
                 </div>
-                
+
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Stock Quantity</label>
-                  <div class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-xl">
+                  <label class="block text-sm font-medium text-gray-700 mb-2"
+                    >Stock Quantity</label
+                  >
+                  <div
+                    class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-xl"
+                  >
                     <div class="flex items-center">
-                      <span class="text-gray-900 font-semibold mr-2">{{ selectedStock?.stock || 0 }}</span>
-                      <span class="text-gray-600 mr-2">{{ getUnit(selectedStock) }}</span>
+                      <span class="text-gray-900 font-semibold mr-2">{{
+                        selectedStock?.stock || 0
+                      }}</span>
+                      <span class="text-gray-600 mr-2">{{
+                        getUnit(selectedStock)
+                      }}</span>
                       <span
                         class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium"
                         :class="
@@ -786,43 +827,61 @@
                     </div>
                   </div>
                 </div>
-                
+
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Cost Price</label>
-                  <div class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-xl text-gray-900 font-semibold">
+                  <label class="block text-sm font-medium text-gray-700 mb-2"
+                    >Cost Price</label
+                  >
+                  <div
+                    class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-xl text-gray-900 font-semibold"
+                  >
                     Rs. {{ selectedStock?.cost_price || 0 }}
                   </div>
                 </div>
-                
+
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Margin</label>
-                  <div class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-xl text-gray-900 font-semibold">
+                  <label class="block text-sm font-medium text-gray-700 mb-2"
+                    >Margin</label
+                  >
+                  <div
+                    class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-xl text-gray-900 font-semibold"
+                  >
                     Rs. {{ selectedStock?.margin || 0 }}
                   </div>
                 </div>
-                
+
                 <div v-if="selectedStock?.expires_at">
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Expiry Date</label>
-                  <div class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-xl text-gray-900 font-semibold">
+                  <label class="block text-sm font-medium text-gray-700 mb-2"
+                    >Expiry Date</label
+                  >
+                  <div
+                    class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-xl text-gray-900 font-semibold"
+                  >
                     {{ formatDate(selectedStock?.expires_at) }}
                   </div>
                 </div>
-                
+
                 <div v-if="selectedStock?.description" class="md:col-span-2">
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Description</label>
-                  <div class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-xl text-gray-900">
+                  <label class="block text-sm font-medium text-gray-700 mb-2"
+                    >Description</label
+                  >
+                  <div
+                    class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-xl text-gray-900"
+                  >
                     {{ selectedStock?.description }}
                   </div>
                 </div>
               </div>
-              
+
               <div class="bg-blue-50 p-4 rounded-xl mt-4">
                 <div class="flex justify-between items-center">
                   <span class="font-medium text-gray-700">Selling Price:</span>
-                  <span class="text-xl font-bold text-blue-600">Rs. {{ viewSellingPrice }}</span>
+                  <span class="text-xl font-bold text-blue-600"
+                    >Rs. {{ viewSellingPrice }}</span
+                  >
                 </div>
               </div>
-              
+
               <div class="flex space-x-3 pt-6 border-t border-gray-200">
                 <button
                   @click="showViewModal = false"
@@ -1031,48 +1090,21 @@ const editForm = ref<EditProductForm>({
   description: "",
 });
 
-const createForm = ref<CreateProductForm>({
-  name: "",
-  category: "",
-  supliers: "",
-  serial_number: "",
-  cost_price: null,
-  margin: null,
-  stock: null,
-  unit: "",
-  expires_at: "",
-  description: "",
-});
-
-const createCategoryForm = ref<CreateCategoryForm>({
-  name: "",
-  description: "",
-  is_expired_applicable: false,
-});
-
 const editCategoryForm = ref<EditCategoryForm>({
   id: null,
   name: "",
   description: "",
   is_expired_applicable: false,
 });
-const sellingPrice = computed(() => {
-  const cp = Number(createForm.value.cost_price) || 0;
-  const margin = Number(createForm.value.margin) || 0;
-  return cp + margin;
-});
 const viewSellingPrice = computed(() => {
   const cp = Number(selectedStock.value?.cost_price) || 0;
   const margin = Number(selectedStock.value?.margin) || 0;
   return cp + margin;
 });
-const editSellingPrice = computed(() => {
-  const cp = Number(editForm.value.cost_price) || 0;
-  const margin = Number(editForm.value.margin) || 0;
-  return cp + margin;
-});
 const isStaff = computed(() => auth.user?.role === "staff");
-const canEditExpiry = computed(() => auth.user?.role === "admin" || auth.user?.role === "superuser");
+const canEditExpiry = computed(
+  () => auth.user?.role === "admin" || auth.user?.role === "superuser",
+);
 const tab = ref("products");
 
 const categoryNameMap = computed(() => {
@@ -1083,45 +1115,11 @@ const categoryNameMap = computed(() => {
   return map;
 });
 
-// const supplierNameMap = computed(() => {
-//   const map: Record<number, string> = {};
-//   suppliers.value.forEach((supplier) => {
-//     map[supplier.id] = supplier.name;
-//   });
-//   return map;
-// });
-
-// Computed properties for expiry requirements
-const selectedCategory = computed((): Category | null => {
-  const categoryId = Number(createForm.value.category);
-  return categories.value.find(cat => cat.id === categoryId) || null;
-});
-
-const selectedEditCategory = computed((): Category | null => {
-  const categoryId = Number(editForm.value.category);
-  return categories.value.find(cat => cat.id === categoryId) || null;
-});
-
-const isExpiryRequired = computed(() => {
-  return selectedCategory.value?.is_expired_applicable || false;
-});
-
-const isEditExpiryRequired = computed(() => {
-  return selectedEditCategory.value?.is_expired_applicable || false;
-});
-
 async function loadStocks() {
   loading.value = true;
   try {
     const data = await fetchProduct();
-    stocks.value = Array.isArray(data) ? data as Stock[] : [];
-    
-    // Debug: Log the first stock item to see what unit data we have
-    if (stocks.value.length > 0) {
-      console.log("First stock item:", stocks.value[0]);
-      console.log("Unit field:", stocks.value[0].unit);
-      console.log("Unit_name field:", stocks.value[0].unit_name);
-    }
+    stocks.value = Array.isArray(data) ? (data as Stock[]) : [];
   } catch (e) {
     $toast.error("Failed to fetch stocks.", {
       position: "top-right",
@@ -1136,7 +1134,7 @@ async function loadStocks() {
 async function loadCategories() {
   try {
     const data = await fetchCategory();
-    categories.value = Array.isArray(data) ? data as Category[] : [];
+    categories.value = Array.isArray(data) ? (data as Category[]) : [];
   } catch (e) {
     $toast.error("Failed to fetch categories.", {
       position: "top-right",
@@ -1149,7 +1147,7 @@ async function loadCategories() {
 async function loadSuppliers() {
   try {
     const data = await fetchSuppliers();
-    suppliers.value = Array.isArray(data) ? data as Supplier[] : [];
+    suppliers.value = Array.isArray(data) ? (data as Supplier[]) : [];
   } catch (e) {
     $toast.error("Failed to fetch suppliers.", {
       position: "top-right",
@@ -1162,9 +1160,8 @@ async function loadSuppliers() {
 async function loadUnits() {
   try {
     const data = await fetchUnits();
-    units.value = Array.isArray(data) ? data as Unit[] : [];
-    console.log("Units loaded:", units.value);
-    
+    units.value = Array.isArray(data) ? (data as Unit[]) : [];
+
     if (units.value.length === 0) {
       $toast.warning("No units found in database.", {
         position: "top-right",
@@ -1179,17 +1176,6 @@ async function loadUnits() {
       duration: 3000,
       dismissible: true,
     });
-    // Fix: Update fallback units to match API structure
-    units.value = [
-      { id: 1, unit: "pieces" },
-      { id: 2, unit: "kg" },
-      { id: 3, unit: "liter" },
-      { id: 4, unit: "meter" },
-      { id: 5, unit: "box" },
-      { id: 6, unit: "packet" },
-      { id: 7, unit: "bottle" },
-      { id: 8, unit: "dozen" },
-    ];
   }
 }
 
@@ -1224,7 +1210,7 @@ async function deleteProducts(id: number) {
 async function deleteCategoryHandler(id: number) {
   const confirmed = confirm("Are you sure you want to delete this category?");
   if (!confirmed) return;
-  
+
   loading.value = true;
   try {
     await deleteCategory(id);
@@ -1257,9 +1243,9 @@ function openEditModal(id: number) {
   if (stock) {
     // Find the unit string from the unit_name field for the dropdown
     const unitString = stock.unit_name || String(stock.unit);
-    editForm.value = { 
+    editForm.value = {
       ...stock,
-      unit: unitString // Use the unit string for the dropdown
+      unit: unitString, // Use the unit string for the dropdown
     };
   }
   showEditModal.value = true;
@@ -1279,7 +1265,7 @@ async function handleCreate(formData: CreateProductForm) {
   loading.value = true;
   try {
     const data = { ...formData };
-    
+
     // Only allow admin/superuser to set expiry dates
     if (data.expires_at && !canEditExpiry.value) {
       $toast.error("Only administrators can set expiry dates.", {
@@ -1289,24 +1275,24 @@ async function handleCreate(formData: CreateProductForm) {
       });
       return;
     }
-    
+
     // Convert datetime-local to ISO format if expiry is set
     if (data.expires_at) {
       data.expires_at = new Date(data.expires_at).toISOString();
     }
-    
+
     // Remove empty serial number to let backend handle it
     if (!data.serial_number || !data.serial_number.trim()) {
       const { serial_number, ...dataWithoutSerial } = data;
       Object.assign(data, dataWithoutSerial);
     }
-    
+
     // Convert unit string to unit ID
-    const selectedUnit = units.value.find(u => u.unit === String(data.unit));
+    const selectedUnit = units.value.find((u) => u.unit === String(data.unit));
     if (selectedUnit) {
       data.unit = selectedUnit.id;
     }
-    
+
     await createProduct(data);
     showCreateModal.value = false;
     await loadStocks();
@@ -1338,7 +1324,7 @@ async function handleEdit(formData: EditProductForm) {
   loading.value = true;
   try {
     const data = { ...formData };
-    
+
     // Only allow admin/superuser to modify expiry dates
     if (data.expires_at && !canEditExpiry.value) {
       $toast.error("Only administrators can modify expiry dates.", {
@@ -1348,18 +1334,18 @@ async function handleEdit(formData: EditProductForm) {
       });
       return;
     }
-    
+
     // Convert datetime-local to ISO format if expiry is set
     if (data.expires_at) {
       data.expires_at = new Date(data.expires_at).toISOString();
     }
-    
+
     // Convert unit string to unit ID
-    const selectedUnit = units.value.find(u => u.unit === String(data.unit));
+    const selectedUnit = units.value.find((u) => u.unit === String(data.unit));
     if (selectedUnit) {
       data.unit = selectedUnit.id;
     }
-    
+
     await updateProduct(selectedStockId.value, data);
     showEditModal.value = false;
     await loadStocks();
@@ -1412,7 +1398,7 @@ async function handleEditCategory(formData: EditCategoryForm) {
       });
       return;
     }
-    
+
     await updateCategory(formData.id, {
       name: formData.name,
       description: formData.description,
@@ -1438,28 +1424,32 @@ async function handleEditCategory(formData: EditCategoryForm) {
 
 // Add a helper function to get unit display
 const getUnit = (item: Stock | null): string => {
-  if (!item) return 'N/A';
-  
+  if (!item) return "N/A";
+
   // Check unit_name first since it contains the actual unit string from the serializer
-  if (item.unit_name && typeof item.unit_name === 'string' && item.unit_name.trim()) {
+  if (
+    item.unit_name &&
+    typeof item.unit_name === "string" &&
+    item.unit_name.trim()
+  ) {
     return item.unit_name;
   }
-  
+
   // Fallback to unit field, but check if it's a string first
   if (item.unit) {
-    if (typeof item.unit === 'string' && item.unit.trim()) {
+    if (typeof item.unit === "string" && item.unit.trim()) {
       return item.unit;
     }
     // If unit is a number (ID), try to find the corresponding unit name
-    if (typeof item.unit === 'number') {
-      const unitObj = units.value.find(u => u.id === item.unit);
+    if (typeof item.unit === "number") {
+      const unitObj = units.value.find((u) => u.id === item.unit);
       if (unitObj) {
         return unitObj.unit;
       }
     }
   }
-  
-  return 'N/A';
+
+  return "N/A";
 };
 
 // Close dropdown on outside click
@@ -1492,7 +1482,7 @@ const handleKeyDown = (event: KeyboardEvent) => {
 
 // Helper function with proper type
 function formatDate(dateString: string | undefined): string {
-  if (!dateString) return 'N/A';
+  if (!dateString) return "N/A";
   return new Date(dateString).toLocaleDateString();
 }
 
@@ -1524,8 +1514,13 @@ onMounted(async () => {
   if (!auth.user) {
     await auth.self();
   }
-  await Promise.all([loadStocks(), loadCategories(), loadSuppliers(), loadUnits()]);
-  
+  await Promise.all([
+    loadStocks(),
+    loadCategories(),
+    loadSuppliers(),
+    loadUnits(),
+  ]);
+
   // Add event listeners for better UX
   document.addEventListener("click", handleClickOutside);
   document.addEventListener("keydown", handleKeyDown);
@@ -1576,8 +1571,7 @@ select option:hover {
   width: 8px;
 }
 
-.overflow-auto
-.overflow-y-auto::-webkit-scrollbar-thumb {
+.overflow-auto .overflow-y-auto::-webkit-scrollbar-thumb {
   background: linear-gradient(135deg, #e2e8f0, #cbd5e1);
   border-radius: 4px;
   border: 1px solid #f1f5f9;
@@ -1605,7 +1599,7 @@ select option:hover {
   .grid-cols-1.md\\:grid-cols-2 {
     grid-template-columns: 1fr;
   }
-  
+
   .md\\:col-span-2 {
     grid-column: span 1;
   }
