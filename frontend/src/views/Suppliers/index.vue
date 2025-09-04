@@ -401,8 +401,8 @@ import { useToast } from "vue-toast-notification";
 import { useAuthStore } from "@/stores/auth";
 import Sidebar from "@/components/Sidebar.vue";
 import Navbar from "@/components/Navbar.vue";
-import EditModal from "./Editmodel.vue";
-import CreateModal from "./create.vue";
+import EditModal from "@/components/Supliers/EditSuplierModel.vue";
+import CreateModal from "@/components/Supliers/CreateSuplierModel.vue";
 import { fetchSuppliers, deleteSupplier } from "@/stores/suppliersAPI";
 
 const router = useRouter();

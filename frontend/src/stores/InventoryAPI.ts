@@ -1,6 +1,7 @@
 import axios from "axios";
 import { InventoryApi } from "@/core/endpoints/inventory";
 import { suppliersAPI } from "@/core/endpoints/suppliers";
+import { fetchUnit } from "@/stores/UnitAPI";
 
 const token = localStorage.getItem("token");
 
@@ -174,6 +175,7 @@ export async function createProduct(
     cost_price: number;
     margin: number;
     stock: number;
+    unit: string;
     expires_at?: string;
     description?: string;
   },
@@ -187,6 +189,7 @@ export async function createProduct(
       cost_price: product.cost_price,
       margin: product.margin,
       stock: product.stock,
+      unit: product.unit,
     };
 
     // Only include serial_number if provided
@@ -235,6 +238,7 @@ export async function updateProduct(
     cost_price?: number;
     margin?: number;
     stock?: number;
+    unit?: string;
     expires_at?: string;
     description?: string;
   },
@@ -265,5 +269,15 @@ export async function deleteProduct(id: number | string) {
   } catch (e) {
     console.error(`Error deleting Product with id ${id}:`, e);
     throw new Error("Failed to delete Product");
+  }
+}
+
+// Fetch Available Units for dropdown
+export async function fetchUnits() {
+  try {
+    return await fetchUnit();
+  } catch (e) {
+    console.error("Error fetching units:", e);
+    throw new Error("Failed to fetch units");
   }
 }
