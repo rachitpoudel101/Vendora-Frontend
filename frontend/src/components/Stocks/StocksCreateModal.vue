@@ -292,7 +292,7 @@ const isExpiryRequired = computed(() => {
 
 const handleSubmit = () => {
   // Find the selected unit object
-  const selectedUnitObj = props.units.find(u => u.unit === form.value.unit);
+  const selectedUnitObj = props.units.find((u) => u.unit === form.value.unit);
   // Ensure correct types before emitting
   const payload: CreateProductForm = {
     ...form.value,

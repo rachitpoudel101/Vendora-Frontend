@@ -48,10 +48,12 @@
             src="@/assets/Vendora-.png"
             alt="Vendora Logo"
             class="w-full h-full object-contain"
-            style="display: block;"
+            style="display: block"
           />
         </div>
-        <span class="text-white font-bold text-xl" style="display: block;">Vendora</span>
+        <span class="text-white font-bold text-xl" style="display: block"
+          >Vendora</span
+        >
       </div>
       <button
         @click="showSidebar = false"
