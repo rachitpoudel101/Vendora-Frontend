@@ -18,7 +18,9 @@
         >Vendora</span
       >
     </div>
-    <div class="flex items-center gap-3 sm:gap-4 relative w-full sm:w-auto justify-end">
+    <div
+      class="flex items-center gap-3 sm:gap-4 relative w-full sm:w-auto justify-end"
+    >
       <!-- Profile dropdown -->
       <div class="relative" ref="dropdownRef">
         <button
@@ -160,8 +162,9 @@ nav {
 /* Dropdown transition */
 .dropdown-fade-enter-active,
 .dropdown-fade-leave-active {
-  transition: opacity 0.25s cubic-bezier(0.4, 0.0, 0.2, 1),
-    transform 0.25s cubic-bezier(0.4, 0.0, 0.2, 1);
+  transition:
+    opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .dropdown-fade-enter-from,
 .dropdown-fade-leave-to {
@@ -179,7 +182,8 @@ nav {
   min-width: 10rem;
   max-width: 16rem;
   border-radius: 0.75rem;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08),
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.08),
     0 1.5px 4px rgba(0, 0, 0, 0.04);
   background: #fff;
   border: 1px solid #e5e7eb;

@@ -48,10 +48,12 @@
             src="@/assets/Vendora-.png"
             alt="Vendora Logo"
             class="w-full h-full object-contain"
-            style="display: block;"
+            style="display: block"
           />
         </div>
-        <span class="text-white font-bold text-xl" style="display: block;">Vendora</span>
+        <span class="text-white font-bold text-xl" style="display: block"
+          >Vendora</span
+        >
       </div>
       <button
         @click="showSidebar = false"
@@ -98,7 +100,7 @@
 
     <!-- Footer Section -->
     <div class="p-4 border-t border-white/10">
-      <div class="text-xs text-white/60 text-center">© 2024 StationaryApp</div>
+      <div class="text-xs text-white/60 text-center">© 2025 Vendora</div>
     </div>
   </div>
 </template>

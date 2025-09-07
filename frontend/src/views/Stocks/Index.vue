@@ -1079,13 +1079,13 @@ const selectedStock = ref<Stock | null>(null);
 const editForm = ref<EditProductForm>({
   name: "",
   category: "",
-  supliers: "",
+  supliers: 0, // must be number, not string
   batch_number: "",
   serial_number: "",
   cost_price: null,
   margin: null,
   stock: null,
-  unit: "",
+  unit: "", // must be string
   expires_at: "",
   description: "",
 });
@@ -1244,8 +1244,17 @@ function openEditModal(id: number) {
     // Find the unit string from the unit_name field for the dropdown
     const unitString = stock.unit_name || String(stock.unit);
     editForm.value = {
-      ...stock,
-      unit: unitString, // Use the unit string for the dropdown
+      name: stock.name,
+      category: String(stock.category), // always string
+      supliers: Number(stock.supliers), // always number
+      batch_number: stock.batch_number,
+      serial_number: stock.serial_number ?? "",
+      cost_price: stock.cost_price,
+      margin: stock.margin,
+      stock: stock.stock,
+      unit: unitString, // always string
+      expires_at: stock.expires_at ?? "",
+      description: stock.description ?? "",
     };
   }
   showEditModal.value = true;
@@ -1287,13 +1296,30 @@ async function handleCreate(formData: CreateProductForm) {
       Object.assign(data, dataWithoutSerial);
     }
 
-    // Convert unit string to unit ID
+    // Convert unit string to unit ID, but send as string
     const selectedUnit = units.value.find((u) => u.unit === String(data.unit));
     if (selectedUnit) {
-      data.unit = selectedUnit.id;
+      data.unit = selectedUnit.unit; // always string
+    } else {
+      data.unit = String(data.unit); // fallback to string
     }
 
-    await createProduct(data);
+    // Ensure category is string and supliers is number
+    data.category = String(data.category);
+    data.supliers = Number(data.supliers);
+
+    await createProduct({
+      name: data.name,
+      category: data.category,
+      supliers: data.supliers,
+      serial_number: data.serial_number,
+      cost_price: data.cost_price,
+      margin: data.margin,
+      stock: data.stock,
+      unit: data.unit,
+      expires_at: data.expires_at,
+      description: data.description,
+    });
     showCreateModal.value = false;
     await loadStocks();
     $toast.success("Product created successfully!", {
@@ -1340,13 +1366,31 @@ async function handleEdit(formData: EditProductForm) {
       data.expires_at = new Date(data.expires_at).toISOString();
     }
 
-    // Convert unit string to unit ID
+    // Convert unit string to unit ID, but send as string
     const selectedUnit = units.value.find((u) => u.unit === String(data.unit));
     if (selectedUnit) {
-      data.unit = selectedUnit.id;
+      data.unit = selectedUnit.unit; // always string
+    } else {
+      data.unit = String(data.unit); // fallback to string
     }
 
-    await updateProduct(selectedStockId.value, data);
+    // Ensure category is string and supliers is number
+    data.category = String(data.category);
+    data.supliers = Number(data.supliers);
+
+    await updateProduct(selectedStockId.value, {
+      name: data.name,
+      category: data.category,
+      supliers: data.supliers,
+      batch_number: data.batch_number,
+      serial_number: data.serial_number,
+      cost_price: data.cost_price,
+      margin: data.margin,
+      stock: data.stock,
+      unit: data.unit,
+      expires_at: data.expires_at,
+      description: data.description,
+    });
     showEditModal.value = false;
     await loadStocks();
     $toast.success("Product updated successfully!", {
