@@ -38,7 +38,7 @@ export async function createUnitConfig(
     product: number;
     unit_type: number;
     conversion_per_unit: number;
-    conversion_unit_name: string;
+    conversion_unit_name: number;
   },
   tokenOverride?: string,
 ) {
@@ -74,7 +74,7 @@ export async function updateUnitConfig(
     product?: number;
     unit_type?: number;
     conversion_per_unit?: number;
-    conversion_unit_name?: string;
+    conversion_unit_name?: number;
   },
 ) {
   try {
