@@ -22,7 +22,8 @@
                     Unit Management
                   </h1>
                   <p class="text-gray-600 text-sm sm:text-base lg:text-lg">
-                    Manage measurement units and unit configurations for your products
+                    Manage measurement units and unit configurations for your
+                    products
                   </p>
                 </div>
 
@@ -90,7 +91,7 @@
                     activeTab === 'units'
                       ? 'border-blue-500 text-blue-600'
                       : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300',
-                    'whitespace-nowrap border-b-2 py-2 px-1 text-sm font-medium'
+                    'whitespace-nowrap border-b-2 py-2 px-1 text-sm font-medium',
                   ]"
                 >
                   Units
@@ -101,7 +102,7 @@
                     activeTab === 'configurations'
                       ? 'border-blue-500 text-blue-600'
                       : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300',
-                    'whitespace-nowrap border-b-2 py-2 px-1 text-sm font-medium'
+                    'whitespace-nowrap border-b-2 py-2 px-1 text-sm font-medium',
                   ]"
                 >
                   Unit Configurations
@@ -116,7 +117,10 @@
                   class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"
                 ></div>
                 <span class="text-gray-600 font-medium text-lg"
-                  >Loading {{activeTab === 'units' ? 'units' : 'unit configurations'}}...</span
+                  >Loading
+                  {{
+                    activeTab === "units" ? "units" : "unit configurations"
+                  }}...</span
                 >
               </div>
             </div>
@@ -125,141 +129,142 @@
             <div v-else class="h-full flex flex-col">
               <!-- Units Tab Content -->
               <div v-if="activeTab === 'units'" class="h-full flex flex-col">
-              <!-- Mobile Cards View -->
-              <div class="block md:hidden p-4 flex-1 overflow-y-auto space-y-4">
+                <!-- Mobile Cards View -->
                 <div
-                  v-for="unit in units"
-                  :key="unit.id"
-                  class="bg-white border border-gray-200 rounded-lg p-4 shadow-sm"
+                  class="block md:hidden p-4 flex-1 overflow-y-auto space-y-4"
                 >
-                  <div class="flex justify-between items-start">
-                    <div class="flex-1">
-                      <h3 class="font-semibold text-gray-900 text-lg">
-                        {{ unit.unit }}
-                      </h3>
-                      <p class="text-gray-500 text-sm mt-1">
-                        ID: {{ unit.id }}
-                      </p>
-                    </div>
-                    <div class="flex space-x-2 ml-4">
-                      <button
-                        @click="openEditModal(unit)"
-                        class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                      >
-                        <svg
-                          class="w-4 h-4"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
+                  <div
+                    v-for="unit in units"
+                    :key="unit.id"
+                    class="bg-white border border-gray-200 rounded-lg p-4 shadow-sm"
+                  >
+                    <div class="flex justify-between items-start">
+                      <div class="flex-1">
+                        <h3 class="font-semibold text-gray-900 text-lg">
+                          {{ unit.unit }}
+                        </h3>
+                        <p class="text-gray-500 text-sm mt-1">
+                          ID: {{ unit.id }}
+                        </p>
+                      </div>
+                      <div class="flex space-x-2 ml-4">
+                        <button
+                          @click="openEditModal(unit)"
+                          class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                         >
+                          <!-- <svg
+                            class="w-4 h-4"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          > -->
                           <path
                             stroke-linecap="round"
                             stroke-linejoin="round"
                             stroke-width="2"
                             d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
                           ></path>
-                        </svg>
-                      </button>
-                      <button
-                        @click="confirmDelete(unit)"
-                        class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                      >
-                        <svg
-                          class="w-4 h-4"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
+                        </button>
+                        <button
+                          @click="confirmDelete(unit)"
+                          class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                         >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                          ></path>
-                        </svg>
-                      </button>
+                          <svg
+                            class="w-4 h-4"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                            ></path>
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div v-if="units.length === 0" class="text-center py-8">
+                    <div class="flex flex-col items-center">
+                      <svg
+                        class="w-12 h-12 text-gray-300 mb-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"
+                        ></path>
+                      </svg>
+                      <p class="text-lg font-medium text-gray-500">
+                        No units found
+                      </p>
+                      <p class="text-sm text-gray-400">
+                        Add your first unit to get started
+                      </p>
                     </div>
                   </div>
                 </div>
 
-                <div v-if="units.length === 0" class="text-center py-8">
-                  <div class="flex flex-col items-center">
-                    <svg
-                      class="w-12 h-12 text-gray-300 mb-4"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"
-                      ></path>
-                    </svg>
-                    <p class="text-lg font-medium text-gray-500">
-                      No units found
-                    </p>
-                    <p class="text-sm text-gray-400">
-                      Add your first unit to get started
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Desktop Table View -->
-              <div
-                class="hidden md:flex flex-1 flex-col bg-gradient-to-br from-gray-50 to-white rounded-xl border border-gray-200 overflow-hidden"
-              >
-                <div class="flex-1 overflow-auto">
-                  <table class="min-w-full divide-y divide-gray-200">
-                    <thead
-                      class="bg-gradient-to-r from-gray-100 to-gray-50 sticky top-0"
-                    >
-                      <tr>
-                        <th
-                          class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
-                        >
-                          S.N.
-                        </th>
-                        <th
-                          class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
-                        >
-                          Unit Name
-                        </th>
-                        <th
-                          class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
-                        >
-                          Actions
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody class="bg-white divide-y divide-gray-100">
-                      <tr
-                        v-for="(unit, idx) in units"
-                        :key="unit.id"
-                        class="hover:bg-gray-50 transition-colors duration-150"
+                <!-- Desktop Table View -->
+                <div
+                  class="hidden md:flex flex-1 flex-col bg-gradient-to-br from-gray-50 to-white rounded-xl border border-gray-200 overflow-hidden"
+                >
+                  <div class="flex-1 overflow-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                      <thead
+                        class="bg-gradient-to-r from-gray-100 to-gray-50 sticky top-0"
                       >
-                        <td
-                          class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"
+                        <tr>
+                          <th
+                            class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
+                          >
+                            S.N.
+                          </th>
+                          <th
+                            class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
+                          >
+                            Unit Name
+                          </th>
+                          <th
+                            class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
+                          >
+                            Actions
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody class="bg-white divide-y divide-gray-100">
+                        <tr
+                          v-for="(unit, idx) in units"
+                          :key="unit.id"
+                          class="hover:bg-gray-50 transition-colors duration-150"
                         >
-                          {{ idx + 1 }}
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                          <div class="text-sm font-medium text-gray-900">
-                            {{ unit.unit }}
-                          </div>
-                        </td>
-                        <td
-                          class="px-6 py-4 whitespace-nowrap text-sm font-medium"
-                        >
-                          <div class="flex space-x-3">
-                            <button
-                              @click="openEditModal(unit)"
-                              class="text-blue-600 hover:text-blue-900 transition-colors duration-150"
-                              title="Edit Unit"
-                            >
-                              <!-- <svg
+                          <td
+                            class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"
+                          >
+                            {{ idx + 1 }}
+                          </td>
+                          <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm font-medium text-gray-900">
+                              {{ unit.unit }}
+                            </div>
+                          </td>
+                          <td
+                            class="px-6 py-4 whitespace-nowrap text-sm font-medium"
+                          >
+                            <div class="flex space-x-3">
+                              <button
+                                @click="openEditModal(unit)"
+                                class="text-blue-600 hover:text-blue-900 transition-colors duration-150"
+                                title="Edit Unit"
+                              >
+                                <!-- <svg
                                 class="w-4 h-4"
                                 fill="none"
                                 stroke="currentColor"
@@ -271,14 +276,37 @@
                                   stroke-width="2"
                                   d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
                                 ></path>
-                            </button>
-                            <button
-                              @click="confirmDelete(unit)"
-                              class="text-red-600 hover:text-red-900 transition-colors duration-150"
-                              title="Delete Unit"
-                            >
+                              </button>
+                              <button
+                                @click="confirmDelete(unit)"
+                                class="text-red-600 hover:text-red-900 transition-colors duration-150"
+                                title="Delete Unit"
+                              >
+                                <svg
+                                  class="w-4 h-4"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                                  ></path>
+                                </svg>
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                        <tr v-if="units.length === 0">
+                          <td
+                            colspan="3"
+                            class="px-6 py-12 text-center text-gray-500"
+                          >
+                            <div class="flex flex-col items-center">
                               <svg
-                                class="w-4 h-4"
+                                class="w-12 h-12 text-gray-300 mb-4"
                                 fill="none"
                                 stroke="currentColor"
                                 viewBox="0 0 24 24"
@@ -287,49 +315,31 @@
                                   stroke-linecap="round"
                                   stroke-linejoin="round"
                                   stroke-width="2"
-                                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                                  d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"
                                 ></path>
                               </svg>
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                      <tr v-if="units.length === 0">
-                        <td
-                          colspan="3"
-                          class="px-6 py-12 text-center text-gray-500"
-                        >
-                          <div class="flex flex-col items-center">
-                            <svg
-                              class="w-12 h-12 text-gray-300 mb-4"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                            >
-                              <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"
-                              ></path>
-                            </svg>
-                            <p class="text-lg font-medium">No units found</p>
-                            <p class="text-sm">
-                              Create your first unit to get started
-                            </p>
-                          </div>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
+                              <p class="text-lg font-medium">No units found</p>
+                              <p class="text-sm">
+                                Create your first unit to get started
+                              </p>
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
-              </div>
               </div>
 
               <!-- Unit Configurations Tab Content -->
-              <div v-if="activeTab === 'configurations'" class="h-full flex flex-col">
+              <div
+                v-if="activeTab === 'configurations'"
+                class="h-full flex flex-col"
+              >
                 <!-- Mobile Cards View for Unit Configs -->
-                <div class="block md:hidden p-4 flex-1 overflow-y-auto space-y-4">
+                <div
+                  class="block md:hidden p-4 flex-1 overflow-y-auto space-y-4"
+                >
                   <div
                     v-for="config in unitConfigs"
                     :key="config.id"
@@ -338,10 +348,17 @@
                     <div class="flex justify-between items-start">
                       <div class="flex-1">
                         <h3 class="font-semibold text-gray-900 text-lg">
-                          {{ config.product_name }} - {{ config.unit_type_name }}
+                          {{ config.product_name }} -
+                          {{ config.unit_type_name }}
                         </h3>
                         <p class="text-gray-500 text-sm mt-1">
-                          {{ config.conversion_per_unit }} {{ config.unit_type_name }} = {{ config.conversion_per_unit }} {{ unitMap[config.conversion_unit_name] || config.conversion_unit_name }}
+                          {{ config.conversion_per_unit }}
+                          {{ config.unit_type_name }} =
+                          {{ config.conversion_per_unit }}
+                          {{
+                            unitMap[config.conversion_unit_name] ||
+                            config.conversion_unit_name
+                          }}
                         </p>
                       </div>
                       <div class="flex space-x-2 ml-4">
@@ -349,8 +366,18 @@
                           @click="openEditUnitConfigModal(config)"
                           class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                         >
-                          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                          <svg
+                            class="w-4 h-4"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                            ></path>
                           </svg>
                         </button>
                       </div>
@@ -359,68 +386,169 @@
 
                   <div v-if="unitConfigs.length === 0" class="text-center py-8">
                     <div class="flex flex-col items-center">
-                      <svg class="w-12 h-12 text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                      <svg
+                        class="w-12 h-12 text-gray-300 mb-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+                        ></path>
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                        ></path>
                       </svg>
-                      <p class="text-lg font-medium text-gray-500">No unit configurations found</p>
-                      <p class="text-sm text-gray-400">Add your first unit configuration to get started</p>
+                      <p class="text-lg font-medium text-gray-500">
+                        No unit configurations found
+                      </p>
+                      <p class="text-sm text-gray-400">
+                        Add your first unit configuration to get started
+                      </p>
                     </div>
                   </div>
                 </div>
 
                 <!-- Desktop Table View for Unit Configs -->
-                <div class="hidden md:flex flex-1 flex-col bg-gradient-to-br from-gray-50 to-white rounded-xl border border-gray-200 overflow-hidden">
+                <div
+                  class="hidden md:flex flex-1 flex-col bg-gradient-to-br from-gray-50 to-white rounded-xl border border-gray-200 overflow-hidden"
+                >
                   <div class="flex-1 overflow-auto">
                     <table class="min-w-full divide-y divide-gray-200">
-                      <thead class="bg-gradient-to-r from-gray-100 to-gray-50 sticky top-0">
+                      <thead
+                        class="bg-gradient-to-r from-gray-100 to-gray-50 sticky top-0"
+                      >
                         <tr>
-                          <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">S.N.</th>
-                          <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Product</th>
-                          <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Unit Type</th>
-                          <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Conversion</th>
-                          <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Base Unit</th>
-                          <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Actions</th>
+                          <th
+                            class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
+                          >
+                            S.N.
+                          </th>
+                          <th
+                            class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
+                          >
+                            Product
+                          </th>
+                          <th
+                            class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
+                          >
+                            Unit Type
+                          </th>
+                          <th
+                            class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
+                          >
+                            Conversion
+                          </th>
+                          <th
+                            class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
+                          >
+                            Base Unit
+                          </th>
+                          <th
+                            class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
+                          >
+                            Actions
+                          </th>
                         </tr>
                       </thead>
                       <tbody class="bg-white divide-y divide-gray-100">
-                        <tr v-for="(config, idx) in unitConfigs" :key="config.id" class="hover:bg-gray-50 transition-colors duration-150">
-                          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ idx + 1 }}</td>
-                          <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm font-medium text-gray-900">{{ config.product_name }}</div>
+                        <tr
+                          v-for="(config, idx) in unitConfigs"
+                          :key="config.id"
+                          class="hover:bg-gray-50 transition-colors duration-150"
+                        >
+                          <td
+                            class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"
+                          >
+                            {{ idx + 1 }}
                           </td>
                           <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm text-gray-900">{{ config.unit_type_name }}</div>
+                            <div class="text-sm font-medium text-gray-900">
+                              {{ config.product_name }}
+                            </div>
                           </td>
                           <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm text-gray-900">{{ config.conversion_per_unit }}</div>
+                            <div class="text-sm text-gray-900">
+                              {{ config.unit_type_name }}
+                            </div>
                           </td>
                           <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm text-gray-900">{{ unitMap[config.conversion_unit_name] || config.conversion_unit_name }}</div>
+                            <div class="text-sm text-gray-900">
+                              {{ config.conversion_per_unit }}
+                            </div>
                           </td>
-                          <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                          <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900">
+                              {{
+                                unitMap[config.conversion_unit_name] ||
+                                config.conversion_unit_name
+                              }}
+                            </div>
+                          </td>
+                          <td
+                            class="px-6 py-4 whitespace-nowrap text-sm font-medium"
+                          >
                             <div class="flex space-x-3">
                               <button
                                 @click="openEditUnitConfigModal(config)"
                                 class="text-blue-600 hover:text-blue-900 transition-colors duration-150"
                                 title="Edit Unit Configuration"
                               >
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                <svg
+                                  class="w-4 h-4"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                                  ></path>
                                 </svg>
                               </button>
                             </div>
                           </td>
                         </tr>
                         <tr v-if="unitConfigs.length === 0">
-                          <td colspan="6" class="px-6 py-12 text-center text-gray-500">
+                          <td
+                            colspan="6"
+                            class="px-6 py-12 text-center text-gray-500"
+                          >
                             <div class="flex flex-col items-center">
-                              <svg class="w-12 h-12 text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                              <svg
+                                class="w-12 h-12 text-gray-300 mb-4"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  stroke-width="2"
+                                  d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+                                ></path>
+                                <path
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  stroke-width="2"
+                                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                                ></path>
                               </svg>
-                              <p class="text-lg font-medium">No unit configurations found</p>
-                              <p class="text-sm">Create your first unit configuration to get started</p>
+                              <p class="text-lg font-medium">
+                                No unit configurations found
+                              </p>
+                              <p class="text-sm">
+                                Create your first unit configuration to get
+                                started
+                              </p>
                             </div>
                           </td>
                         </tr>
@@ -526,9 +654,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
-import { fetchUnit, deleteUnit } from "@/stores/UnitAPI";
-import { fetchUnitConfig } from "@/stores/unitConfigAPI";
+import { ref, onMounted, computed } from "vue";
+import { useUnitStore } from "@/stores/UnitAPI";
+import { useUnitConfigStore } from "@/stores/unitConfigAPI";
 import CreateUnitModel from "@/components/Unit/CreateUnitModel.vue";
 import EditUnitModel from "@/components/Unit/EditUnitModel.vue";
 import CreateUnitConfig from "@/components/UnitTypeConfigurations/CreateUnitConfigModal.vue";
@@ -548,13 +676,19 @@ interface UnitConfig {
   unit_type: number;
   unit_type_name: string;
   conversion_per_unit: number;
-  conversion_unit_name: string;
+  conversion_unit_name: number;
 }
 
-const units = ref<Unit[]>([]);
+const unitStore = useUnitStore();
+const unitConfigStore = useUnitConfigStore();
+
+const units = computed(() => unitStore.units);
+const unitConfigs = computed(() => unitConfigStore.unitConfigs);
+const loading = computed(() => unitStore.loading || unitConfigStore.loading);
+const error = computed(() => unitStore.error || unitConfigStore.error);
+
 const unitMap = ref<Record<number, string>>({});
-const unitConfigs = ref<UnitConfig[]>([]);
-const activeTab = ref<'units' | 'configurations'>('units');
+const activeTab = ref<"units" | "configurations">("units");
 const showCreateModal = ref(false);
 const showEditModal = ref(false);
 const showDeleteModal = ref(false);
@@ -563,22 +697,12 @@ const showEditUnitConfigModal = ref(false);
 const selectedUnit = ref<Unit | null>(null);
 const selectedUnitConfig = ref<UnitConfig | null>(null);
 const unitToDelete = ref<Unit | null>(null);
-const loading = ref(false);
 
 const loadUnits = async () => {
   try {
-    loading.value = true;
-    const data = await fetchUnit();
-    units.value = data;
-    // Build a lookup map for unit id -> unit name
-    unitMap.value = {};
-    data.forEach((u: Unit) => {
-      unitMap.value[u.id] = u.unit;
-    });
+    unitStore.fetchUnits();
   } catch (error) {
     console.error("Error loading units:", error);
-  } finally {
-    loading.value = false;
   }
 };
 
@@ -614,7 +738,7 @@ const handleDelete = async () => {
   if (!unitToDelete.value) return;
 
   try {
-    await deleteUnit(unitToDelete.value.id);
+    await unitStore.deleteUnit(unitToDelete.value.id);
     await loadUnits();
     closeDeleteModal();
   } catch (error) {
@@ -663,8 +787,7 @@ const handleUnitConfigUpdated = () => {
 
 const loadUnitConfigs = async () => {
   try {
-    const data = await fetchUnitConfig();
-    unitConfigs.value = data;
+    unitConfigStore.fetchUnitConfigs();
   } catch (error) {
     console.error("Error loading unit configurations:", error);
   }
