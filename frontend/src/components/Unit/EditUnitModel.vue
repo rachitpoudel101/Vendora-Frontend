@@ -70,8 +70,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted } from "vue";
-import { updateunit } from "@/stores/UnitAPI";
+import { reactive, onMounted, computed } from "vue";
+import { useUnitStore } from "@/stores/UnitAPI";
 
 interface Unit {
   id: number;
@@ -84,7 +84,11 @@ const props = defineProps<{
 
 const emit = defineEmits(["close", "updated"]);
 
-const loading = ref(false);
+const unitStore = useUnitStore();
+
+const loading = computed(() => unitStore.loading);
+// const error = computed(() => unitStore.error);
+
 const form = reactive({
   unit: "",
 });
@@ -113,14 +117,11 @@ const handleSubmit = async () => {
   if (!validateForm()) return;
 
   try {
-    loading.value = true;
-    await updateunit(props.unit.id, { unit: form.unit.trim() });
+    await unitStore.updateUnit(props.unit.id, form);
     emit("updated");
   } catch (error) {
     console.error("Error updating unit:", error);
     errors.unit = "Failed to update unit. Please try again.";
-  } finally {
-    loading.value = false;
   }
 };
 

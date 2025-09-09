@@ -159,10 +159,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch } from "vue";
-import { updateUnitConfig } from "@/stores/unitConfigAPI";
-import { fetchProduct } from "@/stores/InventoryAPI";
-import { fetchUnit } from "@/stores/UnitAPI";
+import { ref, onMounted, watch, computed } from "vue";
+import { useUnitConfigStore } from "@/stores/unitConfigAPI";
+import { useInventoryStore } from "@/stores/InventoryAPI";
+import { useUnitStore } from "@/stores/UnitAPI";
 
 interface Product {
   id: number;
@@ -200,19 +200,22 @@ const form = ref({
   conversion_unit_name: "",
 });
 
-const products = ref<Product[]>([]);
-const unitTypes = ref<UnitType[]>([]);
-const loading = ref(false);
-const error = ref("");
+const unitConfigStore = useUnitConfigStore();
+const inventoryStore = useInventoryStore();
+const unitStore = useUnitStore();
+
+const loading = computed(
+  () => unitConfigStore.loading || inventoryStore.loading || unitStore.loading,
+);
+const error = computed(
+  () => unitConfigStore.error || inventoryStore.error || unitStore.error,
+);
+const products = computed(() => inventoryStore.products);
+const unitTypes = computed(() => unitStore.units);
 
 const loadData = async () => {
   try {
-    const [productsData, unitsData] = await Promise.all([
-      fetchProduct(),
-      fetchUnit(),
-    ]);
-    products.value = productsData;
-    unitTypes.value = unitsData;
+    await Promise.all([inventoryStore.fetchProducts(), unitStore.fetchUnits()]);
   } catch (err) {
     console.error("Error loading data:", err);
     error.value = "Failed to load products and unit types";
@@ -232,22 +235,17 @@ const initializeForm = () => {
 
 const handleSubmit = async () => {
   error.value = "";
-  loading.value = true;
+  unitConfigStore.loading = true;
 
   try {
-    await updateUnitConfig(props.unitConfig.id, {
-      product: parseInt(form.value.product),
-      unit_type: parseInt(form.value.unit_type),
-      conversion_per_unit: parseFloat(form.value.conversion_per_unit),
-      conversion_unit_name: parseInt(form.value.conversion_unit_name),
-    });
+          await unitConfigStore.updateUnitConfig(props.unitConfig.id, updatedData);
 
     emit("updated");
   } catch (err) {
     console.error("Error updating unit configuration:", err);
     error.value = "Failed to update unit configuration. Please try again.";
   } finally {
-    loading.value = false;
+    unitConfigStore.loading = false;
   }
 };
 

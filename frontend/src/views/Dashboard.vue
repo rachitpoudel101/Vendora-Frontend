@@ -293,7 +293,7 @@ import { useAuthStore } from "@/stores/auth";
 import { useRouter } from "vue-router";
 import Sidebar from "@/components/Sidebar.vue";
 import Navbar from "@/components/Navbar.vue";
-import { fetchDashboardStats } from "@/stores/dashbaordAPI";
+import { useDashboardStore } from "@/stores/dashbaordAPI";
 import { Line, Pie } from "vue-chartjs";
 import {
   Chart,
@@ -355,6 +355,7 @@ export type DashboardStats = {
 };
 
 const auth = useAuthStore();
+const dashboardStore = useDashboardStore();
 const router = useRouter();
 
 const dashboardStats = ref<DashboardStats | null>(null);
@@ -368,7 +369,7 @@ onMounted(async () => {
     await auth.self();
   }
   try {
-    dashboardStats.value = await fetchDashboardStats();
+    dashboardStats.value = await dashboardStore.fetchDashboardStats();
   } catch (e) {
     dashboardStats.value = {
       total_sales: 0,

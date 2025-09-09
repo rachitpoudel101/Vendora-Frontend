@@ -654,9 +654,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
-import { fetchUnit, deleteUnit } from "@/stores/UnitAPI";
-import { fetchUnitConfig } from "@/stores/unitConfigAPI";
+import { ref, onMounted, computed } from "vue";
+import { useUnitStore } from "@/stores/UnitAPI";
+import { useUnitConfigStore } from "@/stores/unitConfigAPI";
 import CreateUnitModel from "@/components/Unit/CreateUnitModel.vue";
 import EditUnitModel from "@/components/Unit/EditUnitModel.vue";
 import CreateUnitConfig from "@/components/UnitTypeConfigurations/CreateUnitConfigModal.vue";
@@ -679,9 +679,15 @@ interface UnitConfig {
   conversion_unit_name: number;
 }
 
-const units = ref<Unit[]>([]);
+const unitStore = useUnitStore();
+const unitConfigStore = useUnitConfigStore();
+
+const units = computed(() => unitStore.units);
+const unitConfigs = computed(() => unitConfigStore.unitConfigs);
+const loading = computed(() => unitStore.loading || unitConfigStore.loading);
+const error = computed(() => unitStore.error || unitConfigStore.error);
+
 const unitMap = ref<Record<number, string>>({});
-const unitConfigs = ref<UnitConfig[]>([]);
 const activeTab = ref<"units" | "configurations">("units");
 const showCreateModal = ref(false);
 const showEditModal = ref(false);
@@ -691,22 +697,12 @@ const showEditUnitConfigModal = ref(false);
 const selectedUnit = ref<Unit | null>(null);
 const selectedUnitConfig = ref<UnitConfig | null>(null);
 const unitToDelete = ref<Unit | null>(null);
-const loading = ref(false);
 
 const loadUnits = async () => {
   try {
-    loading.value = true;
-    const data = await fetchUnit();
-    units.value = data;
-    // Build a lookup map for unit id -> unit name
-    unitMap.value = {};
-    data.forEach((u: Unit) => {
-      unitMap.value[u.id] = u.unit;
-    });
+    unitStore.fetchUnits();
   } catch (error) {
     console.error("Error loading units:", error);
-  } finally {
-    loading.value = false;
   }
 };
 
@@ -742,7 +738,7 @@ const handleDelete = async () => {
   if (!unitToDelete.value) return;
 
   try {
-    await deleteUnit(unitToDelete.value.id);
+    await unitStore.deleteUnit(unitToDelete.value.id);
     await loadUnits();
     closeDeleteModal();
   } catch (error) {
@@ -791,8 +787,7 @@ const handleUnitConfigUpdated = () => {
 
 const loadUnitConfigs = async () => {
   try {
-    const data = await fetchUnitConfig();
-    unitConfigs.value = data;
+    unitConfigStore.fetchUnitConfigs();
   } catch (error) {
     console.error("Error loading unit configurations:", error);
   }

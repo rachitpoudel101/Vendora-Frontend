@@ -50,11 +50,10 @@
 </template>
 
 <script setup>
-import { ref, watch } from "vue";
-import axios from "axios";
-import Modal from "@/components/Modal.vue";
-import { getUser, updateUser } from "@/stores/usersAPI";
+import { ref, watch, computed } from "vue";
 import { useToast } from "vue-toast-notification";
+import Modal from "@/components/Modal.vue";
+import { useUsersStore } from "@/stores/usersAPI";
 
 const $toast = useToast();
 // Props
@@ -65,24 +64,27 @@ const props = defineProps({
 const emit = defineEmits(["close"]);
 
 // State
+const usersStore = useUsersStore();
 const userData = ref({
   first_name: "",
   last_name: "",
   username: "",
   email: "",
 });
-const loading = ref(false);
+const loading = computed(() => usersStore.loading);
+const error = computed(() => usersStore.error);
+const roles = computed(() => usersStore.roles);
 
 // Watch for userId when modal opens
 watch(
   () => props.userId,
   async (newId) => {
     if (props.show && newId) {
-      loading.value = true;
+      usersStore.loading = true;
       try {
-        userData.value = await getUser(newId);
+        userData.value = await usersStore.getUser(newId);
       } finally {
-        loading.value = false;
+        usersStore.loading = false;
       }
     }
   },
@@ -92,7 +94,7 @@ watch(
 // Update user
 async function handleUpdateUser() {
   try {
-    await updateUser(props.userId, {
+    await usersStore.updateUser(props.userId, {
       username: userData.value.username,
       email: userData.value.email,
       first_name: userData.value.first_name,

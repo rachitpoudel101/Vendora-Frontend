@@ -542,17 +542,17 @@ import { ref, computed, onMounted, onUnmounted, watch } from "vue";
 import { useRouter } from "vue-router";
 import { useToast } from "vue-toast-notification";
 import { useAuthStore } from "@/stores/auth";
+import { useUsersStore } from "@/stores/usersAPI";
 import Sidebar from "@/components/Sidebar.vue";
 import Navbar from "@/components/Navbar.vue";
 import UserEditModal from "@/components/Users/UserEditModal.vue";
 import UserEditRole from "@/components/Users/UserEditRole.vue";
-import { fetchUsers, deleteUser, restoreUser } from "@/stores/usersAPI";
 
 const router = useRouter();
 const toast = useToast();
 const auth = useAuthStore();
+const usersStore = useUsersStore();
 
-const users = ref([]);
 const showModal = ref(false);
 const selectedUserId = ref(null);
 const showRoleEditModal = ref(false);
@@ -564,7 +564,7 @@ const canCreateUser = computed(() => {
   return auth.user?.role !== "staff";
 });
 
-const totalUsers = computed(() => users.value.length);
+const totalUsers = computed(() => usersStore.users.length);
 const totalPages = computed(() => Math.ceil(totalUsers.value / pageSize));
 const startIndex = computed(() => (currentPage.value - 1) * pageSize + 1);
 const endIndex = computed(() =>
@@ -574,7 +574,7 @@ const endIndex = computed(() =>
 const displayUsers = computed(() => {
   const start = (currentPage.value - 1) * pageSize;
   const end = start + pageSize;
-  return users.value.slice(start, end);
+  return usersStore.users.slice(start, end);
 });
 
 const getRoleBadgeClass = (role) => {
@@ -633,8 +633,8 @@ const handleDeleteUser = async (userId) => {
   if (!confirmed) return;
 
   try {
-    await deleteUser(userId);
-    users.value = users.value.filter((user) => user.id !== userId);
+    await usersStore.deleteUser(userId);
+    // users.value = users.value.filter((user) => user.id !== userId);
 
     if (currentPage.value > totalPages.value) {
       currentPage.value = totalPages.value || 1;
@@ -658,8 +658,8 @@ const handleDeleteUser = async (userId) => {
 
 const handleRestoreUser = async (userId) => {
   try {
-    await restoreUser(userId);
-    users.value = await fetchUsers();
+    await usersStore.restoreUser(userId);
+    // users.value = await fetchUsers();
     toast.success("User restored successfully!", {
       position: "top-right",
       duration: 3000,
@@ -689,7 +689,7 @@ const nextPage = () => {
 
 onMounted(async () => {
   try {
-    users.value = await fetchUsers();
+    await usersStore.fetchUsers();
   } catch (error) {
     console.error("Failed to fetch users:", error);
     toast.error("Failed to load users.", {
@@ -713,7 +713,7 @@ onUnmounted(() => {
   window.removeEventListener("click", handleClickOutside);
 });
 
-watch(users, () => {
+watch(usersStore.users, () => {
   if (currentPage.value > totalPages.value) {
     currentPage.value = totalPages.value || 1;
   }

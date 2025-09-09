@@ -741,8 +741,8 @@
 <script setup>
 import { ref, computed, onMounted, nextTick, onUnmounted } from "vue";
 import { useRouter } from "vue-router";
-import { createBills } from "@/stores/billsAPI";
-import { fetchProduct } from "@/stores/InventoryAPI";
+import { useBillsStore } from "@/stores/billsAPI";
+import { useInventoryStore } from "@/stores/InventoryAPI";
 import { useAuthStore } from "@/stores/auth";
 import BillSummary from "@/components/Bill/BillSummary.vue";
 
@@ -756,7 +756,12 @@ const remarks = ref("");
 const isDisabled = ref(true); // Add this missing property
 
 // Products for dropdown
-const products = ref([]);
+const billsStore = useBillsStore();
+const inventoryStore = useInventoryStore();
+
+const loading = computed(() => billsStore.loading || inventoryStore.loading);
+const error = computed(() => billsStore.error || inventoryStore.error);
+const products = computed(() => inventoryStore.products);
 
 // Get current user from localStorage or auth store
 const getCurrentUser = () => {
@@ -821,7 +826,7 @@ const handleEscKey = (event) => {
 
 // Fetch products on mount using inventory store
 onMounted(async () => {
-  products.value = await fetchProduct();
+  await inventoryStore.fetchProducts();
 
   // Auto-populate billed by field with current user
   const currentUser = getCurrentUser();
@@ -1098,7 +1103,7 @@ const onSubmit = async () => {
       items: billItems,
     };
 
-    const res = await createBills(payload);
+    const res = await billsStore.createBill(payload);
     if (res && res.id) {
       showToastNotification("success", "Bill created successfully!");
       setTimeout(() => {

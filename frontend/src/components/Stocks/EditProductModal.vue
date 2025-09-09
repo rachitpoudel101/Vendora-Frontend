@@ -215,6 +215,7 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
+import { useInventoryStore } from "@/stores/InventoryAPI";
 
 interface EditProductForm {
   name: string;
@@ -256,11 +257,12 @@ interface Props {
 }
 
 const props = defineProps<Props>();
-
 const emit = defineEmits<{
   close: [];
   submit: [form: EditProductForm];
 }>();
+
+const inventoryStore = useInventoryStore();
 
 const localForm = ref<EditProductForm>({ ...props.editForm });
 
@@ -302,6 +304,18 @@ watch(
   },
   { deep: true },
 );
+
+// Replace updateProduct calls with inventoryStore.updateProduct()
+// Replace fetchSuppliers calls with inventoryStore.fetchSuppliers()
+// Replace fetchUnits calls with inventoryStore.fetchUnits()
+// Replace fetchCategory calls with inventoryStore.fetchCategories()
+
+// Update reactive data to use store state
+const loading = computed(() => inventoryStore.loading);
+const error = computed(() => inventoryStore.error);
+const suppliers = computed(() => inventoryStore.suppliers);
+const units = computed(() => inventoryStore.units);
+const categories = computed(() => inventoryStore.categories);
 </script>
 
 <style scoped>

@@ -217,6 +217,7 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
+import { useInventoryStore } from "@/stores/InventoryAPI";
 
 interface CreateProductForm {
   name: string;
@@ -256,11 +257,12 @@ interface Props {
 }
 
 const props = defineProps<Props>();
-
 const emit = defineEmits<{
   close: [];
   submit: [form: CreateProductForm];
 }>();
+
+const inventoryStore = useInventoryStore();
 
 const form = ref<CreateProductForm>({
   name: "",

@@ -67,7 +67,7 @@ import Sidebar from "@/components/Sidebar.vue";
 import Navbar from "@/components/Navbar.vue";
 import { ref, computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
-import { createUser } from "@/stores/usersAPI";
+import { useUsersStore } from "@/stores/usersAPI";
 import { useAuthStore } from "@/stores/auth";
 
 const username = ref("");
@@ -78,6 +78,7 @@ const password = ref("");
 const role = ref("");
 const router = useRouter();
 const authStore = useAuthStore();
+const usersStore = useUsersStore();
 
 const availableRoles = computed(() => {
   if (authStore.user?.role === "superadmin") {
@@ -89,8 +90,12 @@ const availableRoles = computed(() => {
   return ["staff"];
 });
 
+const loading = computed(() => usersStore.loading);
+const error = computed(() => usersStore.error);
+const roles = computed(() => usersStore.roles);
+
 async function onSubmit() {
-  await createUser(
+  await usersStore.createUser(
     {
       username: username.value,
       role: role.value,

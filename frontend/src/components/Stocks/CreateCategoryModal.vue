@@ -79,7 +79,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from "vue";
+import { ref, watch, computed } from "vue";
+import { useInventoryStore } from "@/stores/InventoryAPI";
 
 interface CreateCategoryForm {
   name: string;
@@ -103,6 +104,11 @@ const form = ref<CreateCategoryForm>({
   description: "",
   is_expired_applicable: false,
 });
+
+const inventoryStore = useInventoryStore();
+
+const loading = computed(() => inventoryStore.loading);
+const error = computed(() => inventoryStore.error);
 
 const handleSubmit = () => {
   emit("submit", { ...form.value });
