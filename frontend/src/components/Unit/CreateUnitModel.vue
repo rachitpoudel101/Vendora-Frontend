@@ -70,12 +70,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from "vue";
-import { createUnit } from "@/stores/UnitAPI";
+import { reactive, computed } from "vue";
+import { useUnitStore } from "@/stores/UnitAPI";
 
 const emit = defineEmits(["close", "created"]);
 
-const loading = ref(false);
+const unitStore = useUnitStore();
+
+const loading = computed(() => unitStore.loading);
+// const error = computed(() => unitStore.error);
+
 const form = reactive({
   unit: "",
 });
@@ -104,33 +108,13 @@ const handleSubmit = async () => {
   if (!validateForm()) return;
 
   try {
-    loading.value = true;
-    // Fetch all units to check for deleted ones
-    // const allUnits = await fetchUnit();
-    // Find a deleted unit with the same name (case-insensitive)
-    // const existingDeleted = allUnits.find(
-    //   (u) =>
-    //     u.unit.trim().toLowerCase() === form.unit.trim().toLowerCase() &&
-    //     u.is_deleted,
-    // );
-    // if (existingDeleted) {
-    //   // If found, update is_deleted to false (reactivate)
-    //   await updateunit(existingDeleted.id, {
-    //     unit: form.unit.trim(),
-    //     is_deleted: false,
-    //   });
-    //   emit("created");
-    //   loading.value = false;
-    //   return;
-    // }
-    // Otherwise, create new unit
-    await createUnit({ unit: form.unit.trim() });
+    // Simply create new unit - removed deleted unit reactivation logic
+    // as the updateUnit method doesn't support is_deleted property
+    await unitStore.createUnit(form);
     emit("created");
   } catch (error) {
     console.error("Error creating unit:", error);
     errors.unit = "Failed to create unit. Please try again.";
-  } finally {
-    loading.value = false;
   }
 };
 </script>

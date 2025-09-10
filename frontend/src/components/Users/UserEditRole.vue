@@ -24,13 +24,9 @@
 </template>
 
 <script setup>
-import { onMounted, ref, watch } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import Modal from "@/components/Modal.vue";
-import axios from "axios";
-import { UserApi } from "@/core/endpoints/users";
-import { authAPI } from "@/core/endpoints/auth";
-import { fetchROles } from "@/stores/usersAPI";
-import { getUser, UpdateRoles } from "@/stores/usersAPI";
+import { useUsersStore } from "@/stores/usersAPI";
 import { useToast } from "vue-toast-notification";
 
 const $toast = useToast();
@@ -42,12 +38,18 @@ const props = defineProps({
 });
 const emit = defineEmits(["close"]);
 
-const roles = ref();
+const usersStore = useUsersStore();
+
 const userRole = ref();
+
+// Update reactive data to use store state
+const loading = computed(() => usersStore.loading);
+const error = computed(() => usersStore.error);
+const roles = computed(() => usersStore.roles);
 
 async function handleUpdateRole() {
   try {
-    await UpdateRoles(props.userId, { role: userRole.value });
+    await usersStore.updateUserRoles(props.userId, { role: userRole.value });
 
     // SUCCESS TOAST
     $toast.success("User role updated successfully!", {
@@ -77,7 +79,7 @@ watch(
   async (newId) => {
     if (props.show && newId) {
       try {
-        const response = await getUser(newId);
+        const response = await usersStore.getUser(newId);
         userRole.value = response.role;
       } finally {
       }
@@ -87,6 +89,6 @@ watch(
 );
 
 onMounted(async () => {
-  roles.value = await fetchROles();
+  await usersStore.fetchRoles();
 });
 </script>

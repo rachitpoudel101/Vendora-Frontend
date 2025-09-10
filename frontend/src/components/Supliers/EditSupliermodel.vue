@@ -124,9 +124,9 @@
 </template>
 
 <script setup>
-import { ref, reactive, watch } from "vue";
+import { ref, reactive, watch, computed } from "vue";
 import { useToast } from "vue-toast-notification";
-import { updateSupplier } from "@/stores/suppliersAPI";
+import { useSuppliersStore } from "@/stores/suppliersAPI";
 
 const props = defineProps({
   isOpen: {
@@ -142,7 +142,7 @@ const props = defineProps({
 const emit = defineEmits(["close", "updated"]);
 
 const toast = useToast();
-const loading = ref(false);
+const suppliersStore = useSuppliersStore();
 
 const form = reactive({
   name: "",
@@ -155,6 +155,10 @@ const errors = reactive({
   phone: "",
   address: "",
 });
+
+// Computed properties for loading and error states
+const loading = computed(() => suppliersStore.loading);
+const error = computed(() => suppliersStore.error);
 
 // Watch for supplier prop changes and populate form
 watch(
@@ -231,8 +235,6 @@ const handleSubmit = async () => {
     return;
   }
 
-  loading.value = true;
-
   try {
     const updateData = {
       name: form.name.trim(),
@@ -240,7 +242,7 @@ const handleSubmit = async () => {
       address: form.address.trim(),
     };
 
-    const result = await updateSupplier(props.supplier.id, updateData);
+    await suppliersStore.updateSupplier(props.supplier.id, form);
 
     toast.success("Supplier updated successfully!", {
       position: "top-right",
@@ -257,8 +259,6 @@ const handleSubmit = async () => {
       duration: 3000,
       dismissible: true,
     });
-  } finally {
-    loading.value = false;
   }
 };
 </script>

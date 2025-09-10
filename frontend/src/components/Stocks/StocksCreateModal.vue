@@ -146,7 +146,7 @@
               </div>
               <div v-if="isExpiryRequired">
                 <label class="block text-sm font-medium text-gray-700 mb-2">
-                  Expiry Date * >
+                  Expiry Date *
                 </label>
                 <input
                   v-model="form.expires_at"
@@ -256,7 +256,6 @@ interface Props {
 }
 
 const props = defineProps<Props>();
-
 const emit = defineEmits<{
   close: [];
   submit: [form: CreateProductForm];

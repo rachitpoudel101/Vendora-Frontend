@@ -81,7 +81,7 @@
                     <span
                       class="ml-1 sm:ml-2 bg-blue-100 text-blue-600 py-0.5 px-1.5 sm:py-1 sm:px-2 rounded-full text-xs font-medium"
                     >
-                      {{ stocks.length }}
+                      {{ products.length }}
                     </span>
                   </span>
                 </button>
@@ -449,9 +449,12 @@
                         <div class="flex items-center text-sm text-gray-500">
                           Showing {{ (currentPage - 1) * itemsPerPage + 1 }} to
                           {{
-                            Math.min(currentPage * itemsPerPage, stocks.length)
+                            Math.min(
+                              currentPage * itemsPerPage,
+                              products.length,
+                            )
                           }}
-                          of {{ stocks.length }} results
+                          of {{ products.length }} results
                         </div>
                         <div class="flex items-center space-x-2">
                           <button
@@ -943,18 +946,7 @@ import CreateCategoryModal from "@/components/Stocks/CreateCategoryModal.vue";
 import EditCategoryModal from "@/components/Stocks/EditCategoryModal.vue";
 import { useAuthStore } from "@/stores/auth";
 import { useToast } from "vue-toast-notification";
-import {
-  fetchProduct,
-  createProduct,
-  updateProduct,
-  fetchCategory,
-  createCatyregory,
-  updateCategory,
-  deleteProduct,
-  deleteCategory,
-  fetchSuppliers,
-  fetchUnits,
-} from "@/stores/InventoryAPI";
+import { useInventoryStore } from "@/stores/InventoryAPI";
 
 // Type definitions
 interface Stock {
@@ -985,16 +977,16 @@ interface Category {
   supliers_name?: string;
 }
 
-interface Supplier {
-  id: number;
-  name: string;
-}
+// interface Supplier {
+//   id: number;
+//   name: string;
+// }
 
-interface Unit {
-  id: number;
-  unit: string;
-  label?: string;
-}
+// interface Unit {
+//   id: number;
+//   unit: string;
+//   label?: string;
+// }
 
 interface CreateProductForm {
   name: string;
@@ -1039,12 +1031,12 @@ interface EditCategoryForm {
 const currentPage = ref(1);
 const itemsPerPage = ref(8);
 const totalPages = computed(() =>
-  Math.ceil(stocks.value.length / itemsPerPage.value),
+  Math.ceil(products.value.length / itemsPerPage.value),
 );
 
 const paginatedStocks = computed(() => {
   const start = (currentPage.value - 1) * itemsPerPage.value;
-  return stocks.value.slice(start, start + itemsPerPage.value);
+  return products.value.slice(start, start + itemsPerPage.value);
 });
 
 function goToPage(page: number) {
@@ -1062,11 +1054,15 @@ function prevPage() {
 }
 const auth = useAuthStore();
 const $toast = useToast();
-const stocks = ref<Stock[]>([]);
-const categories = ref<Category[]>([]);
-const suppliers = ref<Supplier[]>([]);
-const units = ref<Unit[]>([]);
-const loading = ref<boolean>(false);
+const inventoryStore = useInventoryStore();
+
+const products = computed(() => inventoryStore.products);
+const categories = computed(() => inventoryStore.categories);
+const suppliers = computed(() => inventoryStore.suppliers);
+const units = computed(() => inventoryStore.units);
+const loading = computed(() => inventoryStore.loading);
+// const error = computed(() => inventoryStore.error);
+
 const dropdownOpen = ref<number | null>(null);
 const showViewModal = ref<boolean>(false);
 const showEditModal = ref<boolean>(false);
@@ -1116,38 +1112,16 @@ const categoryNameMap = computed(() => {
 });
 
 async function loadStocks() {
-  loading.value = true;
-  try {
-    const data = await fetchProduct();
-    stocks.value = Array.isArray(data) ? (data as Stock[]) : [];
-  } catch (e) {
-    $toast.error("Failed to fetch stocks.", {
-      position: "top-right",
-      duration: 3000,
-      dismissible: true,
-    });
-  } finally {
-    loading.value = false;
-  }
+  inventoryStore.fetchProducts();
 }
 
 async function loadCategories() {
-  try {
-    const data = await fetchCategory();
-    categories.value = Array.isArray(data) ? (data as Category[]) : [];
-  } catch (e) {
-    $toast.error("Failed to fetch categories.", {
-      position: "top-right",
-      duration: 3000,
-      dismissible: true,
-    });
-  }
+  inventoryStore.fetchCategories();
 }
 
 async function loadSuppliers() {
   try {
-    const data = await fetchSuppliers();
-    suppliers.value = Array.isArray(data) ? (data as Supplier[]) : [];
+    await inventoryStore.fetchSuppliers();
   } catch (e) {
     $toast.error("Failed to fetch suppliers.", {
       position: "top-right",
@@ -1159,8 +1133,7 @@ async function loadSuppliers() {
 
 async function loadUnits() {
   try {
-    const data = await fetchUnits();
-    units.value = Array.isArray(data) ? (data as Unit[]) : [];
+    await inventoryStore.fetchUnits();
 
     if (units.value.length === 0) {
       $toast.warning("No units found in database.", {
@@ -1184,8 +1157,8 @@ async function deleteProducts(id: number) {
   if (!confirmed) return;
 
   try {
-    await deleteProduct(id);
-    stocks.value = stocks.value.filter((s) => s.id !== id);
+    await inventoryStore.deleteProduct(id);
+    // stocks.value = stocks.value.filter((s) => s.id !== id);
 
     // Adjust pagination if needed
     if (currentPage.value > totalPages.value && totalPages.value > 0) {
@@ -1211,9 +1184,8 @@ async function deleteCategoryHandler(id: number) {
   const confirmed = confirm("Are you sure you want to delete this category?");
   if (!confirmed) return;
 
-  loading.value = true;
   try {
-    await deleteCategory(id);
+    await inventoryStore.deleteCategory(id);
     await loadCategories();
     $toast.success("Category deleted successfully!", {
       position: "top-right",
@@ -1226,20 +1198,18 @@ async function deleteCategoryHandler(id: number) {
       duration: 3000,
       dismissible: true,
     });
-  } finally {
-    loading.value = false;
   }
 }
 
 function openViewModal(id: number) {
   selectedStockId.value = id;
-  selectedStock.value = stocks.value.find((s) => s.id === id) || null;
+  selectedStock.value = products.value.find((s) => s.id === id) || null;
   showViewModal.value = true;
 }
 
 function openEditModal(id: number) {
   selectedStockId.value = id;
-  const stock = stocks.value.find((s) => s.id === id);
+  const stock = products.value.find((s) => s.id === id);
   if (stock) {
     // Find the unit string from the unit_name field for the dropdown
     const unitString = stock.unit_name || String(stock.unit);
@@ -1271,7 +1241,6 @@ function openEditCategoryModal(cat: Category) {
 }
 
 async function handleCreate(formData: CreateProductForm) {
-  loading.value = true;
   try {
     const data = { ...formData };
 
@@ -1308,7 +1277,7 @@ async function handleCreate(formData: CreateProductForm) {
     data.category = String(data.category);
     data.supliers = Number(data.supliers);
 
-    await createProduct({
+    await inventoryStore.createProduct({
       name: data.name,
       category: data.category,
       supliers: data.supliers,
@@ -1316,7 +1285,7 @@ async function handleCreate(formData: CreateProductForm) {
       cost_price: data.cost_price,
       margin: data.margin,
       stock: data.stock,
-      unit: data.unit,
+      unit: String(data.unit),
       expires_at: data.expires_at,
       description: data.description,
     });
@@ -1332,8 +1301,6 @@ async function handleCreate(formData: CreateProductForm) {
       position: "top-right",
       duration: 3000,
     });
-  } finally {
-    loading.value = false;
   }
 }
 
@@ -1347,7 +1314,6 @@ async function handleEdit(formData: EditProductForm) {
     return;
   }
 
-  loading.value = true;
   try {
     const data = { ...formData };
 
@@ -1378,7 +1344,7 @@ async function handleEdit(formData: EditProductForm) {
     data.category = String(data.category);
     data.supliers = Number(data.supliers);
 
-    await updateProduct(selectedStockId.value, {
+    await inventoryStore.updateProduct(selectedStockId.value, {
       name: data.name,
       category: data.category,
       supliers: data.supliers,
@@ -1387,7 +1353,7 @@ async function handleEdit(formData: EditProductForm) {
       cost_price: data.cost_price,
       margin: data.margin,
       stock: data.stock,
-      unit: data.unit,
+      unit: String(data.unit),
       expires_at: data.expires_at,
       description: data.description,
     });
@@ -1403,15 +1369,12 @@ async function handleEdit(formData: EditProductForm) {
       position: "top-right",
       duration: 500,
     });
-  } finally {
-    loading.value = false;
   }
 }
 
 async function handleCreateCategory(formData: CreateCategoryForm) {
-  loading.value = true;
   try {
-    await createCatyregory({ ...formData });
+    await inventoryStore.createCategory({ ...formData });
     showCreateCategoryModal.value = false;
     await loadCategories();
     $toast.success("Category created successfully!", {
@@ -1426,13 +1389,10 @@ async function handleCreateCategory(formData: CreateCategoryForm) {
       duration: 3000,
       dismissible: true,
     });
-  } finally {
-    loading.value = false;
   }
 }
 
 async function handleEditCategory(formData: EditCategoryForm) {
-  loading.value = true;
   try {
     if (!formData.id) {
       $toast.error("Category ID is required for editing.", {
@@ -1443,7 +1403,7 @@ async function handleEditCategory(formData: EditCategoryForm) {
       return;
     }
 
-    await updateCategory(formData.id, {
+    await inventoryStore.updateCategory(formData.id, {
       name: formData.name,
       description: formData.description,
       is_expired_applicable: formData.is_expired_applicable,
@@ -1461,8 +1421,6 @@ async function handleEditCategory(formData: EditCategoryForm) {
       duration: 3000,
       dismissible: true,
     });
-  } finally {
-    loading.value = false;
   }
 }
 

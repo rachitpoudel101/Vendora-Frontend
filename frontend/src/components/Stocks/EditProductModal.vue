@@ -256,7 +256,6 @@ interface Props {
 }
 
 const props = defineProps<Props>();
-
 const emit = defineEmits<{
   close: [];
   submit: [form: EditProductForm];

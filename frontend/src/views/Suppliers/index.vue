@@ -399,30 +399,24 @@ import { ref, computed, onMounted, onBeforeUnmount } from "vue";
 import { useRouter } from "vue-router";
 import { useToast } from "vue-toast-notification";
 import { useAuthStore } from "@/stores/auth";
+import { useSuppliersStore } from "@/stores/suppliersAPI";
 import Sidebar from "@/components/Sidebar.vue";
 import Navbar from "@/components/Navbar.vue";
 import EditModal from "@/components/Supliers/EditSupliermodel.vue";
 import CreateModal from "@/components/Supliers/CreateSuplierModel.vue";
-import { fetchSuppliers, deleteSupplier } from "@/stores/suppliersAPI";
 
 const router = useRouter();
 const toast = useToast();
 const auth = useAuthStore();
+const suppliersStore = useSuppliersStore();
 
 // Dynamic supplier data
-const suppliers = ref([]);
 const currentPage = ref(1);
 const pageSize = 8;
 const activeDropdown = ref(null);
-const loading = ref(false);
-const error = ref(null);
-
-// Modal states
 const showEditModal = ref(false);
 const showCreateModal = ref(false);
 const selectedSupplier = ref(null);
-
-// Delete confirmation modal state
 const showDeleteModal = ref(false);
 const supplierToDelete = ref(null);
 
@@ -432,6 +426,11 @@ const canCreateSupplier = computed(() => {
 const canEditSupplier = computed(() => {
   return auth.user?.role !== "staff";
 });
+
+// Get suppliers from store
+const suppliers = computed(() => suppliersStore.suppliers || []);
+const loading = computed(() => suppliersStore.loading);
+const error = computed(() => suppliersStore.error);
 
 const totalSuppliers = computed(() => suppliers.value.length);
 const totalPages = computed(() => Math.ceil(totalSuppliers.value / pageSize));
@@ -498,33 +497,10 @@ const handleSupplierCreated = async () => {
 };
 
 const loadSuppliers = async () => {
-  loading.value = true;
-  error.value = null;
-
   try {
-    const result = await fetchSuppliers();
-
-    suppliers.value = result || [];
-    if (suppliers.value.length === 0) {
-    }
-  } catch (err) {
-    console.error("❌ Failed to fetch suppliers:", err);
-    error.value = err.message || "Failed to load suppliers. Please try again.";
-
-    // Log more details about the error
-    if (err.response) {
-      console.error("📋 Error response:", err.response);
-      console.error("📋 Error status:", err.response.status);
-      console.error("📋 Error data:", err.response.data);
-    }
-
-    toast.error("Failed to load suppliers.", {
-      position: "top-right",
-      duration: 3000,
-      dismissible: true,
-    });
-  } finally {
-    loading.value = false;
+    await suppliersStore.fetchSuppliers();
+  } catch (error) {
+    console.error("Failed to load suppliers:", error);
   }
 };
 
@@ -551,7 +527,7 @@ const confirmDelete = async () => {
   if (!supplierToDelete.value) return;
 
   try {
-    await deleteSupplier(supplierToDelete.value.id);
+    await suppliersStore.deleteSupplier(supplierToDelete.value.id);
 
     // Close modal and reload suppliers
     showDeleteModal.value = false;
@@ -586,6 +562,11 @@ const handleClickOutside = (event) => {
 };
 
 onMounted(async () => {
+  // Initialize suppliers store if needed
+  if (!suppliersStore.suppliers) {
+    suppliersStore.suppliers = [];
+  }
+
   await loadSuppliers();
 
   document.addEventListener("click", handleClickOutside);

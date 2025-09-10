@@ -346,18 +346,22 @@ import Navbar from "@/components/Navbar.vue";
 import { useAuthStore } from "@/stores/auth";
 import create from "@/components/Bill/CreateBillModel.vue";
 import printBill from "@/components/Bill/PrintBill.vue";
-import { fetchBill } from "@/stores/billsAPI";
-import { fetchProduct } from "@/stores/InventoryAPI";
+import { useBillsStore } from "@/stores/billsAPI";
+// Removed - using inventoryStore instead
 import { useToast } from "vue-toast-notification";
+import { useInventoryStore } from "@/stores/InventoryAPI";
 
 const auth = useAuthStore();
+const billsStore = useBillsStore();
+const inventoryStore = useInventoryStore();
+
 onMounted(async () => {
   if (!auth.user) {
     await auth.self();
   }
   await fetchBills();
   // Fetch products for name lookup
-  products.value = await fetchProduct();
+  products.value = await inventoryStore.fetchProducts();
   productMap.value = Object.fromEntries(
     products.value.map((p: any) => [String(p.id), p.name]),
   );
@@ -367,10 +371,12 @@ onMounted(async () => {
 });
 
 const openModal = ref(false);
-const bills = ref<any[]>([]);
+const bills = computed(() => billsStore.bills);
 const products = ref<any[]>([]);
 const productMap = ref<Record<string, string>>({});
 const userMap = ref<Record<string, string>>({});
+// const loading = computed(() => billsStore.loading);
+// const error = computed(() => billsStore.error);
 
 // Create user map for username lookup
 const createUserMap = () => {
@@ -478,7 +484,7 @@ watch(bills, () => {
 
 async function fetchBills() {
   try {
-    bills.value = await fetchBill();
+    await billsStore.fetchBills();
   } catch (error) {
     console.error("Error fetching bills:", error);
   }

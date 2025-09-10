@@ -124,9 +124,9 @@
 </template>
 
 <script setup>
-import { ref, reactive, watch } from "vue";
+import { ref, reactive, watch, computed } from "vue";
 import { useToast } from "vue-toast-notification";
-import { createSupplier } from "@/stores/suppliersAPI";
+import { useSuppliersStore } from "@/stores/suppliersAPI";
 
 const props = defineProps({
   isOpen: {
@@ -138,7 +138,7 @@ const props = defineProps({
 const emit = defineEmits(["close", "created"]);
 
 const toast = useToast();
-const loading = ref(false);
+const suppliersStore = useSuppliersStore();
 
 const form = reactive({
   name: "",
@@ -151,6 +151,10 @@ const errors = reactive({
   phone: "",
   address: "",
 });
+
+// Loading and error state from the store
+const loading = computed(() => suppliersStore.loading);
+const error = computed(() => suppliersStore.error);
 
 // Watch for modal open/close to reset form
 watch(
@@ -209,8 +213,6 @@ const handleSubmit = async () => {
     return;
   }
 
-  loading.value = true;
-
   try {
     const createData = {
       name: form.name.trim(),
@@ -218,7 +220,7 @@ const handleSubmit = async () => {
       address: form.address.trim(),
     };
 
-    const result = await createSupplier(createData);
+    await suppliersStore.createSupplier(createData);
 
     toast.success("Supplier created successfully!", {
       position: "top-right",
@@ -235,8 +237,6 @@ const handleSubmit = async () => {
       duration: 3000,
       dismissible: true,
     });
-  } finally {
-    loading.value = false;
   }
 };
 </script>

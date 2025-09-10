@@ -80,6 +80,7 @@
 
 <script setup lang="ts">
 import { ref, watch } from "vue";
+// import { useInventoryStore } from "@/stores/InventoryAPI";
 
 interface EditCategoryForm {
   id: number | null;
@@ -100,7 +101,12 @@ const emit = defineEmits<{
   submit: [form: EditCategoryForm];
 }>();
 
+// const inventoryStore = useInventoryStore();
+
 const localForm = ref<EditCategoryForm>({ ...props.editCategoryForm });
+
+// const loading = computed(() => inventoryStore.loading);
+// const error = computed(() => inventoryStore.error);
 
 const handleSubmit = () => {
   emit("submit", { ...localForm.value });
