@@ -90,9 +90,9 @@ const availableRoles = computed(() => {
   return ["staff"];
 });
 
-const loading = computed(() => usersStore.loading);
-const error = computed(() => usersStore.error);
-const roles = computed(() => usersStore.roles);
+// const loading = computed(() => usersStore.loading);
+// const error = computed(() => usersStore.error);
+// const roles = computed(() => usersStore.roles);
 
 async function onSubmit() {
   await usersStore.createUser(

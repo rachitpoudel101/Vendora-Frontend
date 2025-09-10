@@ -685,7 +685,7 @@ const unitConfigStore = useUnitConfigStore();
 const units = computed(() => unitStore.units);
 const unitConfigs = computed(() => unitConfigStore.unitConfigs);
 const loading = computed(() => unitStore.loading || unitConfigStore.loading);
-const error = computed(() => unitStore.error || unitConfigStore.error);
+// const error = computed(() => unitStore.error || unitConfigStore.error);
 
 const unitMap = ref<Record<number, string>>({});
 const activeTab = ref<"units" | "configurations">("units");

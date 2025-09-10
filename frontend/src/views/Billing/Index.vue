@@ -375,8 +375,8 @@ const bills = computed(() => billsStore.bills);
 const products = ref<any[]>([]);
 const productMap = ref<Record<string, string>>({});
 const userMap = ref<Record<string, string>>({});
-const loading = computed(() => billsStore.loading);
-const error = computed(() => billsStore.error);
+// const loading = computed(() => billsStore.loading);
+// const error = computed(() => billsStore.error);
 
 // Create user map for username lookup
 const createUserMap = () => {

@@ -449,7 +449,10 @@
                         <div class="flex items-center text-sm text-gray-500">
                           Showing {{ (currentPage - 1) * itemsPerPage + 1 }} to
                           {{
-                            Math.min(currentPage * itemsPerPage, products.length)
+                            Math.min(
+                              currentPage * itemsPerPage,
+                              products.length,
+                            )
                           }}
                           of {{ products.length }} results
                         </div>
@@ -974,16 +977,16 @@ interface Category {
   supliers_name?: string;
 }
 
-interface Supplier {
-  id: number;
-  name: string;
-}
+// interface Supplier {
+//   id: number;
+//   name: string;
+// }
 
-interface Unit {
-  id: number;
-  unit: string;
-  label?: string;
-}
+// interface Unit {
+//   id: number;
+//   unit: string;
+//   label?: string;
+// }
 
 interface CreateProductForm {
   name: string;
@@ -1058,7 +1061,7 @@ const categories = computed(() => inventoryStore.categories);
 const suppliers = computed(() => inventoryStore.suppliers);
 const units = computed(() => inventoryStore.units);
 const loading = computed(() => inventoryStore.loading);
-const error = computed(() => inventoryStore.error);
+// const error = computed(() => inventoryStore.error);
 
 const dropdownOpen = ref<number | null>(null);
 const showViewModal = ref<boolean>(false);

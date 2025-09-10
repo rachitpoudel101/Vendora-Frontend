@@ -77,7 +77,8 @@ export const useInventoryStore = defineStore("inventory", {
         this.currentCategory = res.data;
         return res.data;
       } catch (err: any) {
-        this.error = err.response?.data?.detail || `Error fetching Category with id ${id}`;
+        this.error =
+          err.response?.data?.detail || `Error fetching Category with id ${id}`;
         console.error(`Error fetching Category with id ${id}:`, err);
         throw new Error("Failed to fetch Category");
       } finally {
@@ -143,7 +144,9 @@ export const useInventoryStore = defineStore("inventory", {
         }
         return res.data;
       } catch (err: any) {
-        this.error = err.response?.data?.detail || `Failed to update Category with id ${id}`;
+        this.error =
+          err.response?.data?.detail ||
+          `Failed to update Category with id ${id}`;
         console.error(`Error updating Category with id ${id}:`, err);
         throw new Error("Failed to update Category");
       } finally {
@@ -164,7 +167,9 @@ export const useInventoryStore = defineStore("inventory", {
         this.categories = this.categories.filter((cat) => cat.id !== id);
         return res.data;
       } catch (err: any) {
-        this.error = err.response?.data?.detail || `Failed to delete Category with id ${id}`;
+        this.error =
+          err.response?.data?.detail ||
+          `Failed to delete Category with id ${id}`;
         console.error(`Error deleting Category with id ${id}:`, err);
         throw new Error("Failed to delete Category");
       } finally {
@@ -207,7 +212,8 @@ export const useInventoryStore = defineStore("inventory", {
         this.currentProduct = res.data;
         return res.data;
       } catch (err: any) {
-        this.error = err.response?.data?.detail || `Error fetching Product with id ${id}`;
+        this.error =
+          err.response?.data?.detail || `Error fetching Product with id ${id}`;
         console.error(`Error fetching Product with id ${id}:`, err);
         throw new Error("Failed to fetch Product");
       } finally {
@@ -300,7 +306,9 @@ export const useInventoryStore = defineStore("inventory", {
         }
         return res.data;
       } catch (err: any) {
-        this.error = err.response?.data?.detail || `Failed to update Product with id ${id}`;
+        this.error =
+          err.response?.data?.detail ||
+          `Failed to update Product with id ${id}`;
         console.error(`Error updating Product with id ${id}:`, err);
         throw new Error("Failed to update Product");
       } finally {
@@ -321,7 +329,9 @@ export const useInventoryStore = defineStore("inventory", {
         this.products = this.products.filter((prod) => prod.id !== id);
         return res.data;
       } catch (err: any) {
-        this.error = err.response?.data?.detail || `Failed to delete Product with id ${id}`;
+        this.error =
+          err.response?.data?.detail ||
+          `Failed to delete Product with id ${id}`;
         console.error(`Error deleting Product with id ${id}:`, err);
         throw new Error("Failed to delete Product");
       } finally {

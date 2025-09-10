@@ -50,7 +50,8 @@ export const useUsersStore = defineStore("users", {
         this.currentUser = res.data;
         return res.data;
       } catch (err: any) {
-        this.error = err.response?.data?.detail || `Error fetching user with id ${id}`;
+        this.error =
+          err.response?.data?.detail || `Error fetching user with id ${id}`;
         console.error(`Error fetching user with id ${id}:`, err);
         throw new Error("Failed to fetch user");
       } finally {
@@ -128,7 +129,8 @@ export const useUsersStore = defineStore("users", {
         }
         return res.data;
       } catch (err: any) {
-        this.error = err.response?.data?.detail || `Failed to update user with id ${id}`;
+        this.error =
+          err.response?.data?.detail || `Failed to update user with id ${id}`;
         console.error(`Error updating user with id ${id}:`, err);
         throw new Error("Failed to update user");
       } finally {
@@ -171,7 +173,9 @@ export const useUsersStore = defineStore("users", {
         });
         return res.data.roles;
       } catch (err: any) {
-        this.error = err.response?.data?.detail || `Failed to update user roles for user ${userId}`;
+        this.error =
+          err.response?.data?.detail ||
+          `Failed to update user roles for user ${userId}`;
         console.error(`Error updating user roles for user ${userId}:`, err);
         throw new Error("Failed to update user roles");
       } finally {
@@ -192,7 +196,8 @@ export const useUsersStore = defineStore("users", {
         this.users = this.users.filter((user) => user.id !== id);
         return res.data;
       } catch (err: any) {
-        this.error = err.response?.data?.detail || `Failed to delete user with id ${id}`;
+        this.error =
+          err.response?.data?.detail || `Failed to delete user with id ${id}`;
         console.error(`Error deleting user with id ${id}:`, err);
         throw new Error("Failed to delete user");
       } finally {
@@ -220,7 +225,8 @@ export const useUsersStore = defineStore("users", {
         }
         return res.data;
       } catch (err: any) {
-        this.error = err.response?.data?.detail || `Failed to restore user with id ${id}`;
+        this.error =
+          err.response?.data?.detail || `Failed to restore user with id ${id}`;
         console.error(`Error restoring user with id ${id}:`, err);
         throw new Error("Failed to restore user");
       } finally {
