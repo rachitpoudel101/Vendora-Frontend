@@ -242,7 +242,7 @@ const handleSubmit = async () => {
       address: form.address.trim(),
     };
 
-          await suppliersStore.updateSupplier(props.supplier.id, form);
+    await suppliersStore.updateSupplier(props.supplier.id, form);
 
     toast.success("Supplier updated successfully!", {
       position: "top-right",

@@ -146,7 +146,7 @@
               </div>
               <div v-if="isExpiryRequired">
                 <label class="block text-sm font-medium text-gray-700 mb-2">
-                  Expiry Date * >
+                  Expiry Date *
                 </label>
                 <input
                   v-model="form.expires_at"
@@ -217,7 +217,6 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
-import { useInventoryStore } from "@/stores/InventoryAPI";
 
 interface CreateProductForm {
   name: string;
@@ -261,8 +260,6 @@ const emit = defineEmits<{
   close: [];
   submit: [form: CreateProductForm];
 }>();
-
-const inventoryStore = useInventoryStore();
 
 const form = ref<CreateProductForm>({
   name: "",

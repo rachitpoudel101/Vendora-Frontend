@@ -181,11 +181,9 @@ const inventoryStore = useInventoryStore();
 const unitStore = useUnitStore();
 
 const loading = computed(
-  () => unitConfigStore.loading || inventoryStore.loading || unitStore.loading
+  () => unitConfigStore.loading || inventoryStore.loading || unitStore.loading,
 );
-const error = computed(
-  () => unitConfigStore.error || inventoryStore.error || unitStore.error
-);
+const error = ref("");
 const products = computed(() => inventoryStore.products);
 const unitTypes = computed(() => unitStore.units);
 
@@ -203,7 +201,15 @@ const handleSubmit = async () => {
   unitConfigStore.loading = true;
 
   try {
-      await unitConfigStore.createUnitConfig(formData);    emit("created");
+    const formData = {
+      product: parseInt(form.value.product),
+      unit_type: parseInt(form.value.unit_type),
+      conversion_per_unit: parseFloat(form.value.conversion_per_unit),
+      conversion_unit_name: parseInt(form.value.conversion_unit_name),
+    };
+
+    await unitConfigStore.createUnitConfig(formData);
+    emit("created");
   } catch (err) {
     console.error("Error creating unit configuration:", err);
     error.value = "Failed to create unit configuration. Please try again.";

@@ -80,7 +80,8 @@ export const useDashboardStore = defineStore("dashboard", {
         this.stats = res.data;
         return res.data;
       } catch (err: any) {
-        this.error = err.response?.data?.detail || "Failed to fetch dashboard stats";
+        this.error =
+          err.response?.data?.detail || "Failed to fetch dashboard stats";
         console.error("Error fetching dashboard stats:", err);
         throw new Error("Failed to fetch dashboard stats");
       } finally {

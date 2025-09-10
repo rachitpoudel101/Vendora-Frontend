@@ -48,7 +48,8 @@ export const useUnitStore = defineStore("unit", {
         this.currentUnit = res.data;
         return res.data;
       } catch (err: any) {
-        this.error = err.response?.data?.detail || `Error fetching unit with id ${id}`;
+        this.error =
+          err.response?.data?.detail || `Error fetching unit with id ${id}`;
         console.error(`Error fetching unit with id ${id}:`, err);
         throw new Error("Failed to fetch unit");
       } finally {
@@ -106,7 +107,8 @@ export const useUnitStore = defineStore("unit", {
         }
         return res.data;
       } catch (err: any) {
-        this.error = err.response?.data?.detail || `Failed to update unit with id ${id}`;
+        this.error =
+          err.response?.data?.detail || `Failed to update unit with id ${id}`;
         console.error(`Error updating unit with id ${id}:`, err);
         throw new Error("Failed to update Unit");
       } finally {
@@ -127,7 +129,8 @@ export const useUnitStore = defineStore("unit", {
         this.units = this.units.filter((unit) => unit.id !== id);
         return res.data;
       } catch (err: any) {
-        this.error = err.response?.data?.detail || `Failed to delete Unit with id ${id}`;
+        this.error =
+          err.response?.data?.detail || `Failed to delete Unit with id ${id}`;
         console.error(`Error deleting Unit with id ${id}:`, err);
         throw new Error("Failed to delete Unit");
       } finally {

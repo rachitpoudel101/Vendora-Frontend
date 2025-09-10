@@ -420,14 +420,17 @@ const selectedSupplier = ref(null);
 const showDeleteModal = ref(false);
 const supplierToDelete = ref(null);
 
-
-
 const canCreateSupplier = computed(() => {
   return auth.user?.role !== "staff";
 });
 const canEditSupplier = computed(() => {
   return auth.user?.role !== "staff";
 });
+
+// Get suppliers from store
+const suppliers = computed(() => suppliersStore.suppliers || []);
+const loading = computed(() => suppliersStore.loading);
+const error = computed(() => suppliersStore.error);
 
 const totalSuppliers = computed(() => suppliers.value.length);
 const totalPages = computed(() => Math.ceil(totalSuppliers.value / pageSize));
@@ -559,6 +562,11 @@ const handleClickOutside = (event) => {
 };
 
 onMounted(async () => {
+  // Initialize suppliers store if needed
+  if (!suppliersStore.suppliers) {
+    suppliersStore.suppliers = [];
+  }
+
   await loadSuppliers();
 
   document.addEventListener("click", handleClickOutside);

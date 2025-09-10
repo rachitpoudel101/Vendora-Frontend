@@ -27,7 +27,8 @@ export const useUnitConfigStore = defineStore("unitConfig", {
         this.unitConfigs = res.data;
         return res.data;
       } catch (err: any) {
-        this.error = err.response?.data?.detail || "Error fetching UnitType Config";
+        this.error =
+          err.response?.data?.detail || "Error fetching UnitType Config";
         console.error("Error fetching UnitType Config:", err);
         return [];
       } finally {
@@ -48,7 +49,9 @@ export const useUnitConfigStore = defineStore("unitConfig", {
         this.currentUnitConfig = res.data;
         return res.data;
       } catch (err: any) {
-        this.error = err.response?.data?.detail || `Error fetching unit config with id ${id}`;
+        this.error =
+          err.response?.data?.detail ||
+          `Error fetching unit config with id ${id}`;
         console.error(`Error fetching unit config with id ${id}:`, err);
         throw new Error("Failed to fetch UnitType Config");
       } finally {
@@ -84,7 +87,8 @@ export const useUnitConfigStore = defineStore("unitConfig", {
         this.unitConfigs.push(res.data);
         return res.data;
       } catch (err: any) {
-        this.error = err.response?.data?.detail || "Failed to create UnitType Config";
+        this.error =
+          err.response?.data?.detail || "Failed to create UnitType Config";
         console.error("Error creating UnitType Config:", err);
         throw new Error("Failed to create UnitType Config");
       } finally {
@@ -105,19 +109,25 @@ export const useUnitConfigStore = defineStore("unitConfig", {
       this.error = null;
       try {
         const token = getToken();
-        const res = await axios.patch(UnitConfigApi.getUnitConfig(id), updates, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: token ? `Bearer ${token}` : "",
+        const res = await axios.patch(
+          UnitConfigApi.getUnitConfig(id),
+          updates,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: token ? `Bearer ${token}` : "",
+            },
           },
-        });
+        );
         const index = this.unitConfigs.findIndex((config) => config.id === id);
         if (index !== -1) {
           this.unitConfigs[index] = res.data;
         }
         return res.data;
       } catch (err: any) {
-        this.error = err.response?.data?.detail || `Failed to update UnitType Config with id ${id}`;
+        this.error =
+          err.response?.data?.detail ||
+          `Failed to update UnitType Config with id ${id}`;
         console.error(`Error updating UnitType Config with id ${id}:`, err);
         throw new Error("Failed to update UnitType Config");
       } finally {
@@ -135,10 +145,14 @@ export const useUnitConfigStore = defineStore("unitConfig", {
             Authorization: token ? `Bearer ${token}` : "",
           },
         });
-        this.unitConfigs = this.unitConfigs.filter((config) => config.id !== id);
+        this.unitConfigs = this.unitConfigs.filter(
+          (config) => config.id !== id,
+        );
         return res.data;
       } catch (err: any) {
-        this.error = err.response?.data?.detail || `Failed to delete UnitType Config with id ${id}`;
+        this.error =
+          err.response?.data?.detail ||
+          `Failed to delete UnitType Config with id ${id}`;
         console.error(`Error deleting UnitType Config with id ${id}:`, err);
         throw new Error("Failed to delete UnitType Config");
       } finally {

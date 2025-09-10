@@ -57,7 +57,8 @@ export const useSuppliersStore = defineStore("suppliers", {
         this.currentSupplier = res.data;
         return res.data;
       } catch (err: any) {
-        this.error = err.response?.data?.detail || `Error fetching supplier with id ${id}`;
+        this.error =
+          err.response?.data?.detail || `Error fetching supplier with id ${id}`;
         console.error(`Error fetching supplier with id ${id}:`, err);
         throw new Error("Failed to fetch supplier");
       } finally {
@@ -109,13 +110,17 @@ export const useSuppliersStore = defineStore("suppliers", {
             Authorization: token ? `Bearer ${token}` : "",
           },
         });
-        const index = this.suppliers.findIndex((supplier) => supplier.id === id);
+        const index = this.suppliers.findIndex(
+          (supplier) => supplier.id === id,
+        );
         if (index !== -1) {
           this.suppliers[index] = res.data;
         }
         return res.data;
       } catch (err: any) {
-        this.error = err.response?.data?.detail || `Failed to update supplier with id ${id}`;
+        this.error =
+          err.response?.data?.detail ||
+          `Failed to update supplier with id ${id}`;
         if (err.response) {
           console.error("📋 Error status:", err.response.status);
           console.error("📋 Error data:", err.response.data);
@@ -136,10 +141,14 @@ export const useSuppliersStore = defineStore("suppliers", {
             Authorization: token ? `Bearer ${token}` : "",
           },
         });
-        this.suppliers = this.suppliers.filter((supplier) => supplier.id !== id);
+        this.suppliers = this.suppliers.filter(
+          (supplier) => supplier.id !== id,
+        );
         return res.data;
       } catch (err: any) {
-        this.error = err.response?.data?.detail || `Failed to delete supplier with id ${id}`;
+        this.error =
+          err.response?.data?.detail ||
+          `Failed to delete supplier with id ${id}`;
         console.error(`❌ Error deleting supplier with id ${id}:`, err);
         if (err.response) {
           console.error("📋 Error status:", err.response.status);
@@ -166,13 +175,17 @@ export const useSuppliersStore = defineStore("suppliers", {
             },
           },
         );
-        const index = this.suppliers.findIndex((supplier) => supplier.id === id);
+        const index = this.suppliers.findIndex(
+          (supplier) => supplier.id === id,
+        );
         if (index !== -1) {
           this.suppliers[index] = res.data;
         }
         return res.data;
       } catch (err: any) {
-        this.error = err.response?.data?.detail || `Failed to restore supplier with id ${id}`;
+        this.error =
+          err.response?.data?.detail ||
+          `Failed to restore supplier with id ${id}`;
         console.error(`❌ Error restoring supplier with id ${id}:`, err);
         if (err.response) {
           console.error("📋 Error status:", err.response.status);

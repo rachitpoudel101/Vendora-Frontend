@@ -48,7 +48,8 @@ export const useBillsStore = defineStore("bills", {
         this.currentBill = res.data;
         return res.data;
       } catch (err: any) {
-        this.error = err.response?.data?.detail || `Failed to fetch Bills with id ${id}`;
+        this.error =
+          err.response?.data?.detail || `Failed to fetch Bills with id ${id}`;
         console.error(`Error fetching Bills with id ${id}:`, err);
         throw new Error("Failed to fetch Bills");
       } finally {

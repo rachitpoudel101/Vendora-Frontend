@@ -713,11 +713,14 @@ onUnmounted(() => {
   window.removeEventListener("click", handleClickOutside);
 });
 
-watch(usersStore.users, () => {
-  if (currentPage.value > totalPages.value) {
-    currentPage.value = totalPages.value || 1;
-  }
-});
+watch(
+  () => usersStore.users,
+  () => {
+    if (currentPage.value > totalPages.value) {
+      currentPage.value = totalPages.value || 1;
+    }
+  },
+);
 
 window.addEventListener("click", handleClickOutside);
 </script>

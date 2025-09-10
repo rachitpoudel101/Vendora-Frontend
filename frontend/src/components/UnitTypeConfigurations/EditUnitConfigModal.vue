@@ -164,15 +164,15 @@ import { useUnitConfigStore } from "@/stores/unitConfigAPI";
 import { useInventoryStore } from "@/stores/InventoryAPI";
 import { useUnitStore } from "@/stores/UnitAPI";
 
-interface Product {
-  id: number;
-  name: string;
-}
+// interface Product {
+//   id: number;
+//   name: string;
+// }
 
-interface UnitType {
-  id: number;
-  unit: string;
-}
+// interface UnitType {
+//   id: number;
+//   unit: string;
+// }
 
 interface UnitConfig {
   id: number;
@@ -207,9 +207,7 @@ const unitStore = useUnitStore();
 const loading = computed(
   () => unitConfigStore.loading || inventoryStore.loading || unitStore.loading,
 );
-const error = computed(
-  () => unitConfigStore.error || inventoryStore.error || unitStore.error,
-);
+const error = ref("");
 const products = computed(() => inventoryStore.products);
 const unitTypes = computed(() => unitStore.units);
 
@@ -238,7 +236,14 @@ const handleSubmit = async () => {
   unitConfigStore.loading = true;
 
   try {
-          await unitConfigStore.updateUnitConfig(props.unitConfig.id, updatedData);
+    const updatedData = {
+      product: parseInt(form.value.product),
+      unit_type: parseInt(form.value.unit_type),
+      conversion_per_unit: parseFloat(form.value.conversion_per_unit),
+      conversion_unit_name: parseInt(form.value.conversion_unit_name),
+    };
+
+    await unitConfigStore.updateUnitConfig(props.unitConfig.id, updatedData);
 
     emit("updated");
   } catch (err) {
