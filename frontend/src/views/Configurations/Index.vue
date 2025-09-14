@@ -486,6 +486,7 @@
                           <td class="px-6 py-4 whitespace-nowrap">
                             <div class="text-sm text-gray-900">
                               {{
+                                config.conversion_unit_name_display ||
                                 unitMap[config.conversion_unit_name] ||
                                 config.conversion_unit_name
                               }}

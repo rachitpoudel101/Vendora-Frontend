@@ -351,17 +351,17 @@
                                 <span
                                   class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium"
                                   :class="
-                                    item.stock > 10
+                                    item.stock > 5
                                       ? 'bg-green-100 text-green-800'
-                                      : item.stock > 5
+                                      : item.stock > 2
                                         ? 'bg-yellow-100 text-yellow-800'
                                         : 'bg-red-100 text-red-800'
                                   "
                                 >
                                   {{
-                                    item.stock > 10
+                                    item.stock > 5
                                       ? "In Stock"
-                                      : item.stock > 5
+                                      : item.stock > 2
                                         ? "Low Stock"
                                         : "Critical"
                                   }}
@@ -812,17 +812,17 @@
                       <span
                         class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium"
                         :class="
-                          (selectedStock?.stock || 0) > 10
+                          (selectedStock?.stock || 0) > 5
                             ? 'bg-green-100 text-green-800'
-                            : (selectedStock?.stock || 0) > 5
+                            : (selectedStock?.stock || 0) > 2
                               ? 'bg-yellow-100 text-yellow-800'
                               : 'bg-red-100 text-red-800'
                         "
                       >
                         {{
-                          (selectedStock?.stock || 0) > 10
+                          (selectedStock?.stock || 0) > 5
                             ? "In Stock"
-                            : (selectedStock?.stock || 0) > 5
+                            : (selectedStock?.stock || 0) > 2
                               ? "Low Stock"
                               : "Critical"
                         }}
