@@ -56,27 +56,38 @@
                 {{ product.name }}
               </option>
             </select>
+            <!-- Display selected product's base unit name -->
+            <p v-if="selectedProduct" class="text-xs text-gray-500 mt-1">
+              Base Unit: {{ selectedProduct.base_unit_name || "N/A" }}
+            </p>
           </div>
 
           <!-- Unit Type Selection -->
           <div>
             <label
-              for="unit_type"
+              for="base_unit"
               class="block text-sm font-medium text-gray-700 mb-2"
             >
-              Unit Type <span class="text-red-500">*</span>
+              Base Unit <span class="text-red-500">*</span>
             </label>
             <select
-              id="unit_type"
-              v-model="form.unit_type"
+              id="base_unit"
+              v-model="form.base_unit"
               required
-              class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-150"
+              :disabled="!!selectedProduct"
+              disable
+              if
+              auto-selected
+              class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-150 disabled:bg-gray-100 disabled:cursor-not-allowed"
             >
               <option value="">Select a unit type</option>
               <option v-for="unit in unitTypes" :key="unit.id" :value="unit.id">
                 {{ unit.unit }}
               </option>
             </select>
+            <p class="text-xs text-gray-500 mt-1">
+              Auto-selected from product's base unit
+            </p>
           </div>
 
           <!-- Conversion Per Unit -->
@@ -159,7 +170,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted, computed, watch } from "vue";
 import { useUnitConfigStore } from "@/stores/unitConfigAPI";
 import { useInventoryStore } from "@/stores/InventoryAPI";
 import { useUnitStore } from "@/stores/UnitAPI";
@@ -171,7 +182,7 @@ const emit = defineEmits<{
 
 const form = ref({
   product: "",
-  unit_type: "",
+  base_unit: "",
   conversion_per_unit: "",
   conversion_unit_name: "",
 });
@@ -186,6 +197,33 @@ const loading = computed(
 const error = ref("");
 const products = computed(() => inventoryStore.products);
 const unitTypes = computed(() => unitStore.units);
+
+// Computed for selected product
+const selectedProduct = computed(() => {
+  if (!form.value.product) return null;
+  return products.value.find((p) => p.id === parseInt(form.value.product));
+});
+
+// Watch for product selection to auto-set base_unit
+watch(
+  () => form.value.product,
+  (newProductId) => {
+    if (newProductId) {
+      const product = products.value.find(
+        (p) => p.id === parseInt(newProductId),
+      );
+      if (product) {
+        // Use base_unit if available, otherwise fall back to unit
+        const baseUnitId = product.base_unit || product.unit;
+        form.value.base_unit = baseUnitId ? baseUnitId.toString() : "";
+      } else {
+        form.value.base_unit = "";
+      }
+    } else {
+      form.value.base_unit = "";
+    }
+  },
+);
 
 const loadData = async () => {
   try {
@@ -203,7 +241,7 @@ const handleSubmit = async () => {
   try {
     const formData = {
       product: parseInt(form.value.product),
-      unit_type: parseInt(form.value.unit_type),
+      unit_type: parseInt(form.value.base_unit),
       conversion_per_unit: parseFloat(form.value.conversion_per_unit),
       conversion_unit_name: parseInt(form.value.conversion_unit_name),
     };

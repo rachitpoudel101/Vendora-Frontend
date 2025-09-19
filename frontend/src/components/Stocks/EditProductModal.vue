@@ -127,7 +127,7 @@
               </div>
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2"
-                  >Unit *</label
+                  >Base Unit *</label
                 >
                 <select
                   v-model="localForm.unit"

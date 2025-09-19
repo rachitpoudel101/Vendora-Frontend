@@ -157,6 +157,7 @@
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg"
                           > -->
                           <path
                             stroke-linecap="round"
@@ -265,11 +266,12 @@
                                 title="Edit Unit"
                               >
                                 <!-- <svg
-                                class="w-4 h-4"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                              > -->
+                                  class="w-4 h-4"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  viewBox="0 0 24 24"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                > -->
                                 <path
                                   stroke-linecap="round"
                                   stroke-linejoin="round"
@@ -341,7 +343,7 @@
                   class="block md:hidden p-4 flex-1 overflow-y-auto space-y-4"
                 >
                   <div
-                    v-for="config in unitConfigs"
+                    v-for="config in processedUnitConfigs"
                     :key="config.id"
                     class="bg-white border border-gray-200 rounded-lg p-4 shadow-sm"
                   >
@@ -349,14 +351,14 @@
                       <div class="flex-1">
                         <h3 class="font-semibold text-gray-900 text-lg">
                           {{ config.product_name }} -
-                          {{ config.unit_type_name }}
+                          {{ config.base_unit_name }}
                         </h3>
                         <p class="text-gray-500 text-sm mt-1">
                           {{ config.conversion_per_unit }}
-                          {{ config.unit_type_name }} =
+                          {{ config.base_unit_name }} =
                           {{ config.conversion_per_unit }}
                           {{
-                            unitMap[config.conversion_unit_name] ||
+                            config.conversion_unit_name_display ||
                             config.conversion_unit_name
                           }}
                         </p>
@@ -366,25 +368,27 @@
                           @click="openEditUnitConfigModal(config)"
                           class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                         >
-                          <svg
+                          <!-- <svg
                             class="w-4 h-4"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
-                          >
-                            <path
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              stroke-width="2"
-                              d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                            ></path>
-                          </svg>
+                          > -->
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                          ></path>
                         </button>
                       </div>
                     </div>
                   </div>
 
-                  <div v-if="unitConfigs.length === 0" class="text-center py-8">
+                  <div
+                    v-if="processedUnitConfigs.length === 0"
+                    class="text-center py-8"
+                  >
                     <div class="flex flex-col items-center">
                       <svg
                         class="w-12 h-12 text-gray-300 mb-4"
@@ -438,7 +442,7 @@
                           <th
                             class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
                           >
-                            Unit Type
+                            Base Unit
                           </th>
                           <th
                             class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
@@ -448,7 +452,7 @@
                           <th
                             class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
                           >
-                            Base Unit
+                            Conversion_unit_name
                           </th>
                           <th
                             class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
@@ -459,7 +463,7 @@
                       </thead>
                       <tbody class="bg-white divide-y divide-gray-100">
                         <tr
-                          v-for="(config, idx) in unitConfigs"
+                          v-for="(config, idx) in processedUnitConfigs"
                           :key="config.id"
                           class="hover:bg-gray-50 transition-colors duration-150"
                         >
@@ -475,7 +479,7 @@
                           </td>
                           <td class="px-6 py-4 whitespace-nowrap">
                             <div class="text-sm text-gray-900">
-                              {{ config.unit_type_name }}
+                              {{ config.base_unit_name }}
                             </div>
                           </td>
                           <td class="px-6 py-4 whitespace-nowrap">
@@ -487,7 +491,6 @@
                             <div class="text-sm text-gray-900">
                               {{
                                 config.conversion_unit_name_display ||
-                                unitMap[config.conversion_unit_name] ||
                                 config.conversion_unit_name
                               }}
                             </div>
@@ -518,7 +521,7 @@
                             </div>
                           </td>
                         </tr>
-                        <tr v-if="unitConfigs.length === 0">
+                        <tr v-if="processedUnitConfigs.length === 0">
                           <td
                             colspan="6"
                             class="px-6 py-12 text-center text-gray-500"
@@ -589,7 +592,7 @@
     <!-- Edit Unit Config Modal -->
     <EditUnitConfigModal
       v-if="showEditUnitConfigModal"
-      :unit-config="selectedUnitConfig"
+      :unitConfig="selectedUnitConfig"
       @close="closeEditUnitConfigModal"
       @updated="handleUnitConfigUpdated"
     />
@@ -655,7 +658,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted, computed, watch } from "vue";
 import { useUnitStore } from "@/stores/UnitAPI";
 import { useUnitConfigStore } from "@/stores/unitConfigAPI";
 import CreateUnitModel from "@/components/Unit/CreateUnitModel.vue";
@@ -670,14 +673,18 @@ interface Unit {
   unit: string;
 }
 
-interface UnitConfig {
+export interface UnitConfig {
   id: number;
-  product: number;
+  product: number | Record<string, any>;
   product_name: string;
-  unit_type: number;
-  unit_type_name: string;
+  base_unit: number | null;
+  base_unit_name?: string | null;
+  unit_type: number; // Added: Required for EditUnitConfigModal compatibility
+  unit_type_name: string; // Added: Required for EditUnitConfigModal compatibility
   conversion_per_unit: number;
-  conversion_unit_name: number;
+  conversion_unit_name: number | string;
+  conversion_unit_name_display?: string;
+  // ...other possible fields...
 }
 
 const unitStore = useUnitStore();
@@ -767,12 +774,36 @@ const closeCreateUnitConfigModal = () => {
 };
 
 const openEditUnitConfigModal = (unitConfig: UnitConfig) => {
-  selectedUnitConfig.value = unitConfig;
+  // Normalize incoming unitConfig so required fields exist.
+  // Some items from the store may lack `unit_type` and `unit_type_name`.
+  const normalized = {
+    ...unitConfig,
+    // ensure unit_type is defined and is a string (safe for .toString())
+    unit_type: String(
+      (unitConfig as any).unit_type ??
+        (unitConfig as any).base_unit ??
+        (unitConfig as any).base_unit_name ??
+        "",
+    ),
+    // ensure unit_type_name is defined
+    unit_type_name:
+      (unitConfig as any).unit_type_name ??
+      (unitConfig as any).base_unit_name ??
+      "",
+    // ensure conversion_unit_name is defined (modal might expect a value)
+    conversion_unit_name:
+      (unitConfig as any).conversion_unit_name ??
+      (unitConfig as any).conversion_unit_name_display ??
+      "",
+  } as unknown as UnitConfig;
+
+  selectedUnitConfig.value = normalized;
   showEditUnitConfigModal.value = true;
 };
 
 const closeEditUnitConfigModal = () => {
   showEditUnitConfigModal.value = false;
+  // clear selected config to avoid stale/partial data being reused
   selectedUnitConfig.value = null;
 };
 
@@ -793,6 +824,61 @@ const loadUnitConfigs = async () => {
     console.error("Error loading unit configurations:", error);
   }
 };
+
+// Keep unitMap in sync with fetched units
+watch(
+  units,
+  (newUnits) => {
+    const map: Record<number, string> = {};
+    (newUnits || []).forEach((u: any) => {
+      if (!u) return;
+      const id = u.id ?? u.pk ?? u["id"];
+      const name = u.unit ?? u.name ?? u.unit_name ?? "";
+      if (id !== undefined) map[id] = name;
+    });
+    unitMap.value = map;
+  },
+  { immediate: true },
+);
+
+// Provide a processed list that resolves missing base_unit_name from product or unitMap
+const processedUnitConfigs = computed(() =>
+  (unitConfigs.value || []).map((cfg: any) => {
+    // Some APIs embed product as object; try to extract possible base unit info
+    const productObj =
+      cfg.product && typeof cfg.product === "object"
+        ? cfg.product
+        : cfg.product_obj || cfg.product_detail || null;
+
+    const productBaseUnitId =
+      productObj?.base_unit ??
+      productObj?.product_base_unit ??
+      productObj?.unit ??
+      null;
+
+    const resolvedBaseUnitName =
+      cfg.base_unit_name ||
+      (productObj &&
+        (productObj.base_unit_name ||
+          productObj.product_base_unit_name ||
+          productObj.unit_name)) ||
+      unitMap.value[cfg.base_unit] ||
+      unitMap.value[productBaseUnitId] ||
+      "";
+
+    const resolvedConversionName =
+      cfg.conversion_unit_name_display ||
+      unitMap.value[cfg.conversion_unit_name] ||
+      cfg.conversion_unit_name ||
+      "";
+
+    return {
+      ...cfg,
+      base_unit_name: resolvedBaseUnitName,
+      conversion_unit_name_display: resolvedConversionName,
+    };
+  }),
+);
 
 onMounted(() => {
   loadUnits();
