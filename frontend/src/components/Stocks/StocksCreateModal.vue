@@ -127,7 +127,7 @@
               </div>
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2"
-                  >Unit *</label
+                  >Base Unit*</label
                 >
                 <select
                   v-model="form.unit"
@@ -227,6 +227,7 @@ interface CreateProductForm {
   margin: number | null;
   stock: number | null;
   unit: string | number;
+  base_unit: string | number; // added
   expires_at: string;
   description: string;
 }
@@ -270,6 +271,7 @@ const form = ref<CreateProductForm>({
   margin: null,
   stock: null,
   unit: "",
+  base_unit: "", // added
   expires_at: "",
   description: "",
 });
@@ -298,6 +300,7 @@ const handleSubmit = () => {
     category: String(form.value.category),
     supliers: Number(form.value.supliers),
     unit: selectedUnitObj ? selectedUnitObj.id : form.value.unit, // pk value if found, else fallback
+    base_unit: selectedUnitObj ? selectedUnitObj.id : form.value.unit, // set base_unit to unit id
   };
   emit("submit", payload);
 };
@@ -316,6 +319,7 @@ watch(
         margin: null,
         stock: null,
         unit: "",
+        base_unit: "", // added
         expires_at: "",
         description: "",
       };

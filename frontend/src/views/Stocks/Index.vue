@@ -255,7 +255,7 @@
                           </span>
                         </div>
                         <div>
-                          <span class="text-gray-500 block">Unit</span>
+                          <span class="text-gray-500 block">Base Unit</span>
                           <span class="font-semibold text-gray-900 mt-1 block">
                             {{ getUnit(item) }}
                           </span>
@@ -302,7 +302,7 @@
                             <th
                               class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
                             >
-                              Unit
+                              Base Unit
                             </th>
                             <th
                               class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
