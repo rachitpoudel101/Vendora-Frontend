@@ -164,24 +164,15 @@ import { useUnitConfigStore } from "@/stores/unitConfigAPI";
 import { useInventoryStore } from "@/stores/InventoryAPI";
 import { useUnitStore } from "@/stores/UnitAPI";
 
-// interface Product {
-//   id: number;
-//   name: string;
-// }
-
-// interface UnitType {
-//   id: number;
-//   unit: string;
-// }
-
+// Changed: allow string|number for fields that sometimes arrive as strings
 interface UnitConfig {
   id: number;
-  product: number;
-  product_name: string;
-  unit_type: number;
-  unit_type_name: string;
-  conversion_per_unit: number;
-  conversion_unit_name: number;
+  product: number | string;
+  product_name?: string;
+  unit_type: number | string;
+  unit_type_name?: string;
+  conversion_per_unit: number | string;
+  conversion_unit_name: number | string;
 }
 
 const props = defineProps<{
@@ -204,8 +195,15 @@ const unitConfigStore = useUnitConfigStore();
 const inventoryStore = useInventoryStore();
 const unitStore = useUnitStore();
 
+// Added local submitting flag instead of mutating store.loading directly
+const submitting = ref(false);
+
 const loading = computed(
-  () => unitConfigStore.loading || inventoryStore.loading || unitStore.loading,
+  () =>
+    submitting.value ||
+    unitConfigStore.loading ||
+    inventoryStore.loading ||
+    unitStore.loading,
 );
 const error = ref("");
 const products = computed(() => inventoryStore.products);
@@ -233,14 +231,14 @@ const initializeForm = () => {
 
 const handleSubmit = async () => {
   error.value = "";
-  unitConfigStore.loading = true;
+  submitting.value = true; // changed from assigning to store.loading
 
   try {
     const updatedData = {
-      product: parseInt(form.value.product),
-      unit_type: parseInt(form.value.unit_type),
-      conversion_per_unit: parseFloat(form.value.conversion_per_unit),
-      conversion_unit_name: parseInt(form.value.conversion_unit_name),
+      product: parseInt(String(form.value.product)),
+      unit_type: parseInt(String(form.value.unit_type)),
+      conversion_per_unit: parseFloat(String(form.value.conversion_per_unit)),
+      conversion_unit_name: parseInt(String(form.value.conversion_unit_name)),
     };
 
     await unitConfigStore.updateUnitConfig(props.unitConfig.id, updatedData);
@@ -250,7 +248,7 @@ const handleSubmit = async () => {
     console.error("Error updating unit configuration:", err);
     error.value = "Failed to update unit configuration. Please try again.";
   } finally {
-    unitConfigStore.loading = false;
+    submitting.value = false; // changed from assigning to store.loading
   }
 };
 
