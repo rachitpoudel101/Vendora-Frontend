@@ -673,16 +673,17 @@ interface Unit {
   unit: string;
 }
 
+// Changed: allow number|string for fields that can be normalized to strings
 export interface UnitConfig {
   id: number;
-  product: number | Record<string, any>;
-  product_name: string;
-  base_unit: number | null;
+  product: number | Record<string, any> | string;
+  product_name?: string;
+  base_unit?: number | string | null;
   base_unit_name?: string | null;
-  unit_type: number; // Added: Required for EditUnitConfigModal compatibility
-  unit_type_name: string; // Added: Required for EditUnitConfigModal compatibility
-  conversion_per_unit: number;
-  conversion_unit_name: number | string;
+  unit_type?: number | string;
+  unit_type_name?: string;
+  conversion_per_unit?: number | string;
+  conversion_unit_name?: number | string;
   conversion_unit_name_display?: string;
   // ...other possible fields...
 }
@@ -774,11 +775,20 @@ const closeCreateUnitConfigModal = () => {
 };
 
 const openEditUnitConfigModal = (unitConfig: UnitConfig) => {
-  // Normalize incoming unitConfig so required fields exist.
-  // Some items from the store may lack `unit_type` and `unit_type_name`.
+
+  let normalizedProduct = unitConfig.product;
+  if (typeof normalizedProduct === "object" && normalizedProduct !== null) {
+    normalizedProduct =
+      normalizedProduct.id ??
+      normalizedProduct.pk ??
+      normalizedProduct.name ??
+      normalizedProduct.unit ??
+      "";
+  }
+
   const normalized = {
     ...unitConfig,
-    // ensure unit_type is defined and is a string (safe for .toString())
+    product: normalizedProduct,
     unit_type: String(
       (unitConfig as any).unit_type ??
         (unitConfig as any).base_unit ??

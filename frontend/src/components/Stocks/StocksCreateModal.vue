@@ -298,7 +298,7 @@ watch(
     if (newUnit != null) {
       form.value.base_unit = newUnit;
     }
-  }
+  },
 );
 
 const handleSubmit = () => {
