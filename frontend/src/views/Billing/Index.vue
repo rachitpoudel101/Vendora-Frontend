@@ -208,10 +208,10 @@
                       <div class="flex justify-center gap-2">
                         <button
                           @click="openPrintModal(b)"
-                          class="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700 transition"
+                          class="bg-white text-black px-3 py-1 rounded text-sm hover:bg-blue-700 transition"
                           title="Print Bill"
                         >
-                          Print
+                          View
                         </button>
                       </div>
                     </td>

@@ -130,17 +130,17 @@
                   >Base Unit*</label
                 >
                 <select
-                  v-model="form.unit"
+                  v-model.number="form.unit"
                   required
                   class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-150"
                 >
                   <option value="" disabled>Select Unit</option>
                   <option
-                    v-for="unit in units"
-                    :key="unit.id"
-                    :value="unit.unit"
+                    v-for="unitObj in units"
+                    :key="unitObj.id"
+                    :value="unitObj.id"
                   >
-                    {{ unit.unit }}
+                    {{ unitObj.unit }}
                   </option>
                 </select>
               </div>
@@ -220,14 +220,14 @@ import { computed, ref, watch } from "vue";
 
 interface CreateProductForm {
   name: string;
-  category: string | number;
-  supliers: string | number;
+  category: string | number | null;
+  supliers: number | null;
   serial_number: string;
   cost_price: number | null;
   margin: number | null;
   stock: number | null;
-  unit: string | number;
-  base_unit: string | number; // added
+  unit: number | null;
+  base_unit: number | null;
   expires_at: string;
   description: string;
 }
@@ -264,14 +264,14 @@ const emit = defineEmits<{
 
 const form = ref<CreateProductForm>({
   name: "",
-  category: "",
-  supliers: "",
+  category: null,
+  supliers: null,
   serial_number: "",
   cost_price: null,
   margin: null,
   stock: null,
-  unit: "",
-  base_unit: "", // added
+  unit: null,
+  base_unit: null,
   expires_at: "",
   description: "",
 });
@@ -291,16 +291,23 @@ const isExpiryRequired = computed(() => {
   return selectedCategory.value?.is_expired_applicable || false;
 });
 
+// Keep base_unit in sync with selected unit id
+watch(
+  () => form.value.unit,
+  (newUnit) => {
+    if (newUnit != null) {
+      form.value.base_unit = newUnit;
+    }
+  }
+);
+
 const handleSubmit = () => {
-  // Find the selected unit object
-  const selectedUnitObj = props.units.find((u) => u.unit === form.value.unit);
-  // Ensure correct types before emitting
   const payload: CreateProductForm = {
     ...form.value,
-    category: String(form.value.category),
+    category: form.value.category != null ? String(form.value.category) : "",
     supliers: Number(form.value.supliers),
-    unit: selectedUnitObj ? selectedUnitObj.id : form.value.unit, // pk value if found, else fallback
-    base_unit: selectedUnitObj ? selectedUnitObj.id : form.value.unit, // set base_unit to unit id
+    unit: Number(form.value.unit),
+    base_unit: Number(form.value.base_unit),
   };
   emit("submit", payload);
 };
@@ -312,14 +319,14 @@ watch(
     if (!newShow) {
       form.value = {
         name: "",
-        category: "",
-        supliers: "",
+        category: null,
+        supliers: null,
         serial_number: "",
         cost_price: null,
         margin: null,
         stock: null,
-        unit: "",
-        base_unit: "", // added
+        unit: null,
+        base_unit: null,
         expires_at: "",
         description: "",
       };
