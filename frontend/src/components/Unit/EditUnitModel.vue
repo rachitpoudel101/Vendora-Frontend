@@ -121,7 +121,12 @@ const handleSubmit = async () => {
     emit("updated");
   } catch (error) {
     console.error("Error updating unit:", error);
-    errors.unit = "Failed to update unit. Please try again.";
+    // Extract error message from response or fallback
+    const errorMessage =
+      error.response?.data?.message ||
+      error.message ||
+      "Failed to update unit. Please try again.";
+    errors.unit = errorMessage; // Keep this for form-level error display if needed
   }
 };
 

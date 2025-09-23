@@ -112,8 +112,14 @@ async function handleUpdateUser() {
   } catch (err) {
     console.error("Failed to update user:", err);
 
-    // ERROR TOAST
-    $toast.error("Failed to update user. Try again.", {
+    // Extract error message from response or fallback
+    const errorMessage =
+      err.response?.data?.message ||
+      err.message ||
+      "Failed to update user. Try again.";
+
+    // ERROR TOAST with response error
+    $toast.error(errorMessage, {
       position: "top-right",
       duration: 3000,
       dismissible: true,

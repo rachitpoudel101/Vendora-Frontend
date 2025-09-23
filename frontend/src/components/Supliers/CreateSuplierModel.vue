@@ -232,7 +232,12 @@ const handleSubmit = async () => {
     emit("close");
   } catch (error) {
     console.error("❌ Failed to create supplier:", error);
-    toast.error("Failed to create supplier. Please try again.", {
+    // Extract error message from response or fallback
+    const errorMessage =
+      error.response?.data?.message ||
+      error.message ||
+      "Failed to create supplier. Please try again.";
+    toast.error(errorMessage, {
       position: "top-right",
       duration: 3000,
       dismissible: true,
