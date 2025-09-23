@@ -72,13 +72,14 @@
 <script setup lang="ts">
 import { reactive, computed } from "vue";
 import { useUnitStore } from "@/stores/UnitAPI";
+import { useToast } from "vue-toast-notification";
 
 const emit = defineEmits(["close", "created"]);
 
 const unitStore = useUnitStore();
+const $toast = useToast();
 
 const loading = computed(() => unitStore.loading);
-// const error = computed(() => unitStore.error);
 
 const form = reactive({
   unit: "",
@@ -108,13 +109,20 @@ const handleSubmit = async () => {
   if (!validateForm()) return;
 
   try {
-    // Simply create new unit - removed deleted unit reactivation logic
-    // as the updateUnit method doesn't support is_deleted property
     await unitStore.createUnit(form);
     emit("created");
   } catch (error) {
     console.error("Error creating unit:", error);
-    errors.unit = "Failed to create unit. Please try again.";
+    const errorMessage =
+      error.response?.data?.message ||
+      error.message ||
+      "Failed to create unit. Please try again.";
+    errors.unit = errorMessage;
+    $toast.error(errorMessage, {
+      position: "top-right",
+      duration: 3000,
+      dismissible: true,
+    });
   }
 };
 </script>

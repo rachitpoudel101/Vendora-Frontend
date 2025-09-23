@@ -169,7 +169,7 @@ interface UnitConfig {
   id: number;
   product: number | string;
   product_name?: string;
-  unit_type: number | string;
+  base_unit_id: number | string; // Changed from unit_type
   unit_type_name?: string;
   conversion_per_unit: number | string;
   conversion_unit_name: number | string;
@@ -186,7 +186,7 @@ const emit = defineEmits<{
 
 const form = ref({
   product: "",
-  unit_type: "",
+  unit_type: "", // This can stay as is for form binding, but we'll map it in payload
   conversion_per_unit: "",
   conversion_unit_name: "",
 });
@@ -222,7 +222,7 @@ const initializeForm = () => {
   if (props.unitConfig) {
     form.value = {
       product: props.unitConfig.product.toString(),
-      unit_type: props.unitConfig.unit_type.toString(),
+      unit_type: props.unitConfig.base_unit_id.toString(), // Changed from unit_type
       conversion_per_unit: props.unitConfig.conversion_per_unit.toString(),
       conversion_unit_name: props.unitConfig.conversion_unit_name.toString(),
     };
@@ -236,7 +236,7 @@ const handleSubmit = async () => {
   try {
     const updatedData = {
       product: parseInt(String(form.value.product)),
-      unit_type: parseInt(String(form.value.unit_type)),
+      base_unit_id: parseInt(String(form.value.unit_type)), // Changed from unit_type
       conversion_per_unit: parseFloat(String(form.value.conversion_per_unit)),
       conversion_unit_name: parseInt(String(form.value.conversion_unit_name)),
     };

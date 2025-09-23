@@ -5,38 +5,6 @@
     <div
       class="bg-white rounded-lg sm:rounded-xl shadow-2xl w-full max-w-[90vw] max-h-[95vh] sm:max-h-[90vh] flex flex-col overflow-hidden"
     >
-      <!-- Toast Notification -->
-      <div
-        v-if="showToast"
-        :class="[
-          'fixed top-4 sm:top-6 right-2 sm:right-6 px-4 sm:px-6 py-2 sm:py-3 rounded-lg shadow-lg z-50 flex items-center space-x-2 text-sm sm:text-base',
-          toastType === 'error'
-            ? 'bg-red-500 text-white'
-            : 'bg-green-500 text-white',
-        ]"
-      >
-        <svg
-          v-if="toastType === 'error'"
-          class="w-5 h-5"
-          fill="currentColor"
-          viewBox="0 0 20 20"
-        >
-          <path
-            fill-rule="evenodd"
-            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-            clip-rule="evenodd"
-          />
-        </svg>
-        <svg v-else class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-          <path
-            fill-rule="evenodd"
-            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-            clip-rule="evenodd"
-          />
-        </svg>
-        <span>{{ toastMessage }}</span>
-      </div>
-
       <!-- Header -->
       <div
         class="flex flex-col sm:flex-row items-start sm:items-center justify-between p-3 sm:p-6 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-indigo-50 gap-3 sm:gap-0"
@@ -744,6 +712,7 @@ import { useRouter } from "vue-router";
 import { useBillsStore } from "@/stores/billsAPI";
 import { useInventoryStore } from "@/stores/InventoryAPI";
 import { useAuthStore } from "@/stores/auth";
+import { useToast } from "vue-toast-notification";
 import BillSummary from "@/components/Bill/BillSummary.vue";
 
 // Form data
@@ -993,56 +962,35 @@ const grandTotal = computed(
 // OnSubmit function for form submission
 const router = useRouter();
 
-const showToast = ref(false);
-const toastType = ref("error");
-const toastMessage = ref("");
-let toastTimeout = null;
-
-const showToastNotification = (type, message, duration = 3000) => {
-  toastType.value = type;
-  toastMessage.value = message;
-  showToast.value = true;
-
-  if (toastTimeout) {
-    clearTimeout(toastTimeout);
-  }
-
-  toastTimeout = setTimeout(() => {
-    showToast.value = false;
-  }, duration);
-};
-
-const focusNext = (event) => {
-  const currentElement = event.target;
-  const form =
-    currentElement.closest("form") || currentElement.closest(".bg-white");
-  const focusableElements = form.querySelectorAll(
-    "input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled])",
-  );
-
-  const currentIndex = Array.from(focusableElements).indexOf(currentElement);
-  const nextIndex = currentIndex + 1;
-
-  if (nextIndex < focusableElements.length) {
-    focusableElements[nextIndex].focus();
-  }
-};
+const toast = useToast();
 
 const onSubmit = async () => {
   try {
     // Validation checks
     if (!customerName.value.trim()) {
-      showToastNotification("error", "Customer name is required!");
+      toast.error("Customer name is required!", {
+        position: "top-right",
+        duration: 3000,
+        dismissible: true,
+      });
       return;
     }
 
     if (!billDate.value) {
-      showToastNotification("error", "Bill date is required!");
+      toast.error("Bill date is required!", {
+        position: "top-right",
+        duration: 3000,
+        dismissible: true,
+      });
       return;
     }
 
     if (!billedBy.value.trim()) {
-      showToastNotification("error", "Billed By field is required!");
+      toast.error("Billed By field is required!", {
+        position: "top-right",
+        duration: 3000,
+        dismissible: true,
+      });
       return;
     }
 
@@ -1051,10 +999,11 @@ const onSubmit = async () => {
       (item) => item.product_id && item.qty > 0,
     );
     if (validItems.length === 0) {
-      showToastNotification(
-        "error",
-        "Please add at least one item with quantity!",
-      );
+      toast.error("Please add at least one item with quantity!", {
+        position: "top-right",
+        duration: 3000,
+        dismissible: true,
+      });
       return;
     }
 
@@ -1062,17 +1011,19 @@ const onSubmit = async () => {
     for (const item of validItems) {
       const stock = getStock(item.product_id);
       if (stock === 0) {
-        showToastNotification(
-          "error",
-          "Stock is 0 for one or more selected products!",
-        );
+        toast.error("Stock is 0 for one or more selected products!", {
+          position: "top-right",
+          duration: 3000,
+          dismissible: true,
+        });
         return;
       }
       if (item.qty > stock) {
-        showToastNotification(
-          "error",
-          `Quantity exceeds available stock for selected items!`,
-        );
+        toast.error("Quantity exceeds available stock for selected items!", {
+          position: "top-right",
+          duration: 3000,
+          dismissible: true,
+        });
         return;
       }
     }
@@ -1105,31 +1056,37 @@ const onSubmit = async () => {
 
     const res = await billsStore.createBill(payload);
     if (res && res.id) {
-      showToastNotification("success", "Bill created successfully!");
+      toast.success("Bill created successfully!", {
+        position: "top-right",
+        duration: 3000,
+        dismissible: true,
+      });
       setTimeout(() => {
         emit("bill-created");
         emit("close");
       }, 1500);
     } else {
-      showToastNotification(
-        "error",
-        "Failed to create bill. Please try again.",
-      );
+      toast.error("Failed to create bill. Please try again.", {
+        position: "top-right",
+        duration: 3000,
+        dismissible: true,
+      });
     }
   } catch (error) {
     console.error("Error creating bill:", error);
 
-    // Handle specific error messages
-    if (error.response && error.response.data && error.response.data.message) {
-      showToastNotification("error", error.response.data.message);
-    } else if (error.message) {
-      showToastNotification("error", error.message);
-    } else {
-      showToastNotification(
-        "error",
-        "An unexpected error occurred. Please try again.",
-      );
-    }
+    // Extract error message from response or fallback
+    const errorMessage =
+      error.response?.data?.message ||
+      error.message ||
+      "An unexpected error occurred. Please try again.";
+
+    // Use useToast for error
+    toast.error(errorMessage, {
+      position: "top-right",
+      duration: 3000,
+      dismissible: true,
+    });
   }
 };
 </script>

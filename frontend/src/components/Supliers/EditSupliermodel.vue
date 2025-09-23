@@ -254,7 +254,12 @@ const handleSubmit = async () => {
     emit("close");
   } catch (error) {
     console.error("❌ Failed to update supplier:", error);
-    toast.error("Failed to update supplier. Please try again.", {
+    // Extract error message from response or fallback
+    const errorMessage =
+      error.response?.data?.message ||
+      error.message ||
+      "Failed to update supplier. Please try again.";
+    toast.error(errorMessage, {
       position: "top-right",
       duration: 3000,
       dismissible: true,

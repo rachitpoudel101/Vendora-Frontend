@@ -241,7 +241,7 @@ const handleSubmit = async () => {
   try {
     const formData = {
       product: parseInt(form.value.product),
-      unit_type: parseInt(form.value.base_unit),
+      unit_type: parseInt(form.value.base_unit), // Changed to unit_type
       conversion_per_unit: parseFloat(form.value.conversion_per_unit),
       conversion_unit_name: parseInt(form.value.conversion_unit_name),
     };
