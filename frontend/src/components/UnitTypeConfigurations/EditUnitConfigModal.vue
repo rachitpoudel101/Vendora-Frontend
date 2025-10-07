@@ -164,15 +164,16 @@ import { useUnitConfigStore } from "@/stores/unitConfigAPI";
 import { useInventoryStore } from "@/stores/InventoryAPI";
 import { useUnitStore } from "@/stores/UnitAPI";
 
-// Changed: allow string|number for fields that sometimes arrive as strings
+// Changed: Make interface more flexible to handle API variations
 interface UnitConfig {
   id: number;
-  product: number | string;
+  product?: number | string;
   product_name?: string;
-  base_unit_id: number | string; // Changed from unit_type
+  base_unit_id?: number | string; // This is what we receive
+  unit_type?: number | string; // Alternative field name
   unit_type_name?: string;
-  conversion_per_unit: number | string;
-  conversion_unit_name: number | string;
+  conversion_per_unit?: number | string;
+  conversion_unit_name?: number | string;
 }
 
 const props = defineProps<{
@@ -220,9 +221,13 @@ const loadData = async () => {
 
 const initializeForm = () => {
   if (props.unitConfig) {
+    // Use base_unit_id first, fall back to unit_type
+    const unitTypeValue =
+      props.unitConfig.base_unit_id ?? props.unitConfig.unit_type ?? "";
+
     form.value = {
       product: props.unitConfig.product.toString(),
-      unit_type: props.unitConfig.base_unit_id.toString(), // Changed from unit_type
+      unit_type: unitTypeValue.toString(),
       conversion_per_unit: props.unitConfig.conversion_per_unit.toString(),
       conversion_unit_name: props.unitConfig.conversion_unit_name.toString(),
     };
@@ -231,12 +236,12 @@ const initializeForm = () => {
 
 const handleSubmit = async () => {
   error.value = "";
-  submitting.value = true; // changed from assigning to store.loading
+  submitting.value = true;
 
   try {
     const updatedData = {
       product: parseInt(String(form.value.product)),
-      base_unit_id: parseInt(String(form.value.unit_type)), // Changed from unit_type
+      unit_type: parseInt(String(form.value.unit_type)), // Send as unit_type to API
       conversion_per_unit: parseFloat(String(form.value.conversion_per_unit)),
       conversion_unit_name: parseInt(String(form.value.conversion_unit_name)),
     };
@@ -248,7 +253,7 @@ const handleSubmit = async () => {
     console.error("Error updating unit configuration:", err);
     error.value = "Failed to update unit configuration. Please try again.";
   } finally {
-    submitting.value = false; // changed from assigning to store.loading
+    submitting.value = false;
   }
 };
 

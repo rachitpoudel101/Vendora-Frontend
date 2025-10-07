@@ -48,7 +48,7 @@
                     </svg>
                     <span class="text-sm sm:text-base">Add Unit</span>
                   </button>
-                  <button
+                  <!-- <button
                     @click="openCreateUnitConfigModal"
                     class="w-full sm:w-auto inline-flex items-center justify-center px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-green-600 to-green-700 text-white font-medium rounded-lg sm:rounded-xl shadow-sm hover:shadow-lg hover:from-green-700 hover:to-green-800 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
                   >
@@ -72,7 +72,7 @@
                       ></path>
                     </svg>
                     <span class="text-sm sm:text-base">Add Unit Config</span>
-                  </button>
+                  </button> -->
                 </div>
               </div>
             </div>
@@ -96,7 +96,7 @@
                 >
                   Units
                 </button>
-                <button
+                <!-- <button
                   @click="activeTab = 'configurations'"
                   :class="[
                     activeTab === 'configurations'
@@ -106,7 +106,7 @@
                   ]"
                 >
                   Unit Configurations
-                </button>
+                </button> -->
               </nav>
             </div>
 
@@ -676,16 +676,16 @@ interface Unit {
 // Changed: allow number|string for fields that can be normalized to strings
 export interface UnitConfig {
   id: number;
-  product: number | Record<string, any> | string;
+  product: string | number;
   product_name?: string;
-  base_unit?: number | string | null;
-  base_unit_name?: string | null;
-  unit_type?: number | string;
+  base_unit?: string | number;
+  base_unit_name?: string;
+  base_unit_id: string | number; // Required, matching EditUnitConfigModal
+  unit_type?: string | number; // Optional alternative
   unit_type_name?: string;
-  conversion_per_unit?: number | string;
-  conversion_unit_name?: number | string;
+  conversion_per_unit?: string | number;
+  conversion_unit_name?: string | number;
   conversion_unit_name_display?: string;
-  // ...other possible fields...
 }
 
 const unitStore = useUnitStore();
@@ -704,7 +704,19 @@ const showDeleteModal = ref(false);
 const showCreateUnitConfigModal = ref(false);
 const showEditUnitConfigModal = ref(false);
 const selectedUnit = ref<Unit | null>(null);
-const selectedUnitConfig = ref<UnitConfig | null>(null);
+const selectedUnitConfig = ref<UnitConfig>({
+  id: 0,
+  product: "",
+  product_name: "",
+  base_unit: "",
+  base_unit_name: "",
+  base_unit_id: "", // Add this line
+  unit_type: "",
+  unit_type_name: "",
+  conversion_per_unit: "",
+  conversion_unit_name: "",
+  conversion_unit_name_display: "",
+});
 const unitToDelete = ref<Unit | null>(null);
 
 const loadUnits = async () => {
@@ -766,46 +778,43 @@ const handleUnitUpdated = () => {
 };
 
 // Unit Configuration functions
-const openCreateUnitConfigModal = () => {
-  showCreateUnitConfigModal.value = true;
-};
+// const openCreateUnitConfigModal = () => {
+//   showCreateUnitConfigModal.value = true;
+// };
 
 const closeCreateUnitConfigModal = () => {
   showCreateUnitConfigModal.value = false;
 };
 
-const openEditUnitConfigModal = (unitConfig: UnitConfig) => {
-
+const openEditUnitConfigModal = (unitConfig: any) => {
   let normalizedProduct = unitConfig.product;
   if (typeof normalizedProduct === "object" && normalizedProduct !== null) {
     normalizedProduct =
-      normalizedProduct.id ??
-      normalizedProduct.pk ??
-      normalizedProduct.name ??
-      normalizedProduct.unit ??
-      "";
+      (normalizedProduct as any).id ||
+      (normalizedProduct as any).pk ||
+      String(normalizedProduct);
   }
 
-  const normalized = {
-    ...unitConfig,
+  // Ensure base_unit_id is always populated
+  const baseUnitId =
+    unitConfig.base_unit_id ??
+    unitConfig.unit_type ??
+    unitConfig.base_unit ??
+    "";
+
+  const normalized: UnitConfig = {
+    id: unitConfig.id,
     product: normalizedProduct,
-    unit_type: String(
-      (unitConfig as any).unit_type ??
-        (unitConfig as any).base_unit ??
-        (unitConfig as any).base_unit_name ??
-        "",
-    ),
-    // ensure unit_type_name is defined
+    base_unit_id: baseUnitId, // Always set this required field
+    unit_type: unitConfig.unit_type ?? unitConfig.base_unit ?? "",
     unit_type_name:
-      (unitConfig as any).unit_type_name ??
-      (unitConfig as any).base_unit_name ??
-      "",
-    // ensure conversion_unit_name is defined (modal might expect a value)
+      unitConfig.unit_type_name ?? unitConfig.base_unit_name ?? "",
+    conversion_per_unit: unitConfig.conversion_per_unit ?? "",
     conversion_unit_name:
-      (unitConfig as any).conversion_unit_name ??
-      (unitConfig as any).conversion_unit_name_display ??
+      unitConfig.conversion_unit_name ??
+      unitConfig.conversion_unit_name_display ??
       "",
-  } as unknown as UnitConfig;
+  };
 
   selectedUnitConfig.value = normalized;
   showEditUnitConfigModal.value = true;
