@@ -32,8 +32,10 @@
                   placeholder="Enter product name"
                 />
               </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2"
+              <div id="category-dropdown">
+                <label
+                  class="block text-sm font-medium text-gray-700 mb-2"
+                  name="category"
                   >Category *</label
                 >
                 <div v-if="hasNoCategories" class="space-y-2">
@@ -67,8 +69,10 @@
                   </option>
                 </select>
               </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2"
+              <div id="category-dropdown">
+                <label
+                  class="block text-sm font-medium text-gray-700 mb-2"
+                  name="supplier"
                   >Supplier *</label
                 >
                 <select
@@ -101,7 +105,9 @@
                 </p>
               </div>
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2"
+                <label
+                  class="block text-sm font-medium text-gray-700 mb-2"
+                  id="stock_quantity"
                   >Stock Quantity *</label
                 >
                 <input
@@ -114,7 +120,9 @@
                 />
               </div>
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2"
+                <label
+                  class="block text-sm font-medium text-gray-700 mb-2"
+                  id="cost_price"
                   >Cost Price *</label
                 >
                 <input
@@ -128,7 +136,9 @@
                 />
               </div>
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2"
+                <label
+                  class="block text-sm font-medium text-gray-700 mb-2"
+                  id="margin"
                   >Margin *</label
                 >
                 <input
@@ -142,11 +152,13 @@
                 />
               </div>
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2"
+                <label
+                  class="block text-sm font-medium text-gray-700 mb-2"
+                  name="base_unit"
                   >Base Unit*</label
                 >
                 <select
-                  v-model.number="form.unit"
+                  v-model="form.unit"
                   required
                   class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-150"
                 >
@@ -317,19 +329,48 @@ watch(
   () => form.value.unit,
   (newUnit) => {
     if (newUnit != null) {
-      form.value.base_unit = newUnit;
+      form.value.base_unit = Number(newUnit);
     }
   },
+  { immediate: true },
 );
 
 const handleSubmit = () => {
-  const payload: CreateProductForm = {
-    ...form.value,
-    category: form.value.category != null ? String(form.value.category) : "",
+  // Validate required fields
+  if (!form.value.category || !form.value.supliers || !form.value.unit) {
+    console.error("Missing required fields");
+    return;
+  }
+
+  // Ensure base_unit is set
+  const unitValue = Number(form.value.unit);
+  if (!form.value.base_unit) {
+    form.value.base_unit = unitValue;
+  }
+
+  // If expiry is required but not provided, prevent submission
+  if (isExpiryRequired.value && !form.value.expires_at && props.canEditExpiry) {
+    console.error("Expiry date is required for this category");
+    return;
+  }
+
+  const baseUnitValue = Number(form.value.base_unit || unitValue);
+
+  const payload = {
+    name: form.value.name,
+    category: Number(form.value.category),
     supliers: Number(form.value.supliers),
-    unit: Number(form.value.unit),
-    base_unit: Number(form.value.base_unit),
+    serial_number: form.value.serial_number || "",
+    cost_price: Number(form.value.cost_price) || 0,
+    margin: Number(form.value.margin) || 0,
+    stock: Number(form.value.stock) || 0,
+    unit: unitValue,
+    base_unit: baseUnitValue,
+    expires_at: isExpiryRequired.value ? form.value.expires_at : "",
+    description: form.value.description || "",
   };
+
+  console.log("Submitting payload:", payload); // Debug log
   emit("submit", payload);
 };
 
