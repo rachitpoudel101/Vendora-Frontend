@@ -243,7 +243,7 @@
                       </button>
                     </div>
 
-                    <!-- Item Selection -->
+                    <!-- Item Selection with Search -->
                     <div class="space-y-3">
                       <div>
                         <label
@@ -251,22 +251,75 @@
                           >Product</label
                         >
                         <div class="flex space-x-2">
-                          <select
-                            v-model="item.product_id"
-                            class="flex-1 border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            @change="updateItemPrice(index)"
-                          >
-                            <option value="">Select Item</option>
-                            <option
-                              v-for="product in products"
-                              :key="product.id"
-                              :value="product.id"
+                          <!-- Hybrid Search + Dropdown -->
+                          <div class="flex-1 relative">
+                            <!-- Search Input -->
+                            <div class="relative">
+                              <input
+                                v-model="item.searchQuery"
+                                @input="filterProducts(index)"
+                                @focus="openDropdown(index)"
+                                @blur="handleBlur(index)"
+                                type="text"
+                                placeholder="Search or select product..."
+                                class="w-full border border-gray-300 rounded-md px-3 py-2 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              />
+                              <!-- Dropdown Toggle Icon -->
+                              <button
+                                @mousedown.prevent="toggleDropdown(index)"
+                                class="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                              >
+                                <svg
+                                  class="w-4 h-4"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M19 9l-7 7-7-7"
+                                  />
+                                </svg>
+                              </button>
+                            </div>
+                            <!-- Dropdown List -->
+                            <div
+                              v-if="item.showDropdown"
+                              class="absolute z-50 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-48 overflow-y-auto"
                             >
-                              {{ product.name }}
-                            </option>
-                          </select>
+                              <div
+                                v-if="item.filteredProducts.length === 0"
+                                class="px-3 py-2 text-sm text-gray-500 text-center"
+                              >
+                                No products found
+                              </div>
+                              <div
+                                v-for="product in item.filteredProducts"
+                                :key="product.id"
+                                @mousedown.prevent="
+                                  selectProduct(index, product)
+                                "
+                                class="px-3 py-2 hover:bg-blue-50 cursor-pointer text-sm border-b border-gray-100 last:border-b-0"
+                              >
+                                <div class="font-medium text-gray-900">
+                                  {{ product.name }}
+                                </div>
+                                <div class="text-xs text-gray-500">
+                                  Stock: {{ product.stock }} | Price: Rs.
+                                  {{
+                                    (
+                                      Number(product.cost_price) +
+                                      Number(product.margin || 0)
+                                    ).toFixed(2)
+                                  }}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
                           <button
-                            class="w-8 h-8 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors flex items-center justify-center"
+                            class="w-8 h-8 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors flex items-center justify-center flex-shrink-0"
                             @click="addItem(index)"
                             title="Add new item"
                           >
@@ -490,24 +543,103 @@
                       </td>
                       <td class="px-4 py-3">
                         <div class="flex items-center space-x-2">
-                          <select
-                            :ref="`itemSelect${index}`"
-                            v-model="item.product_id"
-                            class="flex-1 border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                            @change="updateItemPrice(index)"
-                            @keydown.enter="focusNext"
-                          >
-                            <option value="">Select Item</option>
-                            <option
-                              v-for="product in products"
-                              :key="product.id"
-                              :value="product.id"
+                          <!-- Hybrid Search + Dropdown for Desktop -->
+                          <div class="flex-1 relative">
+                            <!-- Search Input -->
+                            <div class="relative">
+                              <input
+                                :ref="`itemSearch${index}`"
+                                v-model="item.searchQuery"
+                                @input="filterProducts(index)"
+                                @focus="openDropdown(index)"
+                                @blur="handleBlur(index)"
+                                @keydown.enter.prevent="
+                                  selectFirstProduct(index)
+                                "
+                                @keydown.down.prevent="
+                                  navigateDropdown(index, 1)
+                                "
+                                @keydown.up.prevent="
+                                  navigateDropdown(index, -1)
+                                "
+                                @keydown.tab="handleTabKey(index, $event)"
+                                type="text"
+                                placeholder="Search or select product..."
+                                class="w-full border border-gray-300 rounded-md px-3 py-2 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                              />
+                              <!-- Dropdown Toggle Icon -->
+                              <button
+                                @mousedown.prevent="toggleDropdown(index)"
+                                class="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                                tabindex="-1"
+                              >
+                                <svg
+                                  class="w-4 h-4 transition-transform"
+                                  :class="{ 'rotate-180': item.showDropdown }"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M19 9l-7 7-7-7"
+                                  />
+                                </svg>
+                              </button>
+                            </div>
+                            <!-- Dropdown List -->
+                            <div
+                              v-if="item.showDropdown"
+                              class="absolute z-50 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-y-auto"
                             >
-                              {{ product.name }}
-                            </option>
-                          </select>
+                              <div
+                                v-if="item.filteredProducts.length === 0"
+                                class="px-3 py-2 text-sm text-gray-500 text-center"
+                              >
+                                No products found
+                              </div>
+                              <div
+                                v-for="(
+                                  product, pIndex
+                                ) in item.filteredProducts"
+                                :key="product.id"
+                                @mousedown.prevent="
+                                  selectProduct(index, product)
+                                "
+                                @mouseenter="
+                                  item.selectedDropdownIndex = pIndex
+                                "
+                                :class="[
+                                  'px-3 py-2 cursor-pointer text-sm border-b border-gray-100 last:border-b-0 transition-colors',
+                                  item.selectedDropdownIndex === pIndex
+                                    ? 'bg-blue-100'
+                                    : 'hover:bg-blue-50',
+                                ]"
+                              >
+                                <div class="font-medium text-gray-900">
+                                  {{ product.name }}
+                                </div>
+                                <div
+                                  class="text-xs text-gray-500 flex justify-between"
+                                >
+                                  <span>Stock: {{ product.stock }}</span>
+                                  <span
+                                    >Price: Rs.
+                                    {{
+                                      (
+                                        Number(product.cost_price) +
+                                        Number(product.margin || 0)
+                                      ).toFixed(2)
+                                    }}</span
+                                  >
+                                </div>
+                              </div>
+                            </div>
+                          </div>
                           <button
-                            class="w-8 h-8 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors flex items-center justify-center"
+                            class="w-8 h-8 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors flex items-center justify-center flex-shrink-0"
                             @click="addItem(index)"
                             title="Add new item"
                           >
@@ -856,16 +988,136 @@ const unitLabel = computed(() => {
   return uniqueUnits.length === 1 ? uniqueUnits[0] : "Mixed";
 });
 
-// Watch for product selection and update price accordingly
-const updateItemPrice = (index) => {
+// Filter products based on search query
+const filterProducts = (index) => {
   const item = items.value[index];
-  if (item.product_id) {
-    item.price = getProductPrice(item.product_id);
-    calculateRow(index);
+  const query = item.searchQuery.toLowerCase().trim();
+
+  if (!query) {
+    item.filteredProducts = [...products.value];
+  } else {
+    item.filteredProducts = products.value.filter(
+      (product) =>
+        product.name.toLowerCase().includes(query) ||
+        (product.batch_number &&
+          product.batch_number.toLowerCase().includes(query)) ||
+        (product.serial_number &&
+          product.serial_number.toLowerCase().includes(query)) ||
+        (product.code && product.code.toLowerCase().includes(query)) ||
+        (product.category_name &&
+          product.category_name.toLowerCase().includes(query)),
+    );
+  }
+  item.selectedDropdownIndex = -1;
+};
+
+// Open dropdown
+const openDropdown = (index) => {
+  const item = items.value[index];
+  if (!item.filteredProducts || item.filteredProducts.length === 0) {
+    item.filteredProducts = [...products.value];
+  }
+  item.showDropdown = true;
+};
+
+// Toggle dropdown
+const toggleDropdown = (index) => {
+  const item = items.value[index];
+  if (item.showDropdown) {
+    item.showDropdown = false;
+  } else {
+    if (!item.filteredProducts || item.filteredProducts.length === 0) {
+      item.filteredProducts = [...products.value];
+    }
+    item.showDropdown = true;
   }
 };
 
-// Items data
+// Select a product from dropdown
+const selectProduct = (index, product) => {
+  const item = items.value[index];
+  item.product_id = product.id;
+  item.searchQuery = product.name;
+  item.showDropdown = false;
+  item.price = getProductPrice(product.id);
+  item.selectedDropdownIndex = -1;
+  calculateRow(index);
+
+  // Focus on quantity input after selection
+  nextTick(() => {
+    const qtyInputs = document.querySelectorAll(`[ref^="qtyInput"]`);
+    if (qtyInputs[index]) {
+      qtyInputs[index].focus();
+    }
+  });
+};
+
+// Handle blur event with delay for dropdown selection
+const handleBlur = (index) => {
+  setTimeout(() => {
+    items.value[index].showDropdown = false;
+    items.value[index].selectedDropdownIndex = -1;
+  }, 200);
+};
+
+// Handle tab key to prevent closing dropdown
+const handleTabKey = (index, event) => {
+  const item = items.value[index];
+  if (item.showDropdown && item.filteredProducts.length > 0) {
+    // If dropdown is open and has products, close it and allow tab
+    item.showDropdown = false;
+  }
+};
+
+// Select first/highlighted product from filtered list on Enter
+const selectFirstProduct = (index) => {
+  const item = items.value[index];
+  if (item.filteredProducts.length > 0) {
+    const selectedIndex =
+      item.selectedDropdownIndex >= 0 ? item.selectedDropdownIndex : 0;
+    selectProduct(index, item.filteredProducts[selectedIndex]);
+  }
+};
+
+// Navigate dropdown with arrow keys
+const navigateDropdown = (index, direction) => {
+  const item = items.value[index];
+
+  // Open dropdown if closed
+  if (!item.showDropdown) {
+    openDropdown(index);
+    return;
+  }
+
+  if (item.filteredProducts.length === 0) return;
+
+  const maxIndex = item.filteredProducts.length - 1;
+  let newIndex = item.selectedDropdownIndex + direction;
+
+  // Wrap around
+  if (newIndex < 0) newIndex = 0;
+  if (newIndex > maxIndex) newIndex = maxIndex;
+
+  item.selectedDropdownIndex = newIndex;
+
+  // Scroll to selected item
+  nextTick(() => {
+    const dropdown = document.querySelector(
+      `[ref="itemSearch${index}"]`,
+    )?.nextElementSibling;
+    if (dropdown) {
+      const selectedElement = dropdown.children[newIndex];
+      if (selectedElement) {
+        selectedElement.scrollIntoView({
+          block: "nearest",
+          behavior: "smooth",
+        });
+      }
+    }
+  });
+};
+
+// Items data with search functionality
 const items = ref([
   {
     product_id: "",
@@ -874,11 +1126,15 @@ const items = ref([
     discountPercent: 0,
     discountCheckbox: false,
     discountAmount: 0,
-    vatPercent: 13, // Default VAT percentage
+    vatPercent: 13,
     vatCheckbox: false,
     vatAmount: 0,
     totalPrice: 0,
     description: "",
+    searchQuery: "",
+    showDropdown: false,
+    filteredProducts: [...products.value],
+    selectedDropdownIndex: -1,
   },
 ]);
 
@@ -890,11 +1146,25 @@ const addItem = (index) => {
     discountPercent: 0,
     discountCheckbox: false,
     discountAmount: 0,
-    vatPercent: 13, // Default VAT percentage
+    vatPercent: 13,
     vatCheckbox: false,
     vatAmount: 0,
     totalPrice: 0,
     description: "",
+    searchQuery: "",
+    showDropdown: false,
+    filteredProducts: [...products.value],
+    selectedDropdownIndex: -1,
+  });
+
+  // Focus on the new item's search input
+  nextTick(() => {
+    const newItemSearch = document.querySelector(
+      `[ref="itemSearch${index + 1}"]`,
+    );
+    if (newItemSearch) {
+      newItemSearch.focus();
+    }
   });
 };
 
@@ -1155,69 +1425,33 @@ textarea:focus {
     width: 4px;
   }
 }
-</style>
-<style scoped>
-/* Custom scrollbar for webkit browsers */
-.overflow-x-auto::-webkit-scrollbar {
-  height: 6px;
+
+/* Dropdown scrollbar styling */
+.overflow-y-auto::-webkit-scrollbar {
+  width: 6px;
 }
 
-.overflow-x-auto::-webkit-scrollbar-track {
+.overflow-y-auto::-webkit-scrollbar-track {
   background: #f1f5f9;
   border-radius: 3px;
 }
 
-.overflow-x-auto::-webkit-scrollbar-thumb {
+.overflow-y-auto::-webkit-scrollbar-thumb {
   background: #cbd5e1;
   border-radius: 3px;
 }
 
-.overflow-x-auto::-webkit-scrollbar-thumb:hover {
+.overflow-y-auto::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
 }
 
-/* Hide number input spinners */
-.no-spinner::-webkit-outer-spin-button,
-.no-spinner::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
+/* Rotate animation for dropdown icon */
+.rotate-180 {
+  transform: rotate(180deg);
 }
 
-.no-spinner[type="number"] {
-  -moz-appearance: textfield;
-}
-
-/* Smooth transitions */
-* {
-  transition: all 0.2s ease-in-out;
-}
-
-/* Focus styles */
-input:focus,
-select:focus,
-textarea:focus {
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-}
-
-/* Enhanced mobile responsiveness */
-@media (max-width: 640px) {
-  .max-w-7xl {
-    max-width: calc(100vw - 1rem);
-  }
-
-  .max-h-\[95vh\] {
-    max-height: 95vh;
-  }
-}
-
-/* Improved scrollbar for mobile */
-@media (max-width: 768px) {
-  .overflow-x-auto::-webkit-scrollbar {
-    height: 4px;
-  }
-
-  .overflow-y-auto::-webkit-scrollbar {
-    width: 4px;
-  }
+/* Smooth scrolling for dropdown */
+.overflow-y-auto {
+  scroll-behavior: smooth;
 }
 </style>

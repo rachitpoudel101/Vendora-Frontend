@@ -36,7 +36,23 @@
                 <label class="block text-sm font-medium text-gray-700 mb-2"
                   >Category *</label
                 >
+                <div v-if="hasNoCategories" class="space-y-2">
+                  <div
+                    class="w-full px-4 py-3 border border-gray-300 rounded-xl bg-gray-50 text-gray-500 flex items-center justify-between"
+                  >
+                    <span>No categories available</span>
+                  </div>
+                  <button
+                    type="button"
+                    @click="$emit('add-category')"
+                    class="w-full px-4 py-3 bg-green-600 text-white rounded-xl font-medium hover:bg-green-700 transition-colors duration-150 flex items-center justify-center"
+                  >
+                    <span class="material-icons text-20 mr-2">add</span>
+                    Add Category
+                  </button>
+                </div>
                 <select
+                  v-else
                   v-model="form.category"
                   required
                   class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-150"
@@ -260,6 +276,7 @@ const props = defineProps<Props>();
 const emit = defineEmits<{
   close: [];
   submit: [form: CreateProductForm];
+  "add-category": [];
 }>();
 
 const form = ref<CreateProductForm>({
@@ -289,6 +306,10 @@ const selectedCategory = computed((): Category | null => {
 
 const isExpiryRequired = computed(() => {
   return selectedCategory.value?.is_expired_applicable || false;
+});
+
+const hasNoCategories = computed(() => {
+  return props.categories.length === 0;
 });
 
 // Keep base_unit in sync with selected unit id
@@ -340,6 +361,10 @@ watch(
 
 .text-16 {
   font-size: 16px;
+}
+
+.text-20 {
+  font-size: 20px;
 }
 
 .modal-fade-enter-active,

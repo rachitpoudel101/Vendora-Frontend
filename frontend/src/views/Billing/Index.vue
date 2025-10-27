@@ -53,8 +53,105 @@
           <div
             class="bg-white rounded-xl md:rounded-2xl shadow-sm border border-gray-200 flex-1 flex flex-col overflow-hidden min-h-0"
           >
+            <!-- Filter Section -->
+            <div class="p-4 border-b border-gray-200 flex-shrink-0">
+              <div class="flex flex-col md:flex-row gap-3">
+                <!-- Search Bar -->
+                <div class="flex-1">
+                  <div class="relative">
+                    <span
+                      class="material-icons absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-18"
+                    >
+                      search
+                    </span>
+                    <input
+                      v-model="searchQuery"
+                      type="text"
+                      placeholder="Search by customer name..."
+                      class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                    />
+                  </div>
+                </div>
+
+                <!-- Payment Method Filter -->
+                <div class="w-full md:w-48">
+                  <select
+                    v-model="selectedPaymentFilter"
+                    class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                  >
+                    <option value="">All Payments</option>
+                    <option value="cash">Cash</option>
+                    <option value="card">Card</option>
+                    <option value="online">Online</option>
+                  </select>
+                </div>
+
+                <!-- Date Range Filter -->
+                <div class="w-full md:w-48">
+                  <input
+                    v-model="dateFrom"
+                    type="date"
+                    placeholder="From Date"
+                    class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                  />
+                </div>
+                <div class="w-full md:w-48">
+                  <input
+                    v-model="dateTo"
+                    type="date"
+                    placeholder="To Date"
+                    class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                  />
+                </div>
+
+                <!-- Clear Filters Button -->
+                <button
+                  v-if="
+                    searchQuery || selectedPaymentFilter || dateFrom || dateTo
+                  "
+                  @click="clearFilters"
+                  class="px-4 py-2.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors whitespace-nowrap"
+                >
+                  <span class="flex items-center">
+                    <span class="material-icons text-18 mr-1">clear</span>
+                    Clear
+                  </span>
+                </button>
+              </div>
+
+              <!-- Results Count -->
+              <div class="mt-3 text-sm text-gray-600">
+                Showing {{ filteredBills.length }} of {{ bills.length }} bills
+              </div>
+            </div>
+
+            <!-- No Results Message -->
+            <div
+              v-if="filteredBills.length === 0"
+              class="flex items-center justify-center flex-1"
+            >
+              <div class="text-center py-12">
+                <div
+                  class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4"
+                >
+                  <span class="material-icons text-48 text-gray-300">
+                    search_off
+                  </span>
+                </div>
+                <p class="text-lg font-semibold text-gray-900 mb-1">
+                  No bills found
+                </p>
+                <p class="text-sm text-gray-500">
+                  Try adjusting your filters or create a new bill
+                </p>
+              </div>
+            </div>
+
             <!-- Mobile Cards View -->
-            <div class="block md:hidden flex-1 overflow-y-auto p-4 space-y-4">
+            <div
+              v-else
+              class="block md:hidden flex-1 overflow-y-auto p-4 space-y-4"
+            >
               <div
                 v-for="(b, index) in paginatedBills"
                 :key="b.id"
@@ -112,7 +209,10 @@
             </div>
 
             <!-- Desktop Table View -->
-            <div class="hidden md:block flex-1 overflow-auto">
+            <div
+              v-if="filteredBills.length > 0"
+              class="hidden md:block flex-1 overflow-auto"
+            >
               <table
                 class="w-full divide-y divide-gray-200 text-sm min-w-[800px]"
               >
@@ -255,6 +355,7 @@
 
             <!-- Mobile Pagination -->
             <div
+              v-if="filteredBills.length > 0"
               class="block md:hidden bg-gradient-to-r from-gray-50 to-white px-4 py-3 border-t border-gray-200"
             >
               <div class="flex justify-between items-center">
@@ -280,7 +381,7 @@
 
             <!-- Desktop Pagination -->
             <div
-              v-if="totalPages > 1"
+              v-if="totalPages > 1 && filteredBills.length > 0"
               class="hidden md:block bg-gradient-to-r from-gray-50 to-white px-6 py-4 border-t border-gray-200 flex-shrink-0"
             >
               <div
@@ -347,7 +448,6 @@ import { useAuthStore } from "@/stores/auth";
 import create from "@/components/Bill/CreateBillModel.vue";
 import printBill from "@/components/Bill/PrintBill.vue";
 import { useBillsStore } from "@/stores/billsAPI";
-// Removed - using inventoryStore instead
 import { useToast } from "vue-toast-notification";
 import { useInventoryStore } from "@/stores/InventoryAPI";
 
@@ -375,8 +475,12 @@ const bills = computed(() => billsStore.bills);
 const products = ref<any[]>([]);
 const productMap = ref<Record<string, string>>({});
 const userMap = ref<Record<string, string>>({});
-// const loading = computed(() => billsStore.loading);
-// const error = computed(() => billsStore.error);
+
+// Filter state
+const searchQuery = ref("");
+const selectedPaymentFilter = ref("");
+const dateFrom = ref("");
+const dateTo = ref("");
 
 // Create user map for username lookup
 const createUserMap = () => {
@@ -434,15 +538,60 @@ const createUserMap = () => {
   }
 };
 
+// Filtered bills based on search and filters
+const filteredBills = computed(() => {
+  let filtered = [...bills.value];
+
+  // Search filter - searches by customer name
+  if (searchQuery.value.trim()) {
+    const query = searchQuery.value.toLowerCase();
+    filtered = filtered.filter((bill) =>
+      bill.customer_Name?.toLowerCase().includes(query),
+    );
+  }
+
+  // Payment method filter
+  if (selectedPaymentFilter.value) {
+    filtered = filtered.filter(
+      (bill) =>
+        bill.payment_method?.toLowerCase() ===
+        selectedPaymentFilter.value.toLowerCase(),
+    );
+  }
+
+  // Date range filter
+  if (dateFrom.value) {
+    filtered = filtered.filter((bill) => {
+      const billDate = new Date(bill.date);
+      const fromDate = new Date(dateFrom.value);
+      return billDate >= fromDate;
+    });
+  }
+
+  if (dateTo.value) {
+    filtered = filtered.filter((bill) => {
+      const billDate = new Date(bill.date);
+      const toDate = new Date(dateTo.value);
+      toDate.setHours(23, 59, 59, 999); // Include the entire day
+      return billDate <= toDate;
+    });
+  }
+
+  return filtered;
+});
+
 // Pagination state
 const pageSize = 10;
 const currentPage = ref(1);
 
 const paginatedBills = computed(() => {
   const start = (currentPage.value - 1) * pageSize;
-  return bills.value.slice(start, start + pageSize);
+  return filteredBills.value.slice(start, start + pageSize);
 });
-const totalPages = computed(() => Math.ceil(bills.value.length / pageSize));
+
+const totalPages = computed(() =>
+  Math.ceil(filteredBills.value.length / pageSize),
+);
 
 // Pagination pages logic
 const paginationPages = computed(() => {
@@ -477,6 +626,11 @@ const paginationPages = computed(() => {
   return pages;
 });
 
+// Reset to first page when filters change
+watch([searchQuery, selectedPaymentFilter, dateFrom, dateTo], () => {
+  currentPage.value = 1;
+});
+
 // Reset to first page when bills change
 watch(bills, () => {
   currentPage.value = 1;
@@ -509,6 +663,14 @@ function nextPage() {
   }
 }
 
+function clearFilters() {
+  searchQuery.value = "";
+  selectedPaymentFilter.value = "";
+  dateFrom.value = "";
+  dateTo.value = "";
+  currentPage.value = 1;
+}
+
 const showPrintModal = ref(false);
 const selectedBill = ref(null);
 
@@ -519,6 +681,30 @@ function openPrintModal(bill: any) {
 </script>
 
 <style scoped>
+@import url("https://fonts.googleapis.com/icon?family=Material+Icons");
+
+.text-18 {
+  font-size: 18px;
+}
+
+.text-48 {
+  font-size: 48px;
+}
+
+.material-icons {
+  font-family: "Material Icons";
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+}
+
 /* Unified scrollbar for billing */
 .overflow-auto::-webkit-scrollbar,
 .overflow-y-auto::-webkit-scrollbar,

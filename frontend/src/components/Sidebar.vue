@@ -76,7 +76,10 @@
     </div>
 
     <!-- Navigation -->
-    <nav class="flex flex-col gap-1 p-4 flex-1 overflow-y-auto pt-4 md:pt-0">
+    <nav
+      class="flex flex-col gap-1 p-4 flex-1 overflow-y-auto pt-4 md:pt-0"
+      id="nav"
+    >
       <router-link
         v-for="item in navItems"
         :key="item.path"

@@ -114,6 +114,80 @@
             <div class="flex-1 overflow-hidden">
               <!-- Products Tab -->
               <div v-if="tab === 'products'" class="h-full flex flex-col">
+                <!-- Filter Section -->
+                <div class="p-4 border-b border-gray-200 flex-shrink-0">
+                  <div class="flex flex-col md:flex-row gap-3">
+                    <!-- Search Bar -->
+                    <div class="flex-1">
+                      <div class="relative">
+                        <span
+                          class="material-icons absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                        >
+                          search
+                        </span>
+                        <input
+                          v-model="searchQuery"
+                          type="text"
+                          placeholder="Search products..."
+                          class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                        />
+                      </div>
+                    </div>
+
+                    <!-- Category Filter -->
+                    <div class="w-full md:w-64">
+                      <select
+                        v-model="selectedCategoryFilter"
+                        class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                      >
+                        <option value="">All Categories</option>
+                        <option
+                          v-for="cat in categories"
+                          :key="cat.id"
+                          :value="cat.id"
+                        >
+                          {{ cat.name }}
+                        </option>
+                      </select>
+                    </div>
+
+                    <!-- Stock Level Filter -->
+                    <div class="w-full md:w-48">
+                      <select
+                        v-model="selectedStockFilter"
+                        class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                      >
+                        <option value="">All Stock Levels</option>
+                        <option value="in-stock">In Stock</option>
+                        <option value="low">Low Stock</option>
+                        <option value="critical">Critical</option>
+                      </select>
+                    </div>
+
+                    <!-- Clear Filters Button -->
+                    <button
+                      v-if="
+                        searchQuery ||
+                        selectedCategoryFilter ||
+                        selectedStockFilter
+                      "
+                      @click="clearFilters"
+                      class="px-4 py-2.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors whitespace-nowrap"
+                    >
+                      <span class="flex items-center">
+                        <span class="material-icons text-18 mr-1">clear</span>
+                        Clear
+                      </span>
+                    </button>
+                  </div>
+
+                  <!-- Results Count -->
+                  <div class="mt-3 text-sm text-gray-600">
+                    Showing {{ filteredProducts.length }} of
+                    {{ products.length }} products
+                  </div>
+                </div>
+
                 <!-- Loading State -->
                 <div
                   v-if="loading"
@@ -129,7 +203,27 @@
                   </div>
                 </div>
 
-                <!-- Products Content when not loading -->
+                <!-- No Results Message -->
+                <div
+                  v-else-if="filteredProducts.length === 0"
+                  class="flex items-center justify-center flex-1"
+                >
+                  <div class="text-center py-12">
+                    <span
+                      class="material-icons text-64 text-gray-300 mb-4 block"
+                    >
+                      search_off
+                    </span>
+                    <p class="text-gray-500 text-lg font-medium">
+                      No products found
+                    </p>
+                    <p class="text-gray-400 text-sm mt-1">
+                      Try adjusting your filters
+                    </p>
+                  </div>
+                </div>
+
+                <!-- Products Content when not loading and has results -->
                 <div v-else class="h-full flex flex-col">
                   <!-- Mobile Cards View for Products -->
                   <div
@@ -451,10 +545,10 @@
                           {{
                             Math.min(
                               currentPage * itemsPerPage,
-                              products.length,
+                              filteredProducts.length,
                             )
                           }}
-                          of {{ products.length }} results
+                          of {{ filteredProducts.length }} results
                         </div>
                         <div class="flex items-center space-x-2">
                           <button
@@ -937,7 +1031,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, computed } from "vue";
+import { onMounted, ref, computed, watch } from "vue";
 import Sidebar from "@/components/Sidebar.vue";
 import Navbar from "@/components/Navbar.vue";
 import StocksCreateModal from "@/components/Stocks/StocksCreateModal.vue";
@@ -1030,13 +1124,59 @@ interface EditCategoryForm {
 
 const currentPage = ref(1);
 const itemsPerPage = ref(8);
+const searchQuery = ref("");
+const selectedCategoryFilter = ref<number | string>("");
+const selectedStockFilter = ref<string>("");
+
 const totalPages = computed(() =>
-  Math.ceil(products.value.length / itemsPerPage.value),
+  Math.ceil(filteredProducts.value.length / itemsPerPage.value),
 );
+
+const filteredProducts = computed(() => {
+  let filtered = [...products.value];
+
+  // Search filter - searches in name, supplier name, batch number, and category name
+  if (searchQuery.value.trim()) {
+    const query = searchQuery.value.toLowerCase();
+    filtered = filtered.filter(
+      (product) =>
+        product.name.toLowerCase().includes(query) ||
+        (product.supliers_name &&
+          product.supliers_name.toLowerCase().includes(query)) ||
+        (product.batch_number &&
+          product.batch_number.toLowerCase().includes(query)) ||
+        (product.category_name &&
+          product.category_name.toLowerCase().includes(query)),
+    );
+  }
+
+  // Category filter
+  if (selectedCategoryFilter.value) {
+    filtered = filtered.filter(
+      (product) => product.category === Number(selectedCategoryFilter.value),
+    );
+  }
+
+  // Stock level filter
+  if (selectedStockFilter.value) {
+    filtered = filtered.filter((product) => {
+      if (selectedStockFilter.value === "in-stock") {
+        return product.stock > 10;
+      } else if (selectedStockFilter.value === "low") {
+        return product.stock > 5 && product.stock <= 10;
+      } else if (selectedStockFilter.value === "critical") {
+        return product.stock <= 5;
+      }
+      return true;
+    });
+  }
+
+  return filtered;
+});
 
 const paginatedStocks = computed(() => {
   const start = (currentPage.value - 1) * itemsPerPage.value;
-  return products.value.slice(start, start + itemsPerPage.value);
+  return filteredProducts.value.slice(start, start + itemsPerPage.value);
 });
 
 function goToPage(page: number) {
@@ -1512,6 +1652,13 @@ function handleCreateCategoryClick() {
   showCreateCategoryModal.value = true;
 }
 
+function clearFilters() {
+  searchQuery.value = "";
+  selectedCategoryFilter.value = "";
+  selectedStockFilter.value = "";
+  currentPage.value = 1;
+}
+
 onMounted(async () => {
   if (!auth.user) {
     await auth.self();
@@ -1526,6 +1673,11 @@ onMounted(async () => {
   // Add event listeners for better UX
   document.addEventListener("click", handleClickOutside);
   document.addEventListener("keydown", handleKeyDown);
+});
+
+// Watch for filter changes and reset to page 1
+watch([searchQuery, selectedCategoryFilter, selectedStockFilter], () => {
+  currentPage.value = 1;
 });
 </script>
 
@@ -1543,6 +1695,9 @@ onMounted(async () => {
 }
 .text-12 {
   font-size: 12px;
+}
+.text-64 {
+  font-size: 64px;
 }
 
 /* Unit dropdown styling */
