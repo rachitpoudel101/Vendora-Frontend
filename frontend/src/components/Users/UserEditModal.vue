@@ -211,8 +211,6 @@ const newPassword = ref("");
 const confirmPassword = ref("");
 const passwordError = ref("");
 const loading = computed(() => usersStore.loading);
-const error = computed(() => usersStore.error);
-const roles = computed(() => usersStore.roles);
 
 // Watch for userId when modal opens
 watch(

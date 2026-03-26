@@ -122,7 +122,7 @@ const allNavItems = [
 const navItems = computed(() => {
   const isSuperAdmin = auth.user?.role === "superadmin";
   const isStaff = auth.user?.role === "staff";
-  
+
   return allNavItems.filter((item) => {
     // Hide staff-only items from staff users
     if (isStaff && item.adminOnly) {

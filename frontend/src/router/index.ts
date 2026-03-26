@@ -58,13 +58,13 @@ const router = createRouter({
 });
 
 // Route guard to check permissions
-router.beforeEach(async (to, from, next) => {
+router.beforeEach((to, _from, next) => {
   const authStore = useAuthStore();
 
   // Check if route requires superadmin
   if (to.meta.requiresSuperAdmin) {
     const isSuperAdmin = authStore.user?.role === "superadmin";
-    
+
     if (!isSuperAdmin) {
       // Redirect to dashboard if not superadmin
       next({ name: "Dashboard" });
