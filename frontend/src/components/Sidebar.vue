@@ -116,14 +116,24 @@ const allNavItems = [
     icon: "⚙️",
     adminOnly: true,
   },
-  { label: "Tenants", path: "/tenants", icon: "🏢", adminOnly: true },
+  { label: "Tenants", path: "/tenants", icon: "🏢", superAdminOnly: true },
 ];
 
 const navItems = computed(() => {
-  if (auth.user?.role === "staff") {
-    return allNavItems.filter((item) => !item.adminOnly);
-  }
-  return allNavItems;
+  const isSuperAdmin = auth.user?.role === "superadmin";
+  const isStaff = auth.user?.role === "staff";
+  
+  return allNavItems.filter((item) => {
+    // Hide staff-only items from staff users
+    if (isStaff && item.adminOnly) {
+      return false;
+    }
+    // Hide superadmin-only items from non-superadmins
+    if (item.superAdminOnly && !isSuperAdmin) {
+      return false;
+    }
+    return true;
+  });
 });
 
 // Expose for direct access

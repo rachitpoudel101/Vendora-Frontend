@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
+import { useAuthStore } from "@/stores/auth";
 
 const routes = [
   {
@@ -47,13 +48,31 @@ const routes = [
     path: "/tenants",
     name: "Tenants",
     component: () => import("@/views/Tenants/index.vue"),
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, requiresSuperAdmin: true },
   },
 ];
 
 const router = createRouter({
   history: createWebHistory(),
   routes,
+});
+
+// Route guard to check permissions
+router.beforeEach(async (to, from, next) => {
+  const authStore = useAuthStore();
+
+  // Check if route requires superadmin
+  if (to.meta.requiresSuperAdmin) {
+    const isSuperAdmin = authStore.user?.role === "superadmin";
+    
+    if (!isSuperAdmin) {
+      // Redirect to dashboard if not superadmin
+      next({ name: "Dashboard" });
+      return;
+    }
+  }
+
+  next();
 });
 
 export default router;
