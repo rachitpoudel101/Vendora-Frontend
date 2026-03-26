@@ -592,15 +592,6 @@
               class="modal-overlay"
             />
           </transition>
-          <transition name="modal-fade">
-            <ChangePasswordModal
-              v-if="showPasswordModal"
-              :show="showPasswordModal"
-              :userId="selectedUserId"
-              @close="closePasswordModal"
-              class="modal-overlay"
-            />
-          </transition>
         </div>
       </main>
     </div>
@@ -625,7 +616,6 @@ const usersStore = useUsersStore();
 const showModal = ref(false);
 const selectedUserId = ref(null);
 const showRoleEditModal = ref(false);
-const showPasswordModal = ref(false);
 const dropdownOpen = ref(null);
 const currentPage = ref(1);
 const pageSize = 8;
@@ -768,12 +758,8 @@ const canChangePassword = (user) => {
 
 const handleChangePassword = (userId) => {
   selectedUserId.value = userId;
-  showPasswordModal.value = true;
+  showModal.value = true;
   dropdownOpen.value = null;
-};
-
-const closePasswordModal = () => {
-  showPasswordModal.value = false;
 };
 
 const previousPage = () => {

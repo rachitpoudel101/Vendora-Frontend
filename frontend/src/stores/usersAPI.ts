@@ -119,7 +119,16 @@ export const useUsersStore = defineStore("users", {
       this.error = null;
       try {
         const token = getToken();
-        const res = await axios.patch(UserApi.getUser(id), updates, {
+        // Filter out empty strings but keep other falsy values like 0 or false
+        const cleanUpdates = Object.fromEntries(
+          Object.entries(updates).filter(
+            ([_, v]) => v !== undefined && v !== null && v !== "",
+          ),
+        );
+
+        console.log("Clean updates being sent:", cleanUpdates);
+
+        const res = await axios.patch(UserApi.getUser(id), cleanUpdates, {
           headers: {
             "Content-Type": "application/json",
             Authorization: token ? `Bearer ${token}` : "",
@@ -131,10 +140,35 @@ export const useUsersStore = defineStore("users", {
         }
         return res.data;
       } catch (err: any) {
-        this.error =
-          err.response?.data?.detail || `Failed to update user with id ${id}`;
+        // Extract detailed error messages from backend validation errors
+        let errorMessage = `Failed to update user with id ${id}`;
+        const errorData = err.response?.data;
+
+        if (errorData) {
+          if (typeof errorData === "object") {
+            // Handle field-level validation errors
+            const fieldErrors = Object.entries(errorData)
+              .map(([field, messages]: [string, any]) => {
+                if (Array.isArray(messages)) {
+                  return `${field}: ${messages.join(", ")}`;
+                }
+                return `${field}: ${messages}`;
+              })
+              .join("; ");
+
+            if (fieldErrors) {
+              errorMessage = fieldErrors;
+            }
+          } else if (errorData.detail) {
+            errorMessage = errorData.detail;
+          }
+        }
+
+        this.error = errorMessage;
         console.error(`Error updating user with id ${id}:`, err);
-        throw new Error("Failed to update user");
+        console.error("Request payload:", updates);
+        console.error("Full error response:", err.response?.data);
+        throw new Error(errorMessage);
       } finally {
         this.loading = false;
       }

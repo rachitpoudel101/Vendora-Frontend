@@ -179,7 +179,7 @@
   </Modal>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, watch, computed } from "vue";
 import { useToast } from "vue-toast-notification";
 import Modal from "@/components/Modal.vue";
@@ -201,6 +201,12 @@ const userData = ref({
   username: "",
   email: "",
 });
+const originalUserData = ref({
+  first_name: "",
+  last_name: "",
+  username: "",
+  email: "",
+});
 const newPassword = ref("");
 const confirmPassword = ref("");
 const passwordError = ref("");
@@ -215,7 +221,9 @@ watch(
     if (props.show && newId) {
       usersStore.loading = true;
       try {
-        userData.value = await usersStore.fetchUserById(newId);
+        const fetchedUser = await usersStore.fetchUserById(newId);
+        userData.value = { ...fetchedUser };
+        originalUserData.value = { ...fetchedUser };
         newPassword.value = "";
         confirmPassword.value = "";
         passwordError.value = "";
@@ -255,17 +263,29 @@ async function handleUpdateUser() {
   }
 
   try {
-    const updateData = {
-      username: userData.value.username,
-      email: userData.value.email,
-      first_name: userData.value.first_name,
-      last_name: userData.value.last_name,
-    };
+    // Only include fields that have changed
+    const updateData: any = {};
+
+    if (userData.value.username !== originalUserData.value.username) {
+      updateData.username = userData.value.username;
+    }
+    if (userData.value.email !== originalUserData.value.email) {
+      updateData.email = userData.value.email;
+    }
+    if (userData.value.first_name !== originalUserData.value.first_name) {
+      updateData.first_name = userData.value.first_name;
+    }
+    if (userData.value.last_name !== originalUserData.value.last_name) {
+      updateData.last_name = userData.value.last_name;
+    }
 
     // Only include password if it's provided
     if (newPassword.value) {
       updateData.password = newPassword.value;
     }
+
+    console.log("Sending update data:", updateData);
+    console.log("User ID:", props.userId);
 
     await usersStore.updateUser(props.userId, updateData);
 
@@ -280,20 +300,18 @@ async function handleUpdateUser() {
   } catch (err) {
     console.error("Failed to update user:", err);
 
-    // Extract error message from response or fallback
+    // Extract error message - prioritize store error which now has detailed validation messages
     const errorMessage =
-      err.response?.data?.message ||
-      err.message ||
-      "Failed to update user. Try again.";
+      usersStore.error || err.message || "Failed to update user. Try again.";
 
     // ERROR TOAST with response error
     $toast.error(errorMessage, {
       position: "top-right",
-      duration: 3000,
+      duration: 5000,
       dismissible: true,
     });
 
-    emit("close");
+    // Don't close modal on error so user can fix and retry
   }
 }
 </script>
