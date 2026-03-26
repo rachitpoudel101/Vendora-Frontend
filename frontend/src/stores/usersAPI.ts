@@ -67,6 +67,7 @@ export const useUsersStore = defineStore("users", {
         first_name?: string;
         last_name?: string;
         password: string;
+        tenant?: number | null;
       },
       tokenOverride?: string,
     ) {
@@ -83,6 +84,7 @@ export const useUsersStore = defineStore("users", {
             first_name: user.first_name || "",
             last_name: user.last_name || "",
             password: user.password,
+            tenant: user.tenant || null,
           },
           {
             headers: {
@@ -229,6 +231,34 @@ export const useUsersStore = defineStore("users", {
           err.response?.data?.detail || `Failed to restore user with id ${id}`;
         console.error(`Error restoring user with id ${id}:`, err);
         throw new Error("Failed to restore user");
+      } finally {
+        this.loading = false;
+      }
+    },
+
+    async changePassword(password: string, userId?: number | string) {
+      this.loading = true;
+      this.error = null;
+      try {
+        const token = getToken();
+        const url = userId
+          ? UserApi.changePasswordUser(userId)
+          : UserApi.changePassword;
+        const res = await axios.post(
+          url,
+          { password },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: token ? `Bearer ${token}` : "",
+            },
+          },
+        );
+        return res.data;
+      } catch (err: any) {
+        this.error = err.response?.data?.error || "Failed to change password";
+        console.error("Error changing password:", err);
+        throw new Error("Failed to change password");
       } finally {
         this.loading = false;
       }

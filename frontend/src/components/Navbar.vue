@@ -78,6 +78,12 @@
               {{ user.username }}
             </div>
             <button
+              @click="handleChangePassword"
+              class="w-full text-left px-3 sm:px-4 py-2 text-gray-700 hover:bg-blue-50 font-medium text-sm sm:text-base"
+            >
+              Change Password
+            </button>
+            <button
               @click="handleLogout"
               class="w-full text-left px-3 sm:px-4 py-2 text-red-600 hover:bg-blue-50 font-medium text-sm sm:text-base"
             >
@@ -101,6 +107,12 @@
         >
           {{ user?.username || "User" }}
         </div>
+        <button
+          @click="handleChangePassword"
+          class="w-full text-left px-3 py-2 text-blue-200 hover:bg-blue-900 font-medium rounded transition mb-2"
+        >
+          Change Password
+        </button>
         <button
           @click="handleLogout"
           class="w-full text-left px-3 py-2 text-red-400 hover:bg-blue-900 font-medium rounded transition"
@@ -135,6 +147,7 @@ const mobileMenuOpen = ref(false);
 const dropdownRef = ref<HTMLElement | null>(null);
 const logoutMsg = ref("");
 const logoutMsgType = ref("text-green-600");
+const showPasswordModal = ref(false);
 
 function toggleDropdown() {
   dropdownOpen.value = !dropdownOpen.value;
@@ -161,6 +174,12 @@ onMounted(() => {
 onBeforeUnmount(() => {
   document.removeEventListener("mousedown", handleClickOutside);
 });
+
+function handleChangePassword() {
+  showPasswordModal.value = true;
+  dropdownOpen.value = false;
+  mobileMenuOpen.value = false;
+}
 
 async function handleLogout() {
   try {

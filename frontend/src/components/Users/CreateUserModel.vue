@@ -50,6 +50,16 @@
                 {{ r.charAt(0).toUpperCase() + r.slice(1) }}
               </option>
             </select>
+            <select
+              v-model="tenant"
+              class="w-full px-4 py-2 border rounded"
+              required
+            >
+              <option value="" disabled>Select Tenant</option>
+              <option v-for="t in availableTenants" :key="t.id" :value="t.id">
+                {{ t.name }}
+              </option>
+            </select>
             <button
               type="submit"
               class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
@@ -69,6 +79,7 @@ import { ref, computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { useUsersStore } from "@/stores/usersAPI";
 import { useAuthStore } from "@/stores/auth";
+import { useTenantsStore } from "@/stores/tenantsAPI";
 
 const username = ref("");
 const email = ref("");
@@ -76,23 +87,22 @@ const first_name = ref("");
 const last_name = ref("");
 const password = ref("");
 const role = ref("");
+const tenant = ref("");
 const router = useRouter();
 const authStore = useAuthStore();
 const usersStore = useUsersStore();
+const tenantsStore = useTenantsStore();
 
 const availableRoles = computed(() => {
-  if (authStore.user?.role === "superadmin") {
-    return ["admin", "staff"];
-  }
   if (authStore.user?.role === "admin") {
     return ["staff"];
   }
-  return ["staff"];
+  return ["admin", "staff"];
 });
 
-// const loading = computed(() => usersStore.loading);
-// const error = computed(() => usersStore.error);
-// const roles = computed(() => usersStore.roles);
+const availableTenants = computed(() => {
+  return tenantsStore.tenants;
+});
 
 async function onSubmit() {
   await usersStore.createUser(
@@ -103,6 +113,7 @@ async function onSubmit() {
       first_name: first_name.value,
       last_name: last_name.value,
       password: password.value,
+      tenant: tenant.value ? parseInt(tenant.value) : null,
     },
     authStore.token,
   );
@@ -111,5 +122,6 @@ async function onSubmit() {
 
 onMounted(async () => {
   await authStore.self();
+  await tenantsStore.fetchTenants();
 });
 </script>

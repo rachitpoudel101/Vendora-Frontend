@@ -79,7 +79,7 @@ watch(
   async (newId) => {
     if (props.show && newId) {
       try {
-        const response = await usersStore.getUser(newId);
+        const response = await usersStore.fetchUserById(newId);
         userRole.value = response.role;
       } finally {
       }
