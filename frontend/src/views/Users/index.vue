@@ -46,145 +46,175 @@
           <div
             class="bg-white rounded-xl md:rounded-2xl shadow-sm border border-gray-200 flex-1 flex flex-col overflow-hidden min-h-0"
           >
-            <!-- Mobile Cards View -->
-            <div class="block md:hidden flex-1 overflow-y-auto p-4 space-y-4">
-              <div
-                v-for="(user, idx) in displayUsers"
-                :key="user.id"
-                class="bg-white border border-gray-200 rounded-lg p-4 shadow-sm"
-              >
-                <div class="flex justify-between items-start mb-3">
-                  <div class="flex-1">
-                    <h3 class="font-semibold text-gray-900 text-lg">
-                      {{ user.first_name }} {{ user.last_name }}
-                    </h3>
-                    <p class="text-gray-600 text-sm">@{{ user.username }}</p>
-                  </div>
-                  <div class="relative dropdown-container">
-                    <!-- Mobile dropdown button -->
-                    <button
-                      @click.stop="toggleDropdown(user.id)"
-                      class="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full"
-                    >
-                      <svg
-                        class="w-5 h-5"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
+            <!-- Mobile Cards View with Grid -->
+            <div class="block md:hidden flex-1 overflow-y-auto p-3 sm:p-4">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                <div
+                  v-for="(user, idx) in displayUsers"
+                  :key="user.id"
+                  class="bg-gradient-to-br from-white to-gray-50 border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow duration-200"
+                >
+                  <div class="flex justify-between items-start mb-3">
+                    <div class="flex-1 min-w-0">
+                      <h3
+                        class="font-semibold text-gray-900 text-base truncate"
                       >
-                        <path
-                          d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"
-                        />
-                      </svg>
-                    </button>
-                    <!-- Mobile dropdown menu -->
-                    <div
-                      v-if="dropdownOpen === user.id"
-                      class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-10"
-                    >
-                      <div class="py-1">
-                        <button
-                          v-if="!user.is_deleted"
-                          class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-gray-900 flex items-center gap-2"
-                          @click="handleEditUser(user.id)"
+                        {{ user.first_name }} {{ user.last_name }}
+                      </h3>
+                      <p class="text-gray-600 text-xs truncate">
+                        @{{ user.username }}
+                      </p>
+                    </div>
+                    <div class="relative dropdown-container ml-2 flex-shrink-0">
+                      <!-- Mobile dropdown button -->
+                      <button
+                        @click.stop="toggleDropdown(user.id)"
+                        class="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-colors"
+                      >
+                        <svg
+                          class="w-4 h-4"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
                         >
-                          <svg
-                            class="w-4 h-4"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
+                          <path
+                            d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"
+                          />
+                        </svg>
+                      </button>
+                      <!-- Mobile dropdown menu -->
+                      <div
+                        v-if="dropdownOpen === user.id"
+                        class="absolute right-0 mt-2 w-44 bg-white border border-gray-200 rounded-lg shadow-lg z-10"
+                      >
+                        <div class="py-1">
+                          <button
+                            v-if="!user.is_deleted"
+                            class="w-full text-left px-3 py-2 text-xs text-gray-700 hover:bg-gray-50 hover:text-gray-900 flex items-center gap-2"
+                            @click="handleEditUser(user.id)"
                           >
-                            <path
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              stroke-width="2"
-                              d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                            />
-                          </svg>
-                          Edit User
-                        </button>
-                        <button
-                          v-if="!user.is_deleted"
-                          class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-gray-900 flex items-center gap-2"
-                          @click="handleEditRole(user.id)"
-                        >
-                          <svg
-                            class="w-4 h-4"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
+                            <svg
+                              class="w-3.5 h-3.5"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                              />
+                            </svg>
+                            Edit
+                          </button>
+                          <button
+                            v-if="!user.is_deleted"
+                            class="w-full text-left px-3 py-2 text-xs text-gray-700 hover:bg-gray-50 hover:text-gray-900 flex items-center gap-2"
+                            @click="handleEditRole(user.id)"
                           >
-                            <path
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              stroke-width="2"
-                              d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 002.944 12c0 4.993 3.684 9.128 8.618 10.128A12.02 12.02 0 0021.056 12a11.955 11.955 0 01-8.618-9.056z"
-                            />
-                          </svg>
-                          Change Role
-                        </button>
-                        <hr
-                          v-if="!user.is_deleted"
-                          class="my-1 border-gray-200"
-                        />
-                        <button
-                          v-if="!user.is_deleted"
-                          class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 hover:text-red-700 flex items-center gap-2"
-                          @click="handleDeleteUser(user.id)"
-                        >
-                          <svg
-                            class="w-4 h-4"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
+                            <svg
+                              class="w-3.5 h-3.5"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 002.944 12c0 4.993 3.684 9.128 8.618 10.128A12.02 12.02 0 0021.056 12a11.955 11.955 0 01-8.618-9.056z"
+                              />
+                            </svg>
+                            Role
+                          </button>
+                          <button
+                            v-if="!user.is_deleted && canChangePassword(user)"
+                            class="w-full text-left px-3 py-2 text-xs text-gray-700 hover:bg-gray-50 hover:text-gray-900 flex items-center gap-2"
+                            @click="handleChangePassword(user.id)"
                           >
-                            <path
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              stroke-width="2"
-                              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                            />
-                          </svg>
-                          Delete User
-                        </button>
-                        <button
-                          v-if="user.is_deleted"
-                          class="w-full text-left px-4 py-2 text-sm text-green-600 hover:bg-green-50 hover:text-green-700 flex items-center gap-2"
-                          @click="handleRestoreUser(user.id)"
-                        >
-                          <svg
-                            class="w-4 h-4"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
+                            <svg
+                              class="w-3.5 h-3.5"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                              />
+                            </svg>
+                            Password
+                          </button>
+                          <hr
+                            v-if="!user.is_deleted"
+                            class="my-1 border-gray-200"
+                          />
+                          <button
+                            v-if="!user.is_deleted"
+                            class="w-full text-left px-3 py-2 text-xs text-red-600 hover:bg-red-50 hover:text-red-700 flex items-center gap-2"
+                            @click="handleDeleteUser(user.id)"
                           >
-                            <path
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              stroke-width="2"
-                              d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11.356-2A8.001 8.001 0 0019.418 15M15 11v6m4-6v6m-4-3h.01M19 8h.01"
-                            />
-                          </svg>
-                          Restore User
-                        </button>
+                            <svg
+                              class="w-3.5 h-3.5"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                              />
+                            </svg>
+                            Delete
+                          </button>
+                          <button
+                            v-if="user.is_deleted"
+                            class="w-full text-left px-3 py-2 text-xs text-green-600 hover:bg-green-50 hover:text-green-700 flex items-center gap-2"
+                            @click="handleRestoreUser(user.id)"
+                          >
+                            <svg
+                              class="w-3.5 h-3.5"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11.356-2A8.001 8.001 0 0019.418 15M15 11v6m4-6v6m-4-3h.01M19 8h.01"
+                              />
+                            </svg>
+                            Restore
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-                <div class="space-y-2 text-sm">
-                  <div class="flex justify-between">
-                    <span class="text-gray-500">Email:</span>
-                    <span class="text-gray-900 font-medium">{{
-                      user.email
-                    }}</span>
-                  </div>
-                  <div class="flex justify-between">
-                    <span class="text-gray-500">Role:</span>
-                    <span
-                      class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium"
-                      :class="getRoleBadgeClass(user.role)"
-                    >
-                      {{ user.role }}
-                    </span>
+                  <div class="grid grid-cols-1 gap-2 text-xs">
+                    <div class="flex flex-col">
+                      <span class="text-gray-500 text-xs font-medium"
+                        >Email</span
+                      >
+                      <span class="text-gray-900 font-medium truncate">{{
+                        user.email
+                      }}</span>
+                    </div>
+                    <div class="flex flex-col">
+                      <span class="text-gray-500 text-xs font-medium"
+                        >Role</span
+                      >
+                      <span
+                        class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium w-fit"
+                        :class="getRoleBadgeClass(user.role)"
+                      >
+                        {{ user.role }}
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -226,6 +256,11 @@
                             Role
                           </th>
                           <th
+                            class="py-4 px-6 text-left font-semibold text-gray-900 text-xs uppercase tracking-wider"
+                          >
+                            Tenant
+                          </th>
+                          <th
                             class="py-4 px-6 text-center font-semibold text-gray-900 text-xs uppercase tracking-wider w-32"
                           >
                             Actions
@@ -261,6 +296,9 @@
                             >
                               {{ user.role }}
                             </span>
+                          </td>
+                          <td class="py-3 md:py-4 px-4 md:px-6 text-gray-700">
+                            {{ user.tenant_name || "No Tenant" }}
                           </td>
                           <td
                             class="py-3 md:py-4 px-4 md:px-6 text-center relative"
@@ -327,6 +365,29 @@
                                       />
                                     </svg>
                                     Change Role
+                                  </button>
+                                  <button
+                                    v-if="
+                                      !user.is_deleted &&
+                                      canChangePassword(user)
+                                    "
+                                    class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-gray-900 flex items-center gap-2"
+                                    @click="handleChangePassword(user.id)"
+                                  >
+                                    <svg
+                                      class="w-4 h-4"
+                                      fill="none"
+                                      stroke="currentColor"
+                                      viewBox="0 0 24 24"
+                                    >
+                                      <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                                      />
+                                    </svg>
+                                    Change Password
                                   </button>
                                   <hr
                                     v-if="!user.is_deleted"
@@ -531,6 +592,15 @@
               class="modal-overlay"
             />
           </transition>
+          <transition name="modal-fade">
+            <ChangePasswordModal
+              v-if="showPasswordModal"
+              :show="showPasswordModal"
+              :userId="selectedUserId"
+              @close="closePasswordModal"
+              class="modal-overlay"
+            />
+          </transition>
         </div>
       </main>
     </div>
@@ -547,7 +617,6 @@ import Sidebar from "@/components/Sidebar.vue";
 import Navbar from "@/components/Navbar.vue";
 import UserEditModal from "@/components/Users/UserEditModal.vue";
 import UserEditRole from "@/components/Users/UserEditRole.vue";
-
 const router = useRouter();
 const toast = useToast();
 const auth = useAuthStore();
@@ -556,6 +625,7 @@ const usersStore = useUsersStore();
 const showModal = ref(false);
 const selectedUserId = ref(null);
 const showRoleEditModal = ref(false);
+const showPasswordModal = ref(false);
 const dropdownOpen = ref(null);
 const currentPage = ref(1);
 const pageSize = 8;
@@ -673,6 +743,37 @@ const handleRestoreUser = async (userId) => {
     });
   }
   dropdownOpen.value = null;
+};
+
+const canChangePassword = (user) => {
+  // Superadmin can change anyone's password
+  if (auth.user?.is_superuser || auth.user?.is_super) {
+    return true;
+  }
+  // Tenant admin can change password for themselves and staff
+  if (auth.user?.role === "admin") {
+    if (user.id === auth.user?.id) {
+      return true; // Can change own password
+    }
+    if (user.role === "staff" && user.tenant === auth.user?.tenant) {
+      return true; // Can change staff password in same tenant
+    }
+  }
+  // Normal user can only change their own password
+  if (user.id === auth.user?.id) {
+    return true;
+  }
+  return false;
+};
+
+const handleChangePassword = (userId) => {
+  selectedUserId.value = userId;
+  showPasswordModal.value = true;
+  dropdownOpen.value = null;
+};
+
+const closePasswordModal = () => {
+  showPasswordModal.value = false;
 };
 
 const previousPage = () => {

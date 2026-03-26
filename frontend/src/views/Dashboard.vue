@@ -8,6 +8,31 @@
       <main class="flex-1 ml-0 md:ml-64 h-[calc(100vh-4rem)] flex flex-col">
         <div class="p-2 sm:p-4 md:p-8 flex flex-col h-full overflow-hidden">
           <div
+            v-if="
+              !dashboardStats ||
+              (dashboardStats.total_sales === 0 &&
+                dashboardStats.products.length === 0)
+            "
+            class="flex items-center justify-center h-full"
+          >
+            <div class="text-center">
+              <h2 class="text-2xl font-bold text-slate-900 mb-4">
+                No Data Available
+              </h2>
+              <p class="text-slate-600 mb-6">
+                You don't have a tenant assigned yet. Please create a tenant and
+                assign it to your user to see dashboard data.
+              </p>
+              <router-link
+                to="/tenants"
+                class="inline-block bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+              >
+                Go to Tenants
+              </router-link>
+            </div>
+          </div>
+          <div
+            v-else
             class="space-y-4 sm:space-y-6 md:space-y-8 flex-1 overflow-y-auto"
           >
             <!-- Top Products Cards -->

@@ -370,7 +370,6 @@ const handleSubmit = () => {
     description: form.value.description || "",
   };
 
-  console.log("Submitting payload:", payload); // Debug log
   emit("submit", payload);
 };
 

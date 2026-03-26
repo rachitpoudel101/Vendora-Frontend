@@ -1,14 +1,22 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-[#102b46] via-[#1a3a52] to-[#0f1f2e] flex items-center justify-center p-4 relative overflow-hidden">
+  <div
+    class="min-h-screen bg-gradient-to-br from-[#102b46] via-[#1a3a52] to-[#0f1f2e] flex items-center justify-center p-4 relative overflow-hidden"
+  >
     <!-- Animated background elements -->
-    <div class="absolute top-0 left-0 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
-    <div class="absolute bottom-0 right-0 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl translate-x-1/2 translate-y-1/2"></div>
+    <div
+      class="absolute top-0 left-0 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"
+    ></div>
+    <div
+      class="absolute bottom-0 right-0 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl translate-x-1/2 translate-y-1/2"
+    ></div>
 
     <div class="w-full max-w-md relative z-10">
       <!-- Header -->
       <div class="text-center mb-10">
         <div class="flex items-center justify-center gap-3 mb-6">
-          <div class="w-12 h-12 bg-white rounded-lg flex items-center justify-center shadow-lg">
+          <div
+            class="w-12 h-12 bg-white rounded-lg flex items-center justify-center shadow-lg"
+          >
             <img
               src="@/assets/Vendora-.png"
               alt="Vendora Logo"
@@ -17,20 +25,31 @@
           </div>
           <h1 class="text-3xl font-bold text-white tracking-wide">Vendora</h1>
         </div>
-        <p class="text-blue-200 text-sm font-medium">Inventory Management System</p>
-        <p class="text-slate-400 text-sm mt-2">Sign in to your account to continue</p>
+        <p class="text-blue-200 text-sm font-medium">
+          Inventory Management System
+        </p>
+        <p class="text-slate-400 text-sm mt-2">
+          Sign in to your account to continue
+        </p>
       </div>
 
       <!-- Login Card -->
-      <div class="bg-white/10 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/20 p-8 mb-6">
+      <div
+        class="bg-white/10 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/20 p-8 mb-6"
+      >
         <form @submit.prevent="handleLogin" class="space-y-5">
           <!-- Username Field -->
           <div class="space-y-2">
-            <label for="username" class="block text-sm font-semibold text-white">
+            <label
+              for="username"
+              class="block text-sm font-semibold text-white"
+            >
               Username
             </label>
             <div class="relative group">
-              <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+              <div
+                class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"
+              >
                 <svg
                   class="h-5 w-5 text-blue-300 group-focus-within:text-blue-400 transition-colors"
                   fill="none"
@@ -58,11 +77,16 @@
 
           <!-- Password Field -->
           <div class="space-y-2">
-            <label for="password" class="block text-sm font-semibold text-white">
+            <label
+              for="password"
+              class="block text-sm font-semibold text-white"
+            >
               Password
             </label>
             <div class="relative group">
-              <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+              <div
+                class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"
+              >
                 <svg
                   class="h-5 w-5 text-blue-300 group-focus-within:text-blue-400 transition-colors"
                   fill="none"
@@ -130,7 +154,10 @@
 
           <!-- Remember Me & Forgot Password -->
           <div class="flex items-center justify-between pt-2">
-            <label for="remember-me" class="flex items-center gap-3 cursor-pointer group">
+            <label
+              for="remember-me"
+              class="flex items-center gap-3 cursor-pointer group"
+            >
               <div class="relative">
                 <input
                   id="remember-me"
@@ -138,7 +165,8 @@
                   v-model="rememberMe"
                   class="sr-only"
                 />
-                <div class="w-5 h-5 border-2 border-blue-300 rounded-md bg-white/10 group-hover:bg-white/20 transition-all duration-200 flex items-center justify-center"
+                <div
+                  class="w-5 h-5 border-2 border-blue-300 rounded-md bg-white/10 group-hover:bg-white/20 transition-all duration-200 flex items-center justify-center"
                   :class="{ 'bg-blue-500 border-blue-500': rememberMe }"
                 >
                   <svg
@@ -157,11 +185,16 @@
                   </svg>
                 </div>
               </div>
-              <span class="text-sm text-slate-300 group-hover:text-slate-200 transition-colors">
+              <span
+                class="text-sm text-slate-300 group-hover:text-slate-200 transition-colors"
+              >
                 Remember me
               </span>
             </label>
-            <a href="#" class="text-sm text-blue-300 hover:text-blue-200 font-medium transition-colors">
+            <a
+              href="#"
+              class="text-sm text-blue-300 hover:text-blue-200 font-medium transition-colors"
+            >
               Forgot password?
             </a>
           </div>
@@ -249,7 +282,7 @@ const rememberMe = ref(false);
 onMounted(() => {
   const savedUsername = localStorage.getItem("vendora_username");
   const savedRememberMe = localStorage.getItem("vendora_remember_me");
-  
+
   if (savedUsername && savedRememberMe === "true") {
     username.value = savedUsername;
     rememberMe.value = true;

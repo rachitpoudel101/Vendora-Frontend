@@ -116,6 +116,7 @@ const allNavItems = [
     icon: "⚙️",
     adminOnly: true,
   },
+  { label: "Tenants", path: "/tenants", icon: "🏢", adminOnly: true },
 ];
 
 const navItems = computed(() => {
