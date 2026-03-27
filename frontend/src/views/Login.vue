@@ -269,9 +269,11 @@
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "@/stores/auth";
+import { useThemeStore } from "@/stores/themeStore";
 
 const router = useRouter();
 const auth = useAuthStore();
+const theme = useThemeStore();
 
 const username = ref("");
 const password = ref("");
@@ -305,6 +307,12 @@ async function handleLogin() {
   });
 
   if (!auth.error && auth.token) {
+    // Fetch theme immediately after successful login
+    try {
+      await theme.fetchCurrentTheme();
+    } catch (err) {
+      console.error("Failed to load theme:", err);
+    }
     router.push({ name: "Dashboard" });
   }
 }

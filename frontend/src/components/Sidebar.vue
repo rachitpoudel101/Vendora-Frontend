@@ -17,7 +17,7 @@
   >
     <!-- Mobile close button -->
     <div
-      class="md:hidden flex justify-between items-center p-4 border-b border-white/10"
+      class="md:hidden flex justify-between items-center p-3 border-b border-white/10"
     >
       <div class="flex items-center gap-3">
         <div
@@ -56,7 +56,7 @@
 
     <!-- Navigation -->
     <nav
-      class="flex flex-col gap-1 p-4 flex-1 overflow-y-auto"
+      class="flex flex-col gap-1 p-3 flex-1 overflow-y-auto"
       :class="{ 'pt-0': showSidebar }"
     >
       <router-link
@@ -81,7 +81,7 @@
     </nav>
 
     <!-- Footer Section -->
-    <div class="p-4 border-t border-white/10 flex-shrink-0">
+    <div class="p-3 border-t border-white/10 flex-shrink-0">
       <div class="text-xs text-white/50 text-center">© 2025 Vendora</div>
     </div>
   </div>

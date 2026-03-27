@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted } from "vue";
+import { onMounted, watch } from "vue";
 import { useAuthStore } from "@/stores/auth";
 import { useThemeStore } from "@/stores/themeStore";
 
@@ -22,6 +22,18 @@ onMounted(async () => {
     }
   }
 });
+
+// Watch for dark mode changes and apply immediately
+watch(
+  () => theme.darkModeEnabled,
+  (isDarkMode) => {
+    if (isDarkMode) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  },
+);
 </script>
 
 <template>

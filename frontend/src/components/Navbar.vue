@@ -1,6 +1,6 @@
 <template>
   <nav
-    class="shadow flex items-center justify-between px-3 sm:px-4 md:px-8 py-2 sm:py-3 md:py-4 fixed top-0 left-0 right-0 z-20 gap-2 sm:gap-3"
+    class="shadow flex items-center justify-between px-4 py-3 fixed top-0 left-0 right-0 z-20 gap-3"
     :style="{ backgroundColor: navbarColor }"
   >
     <!-- Logo Section - Always visible -->
@@ -50,32 +50,6 @@
     <div
       class="hidden md:flex items-center gap-3 sm:gap-4 relative flex-shrink-0"
     >
-      <!-- Dark Mode Toggle -->
-      <button
-        @click="toggleDarkMode"
-        class="p-2 rounded-lg hover:opacity-80 transition focus:outline-none"
-        :style="{ color: getTextColor(navbarColor) }"
-        :title="isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'"
-      >
-        <svg
-          v-if="!isDarkMode"
-          class="w-5 h-5"
-          fill="currentColor"
-          viewBox="0 0 20 20"
-        >
-          <path
-            d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"
-          />
-        </svg>
-        <svg v-else class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-          <path
-            fill-rule="evenodd"
-            d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.536l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.121-10.607a1 1 0 010 1.414l-.707.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.464 5.05l-.707-.707a1 1 0 00-1.414 1.414l.707.707zm5.657-9.193a1 1 0 00-1.414 0l-.707.707A1 1 0 005.05 6.464l.707-.707a1 1 0 001.414-1.414l-.707-.707zM5 8a1 1 0 100-2H4a1 1 0 100 2h1z"
-            clip-rule="evenodd"
-          />
-        </svg>
-      </button>
-
       <div class="relative" ref="dropdownRef">
         <button
           class="mx-1 sm:mx-2 font-medium transition flex items-center gap-1 sm:gap-2 focus:outline-none text-sm sm:text-base hover:opacity-80"
@@ -108,12 +82,6 @@
               {{ user.username }}
             </div>
             <button
-              @click="handleChangePassword"
-              class="w-full text-left px-3 sm:px-4 py-2 text-gray-700 hover:bg-blue-50 font-medium text-sm sm:text-base"
-            >
-              Change Password
-            </button>
-            <button
               @click="handleLogout"
               class="w-full text-left px-3 sm:px-4 py-2 text-red-600 hover:bg-blue-50 font-medium text-sm sm:text-base"
             >
@@ -138,12 +106,6 @@
         >
           {{ user?.username || "User" }}
         </div>
-        <button
-          @click="handleChangePassword"
-          class="w-full text-left px-3 py-2 text-blue-200 hover:bg-blue-900 font-medium rounded transition mb-2"
-        >
-          Change Password
-        </button>
         <button
           @click="handleLogout"
           class="w-full text-left px-3 py-2 text-red-400 hover:bg-blue-900 font-medium rounded transition"
@@ -176,13 +138,11 @@ const theme = useThemeStore();
 const { toggleSidebar: toggleSidebarState } = useSidebar();
 const user = computed(() => auth.user);
 const navbarColor = computed(() => theme.navbarColor);
-const isDarkMode = computed(() => theme.darkModeEnabled);
 const dropdownOpen = ref(false);
 const mobileMenuOpen = ref(false);
 const dropdownRef = ref<HTMLElement | null>(null);
 const logoutMsg = ref("");
 const logoutMsgType = ref("text-green-600");
-const showPasswordModal = ref(false);
 
 function getTextColor(bgColor: string): string {
   // Convert hex to RGB and calculate luminance
@@ -202,14 +162,6 @@ function toggleSidebar() {
   toggleSidebarState();
 }
 
-function toggleDarkMode() {
-  if (theme.theme) {
-    theme.updateTheme({
-      dark_mode_enabled: !theme.darkModeEnabled,
-    });
-  }
-}
-
 function handleClickOutside(event: MouseEvent) {
   if (
     dropdownOpen.value &&
@@ -227,12 +179,6 @@ onMounted(() => {
 onBeforeUnmount(() => {
   document.removeEventListener("mousedown", handleClickOutside);
 });
-
-function handleChangePassword() {
-  showPasswordModal.value = true;
-  dropdownOpen.value = false;
-  mobileMenuOpen.value = false;
-}
 
 async function handleLogout() {
   try {

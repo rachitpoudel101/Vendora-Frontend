@@ -5,9 +5,7 @@
       <Sidebar />
       <main class="flex-1 flex items-center justify-center overflow-auto">
         <div class="bg-white p-8 rounded shadow w-full max-w-lg text-center">
-          <h2 class="text-3xl font-bold mb-4" :style="{ color: buttonColor }">
-            Create User
-          </h2>
+          <h2 class="text-3xl font-bold mb-4">Create User</h2>
           <form @submit.prevent="onSubmit" class="space-y-4">
             <input
               v-model="username"
