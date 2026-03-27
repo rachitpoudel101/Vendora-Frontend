@@ -47,7 +47,11 @@
                   <button
                     type="button"
                     @click="$emit('add-category')"
-                    class="w-full px-4 py-3 bg-green-600 text-white rounded-xl font-medium hover:bg-green-700 transition-colors duration-150 flex items-center justify-center"
+                    class="w-full px-4 py-3 text-white rounded-xl font-medium hover:opacity-90 transition-colors duration-150 flex items-center justify-center"
+                    :style="{
+                      backgroundColor: buttonColor,
+                      color: getButtonTextColor(),
+                    }"
                   >
                     <span class="material-icons text-20 mr-2">add</span>
                     Add Category
@@ -231,7 +235,11 @@
               </button>
               <button
                 type="submit"
-                class="flex-1 px-4 py-3 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 transition-colors duration-150"
+                class="flex-1 px-4 py-3 text-white rounded-xl font-medium hover:opacity-90 transition-colors duration-150"
+                :style="{
+                  backgroundColor: buttonColor,
+                  color: getButtonTextColor(),
+                }"
               >
                 Create Product
               </button>
@@ -245,6 +253,7 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
+import { useTheme } from "@/composables/useTheme";
 
 interface CreateProductForm {
   name: string;
@@ -290,6 +299,8 @@ const emit = defineEmits<{
   submit: [form: CreateProductForm];
   "add-category": [];
 }>();
+
+const { buttonColor, getButtonTextColor } = useTheme();
 
 const form = ref<CreateProductForm>({
   name: "",

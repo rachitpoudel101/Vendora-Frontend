@@ -60,7 +60,11 @@
             Cancel
           </button>
           <button
-            class="flex-1 sm:flex-none px-4 sm:px-6 py-2 text-xs sm:text-sm font-medium bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all shadow-lg"
+            class="flex-1 sm:flex-none px-4 sm:px-6 py-2 text-xs sm:text-sm font-medium text-white rounded-lg hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all shadow-lg"
+            :style="{
+              backgroundColor: buttonColor,
+              color: getButtonTextColor(),
+            }"
             @click="onSubmit"
           >
             <svg
@@ -319,7 +323,11 @@
                             </div>
                           </div>
                           <button
-                            class="w-8 h-8 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors flex items-center justify-center flex-shrink-0"
+                            class="w-8 h-8 text-white rounded-md hover:opacity-90 transition-colors flex items-center justify-center flex-shrink-0"
+                            :style="{
+                              backgroundColor: buttonColor,
+                              color: getButtonTextColor(),
+                            }"
                             @click="addItem(index)"
                             title="Add new item"
                           >
@@ -639,7 +647,11 @@
                             </div>
                           </div>
                           <button
-                            class="w-8 h-8 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors flex items-center justify-center flex-shrink-0"
+                            class="w-8 h-8 text-white rounded-md hover:opacity-90 transition-colors flex items-center justify-center flex-shrink-0"
+                            :style="{
+                              backgroundColor: buttonColor,
+                              color: getButtonTextColor(),
+                            }"
                             @click="addItem(index)"
                             title="Add new item"
                           >
@@ -845,6 +857,7 @@ import { useBillsStore } from "@/stores/billsAPI";
 import { useInventoryStore } from "@/stores/InventoryAPI";
 import { useAuthStore } from "@/stores/auth";
 import { useToast } from "vue-toast-notification";
+import { useTheme } from "@/composables/useTheme";
 import BillSummary from "@/components/Bill/BillSummary.vue";
 
 // Form data
@@ -859,6 +872,7 @@ const isDisabled = ref(true); // Add this missing property
 // Products for dropdown
 const billsStore = useBillsStore();
 const inventoryStore = useInventoryStore();
+const { buttonColor, getButtonTextColor } = useTheme();
 
 const loading = computed(() => billsStore.loading || inventoryStore.loading);
 const error = computed(() => billsStore.error || inventoryStore.error);

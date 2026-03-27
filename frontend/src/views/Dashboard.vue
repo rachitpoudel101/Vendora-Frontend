@@ -25,7 +25,11 @@
               </p>
               <router-link
                 to="/tenants"
-                class="inline-block bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                class="inline-block text-white px-6 py-2 rounded-lg hover:opacity-90 transition-colors font-medium"
+                :style="{
+                  backgroundColor: buttonColor,
+                  color: getButtonTextColor(),
+                }"
               >
                 Go to Tenants
               </router-link>
@@ -164,8 +168,16 @@
                         class="px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg font-medium text-xs sm:text-sm transition-all duration-200"
                         :class="
                           selectedGraphPeriod === 'weekly'
-                            ? 'bg-slate-900 text-white shadow-sm'
+                            ? 'text-white shadow-sm'
                             : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                        "
+                        :style="
+                          selectedGraphPeriod === 'weekly'
+                            ? {
+                                backgroundColor: buttonColor,
+                                color: getButtonTextColor(),
+                              }
+                            : {}
                         "
                         @click="selectedGraphPeriod = 'weekly'"
                       >
@@ -175,8 +187,16 @@
                         class="px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg font-medium text-xs sm:text-sm transition-all duration-200"
                         :class="
                           selectedGraphPeriod === 'yearly'
-                            ? 'bg-slate-900 text-white shadow-sm'
+                            ? 'text-white shadow-sm'
                             : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                        "
+                        :style="
+                          selectedGraphPeriod === 'yearly'
+                            ? {
+                                backgroundColor: buttonColor,
+                                color: getButtonTextColor(),
+                              }
+                            : {}
                         "
                         @click="selectedGraphPeriod = 'yearly'"
                       >
@@ -315,6 +335,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue";
 import { useAuthStore } from "@/stores/auth";
+import { useTheme } from "@/composables/useTheme";
 import { useRouter } from "vue-router";
 import Sidebar from "@/components/Sidebar.vue";
 import Navbar from "@/components/Navbar.vue";
@@ -380,6 +401,7 @@ export type DashboardStats = {
 };
 
 const auth = useAuthStore();
+const { buttonColor, getButtonTextColor } = useTheme();
 const dashboardStore = useDashboardStore();
 const router = useRouter();
 

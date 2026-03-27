@@ -30,7 +30,11 @@
 
                 <button
                   v-show="canCreateSupplier"
-                  class="w-full lg:w-auto inline-flex items-center justify-center px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-medium rounded-lg sm:rounded-xl shadow-sm hover:shadow-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-200"
+                  class="w-full lg:w-auto inline-flex items-center justify-center px-4 sm:px-6 py-2.5 sm:py-3 text-white font-medium rounded-lg sm:rounded-xl shadow-sm hover:shadow-lg hover:opacity-90 transition-all duration-200"
+                  :style="{
+                    backgroundColor: buttonColor,
+                    color: getButtonTextColor(),
+                  }"
                   @click="handleCreateSupplier"
                 >
                   <span class="material-icons text-18 sm:text-20 mr-2"
@@ -76,7 +80,11 @@
                 </p>
                 <button
                   @click="loadSuppliers"
-                  class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm sm:text-base"
+                  class="px-4 py-2 text-white rounded-lg hover:opacity-90 transition-colors text-sm sm:text-base"
+                  :style="{
+                    backgroundColor: buttonColor,
+                    color: getButtonTextColor(),
+                  }"
                 >
                   Try Again
                 </button>
@@ -101,7 +109,11 @@
                 <button
                   v-if="canCreateSupplier"
                   @click="handleCreateSupplier"
-                  class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                  class="px-4 py-2 text-white rounded-lg hover:opacity-90 transition-colors"
+                  :style="{
+                    backgroundColor: buttonColor,
+                    color: getButtonTextColor(),
+                  }"
                 >
                   Add Supplier
                 </button>
@@ -305,7 +317,11 @@
                         Previous
                       </button>
                       <span
-                        class="px-3 py-1 text-sm bg-blue-100 text-blue-800 rounded-md"
+                        class="px-3 py-1 text-sm text-white rounded-md"
+                        :style="{
+                          backgroundColor: buttonColor,
+                          color: getButtonTextColor(),
+                        }"
                       >
                         {{ currentPage }} of {{ totalPages }}
                       </span>
@@ -400,6 +416,7 @@ import { useRouter } from "vue-router";
 import { useToast } from "vue-toast-notification";
 import { useAuthStore } from "@/stores/auth";
 import { useSuppliersStore } from "@/stores/suppliersAPI";
+import { useTheme } from "@/composables/useTheme";
 import Sidebar from "@/components/Sidebar.vue";
 import Navbar from "@/components/Navbar.vue";
 import EditModal from "@/components/Supliers/EditSupliermodel.vue";
@@ -408,6 +425,7 @@ import CreateModal from "@/components/Supliers/CreateSuplierModel.vue";
 const router = useRouter();
 const toast = useToast();
 const auth = useAuthStore();
+const { buttonColor, getButtonTextColor } = useTheme();
 const suppliersStore = useSuppliersStore();
 
 // Dynamic supplier data

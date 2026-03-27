@@ -30,7 +30,12 @@
 
                 <button
                   v-show="canCreateUser"
-                  class="w-full lg:w-auto inline-flex items-center justify-center px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-medium rounded-lg sm:rounded-xl shadow-sm hover:shadow-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                  class="w-full lg:w-auto inline-flex items-center justify-center px-4 sm:px-6 py-2.5 sm:py-3 text-white font-medium rounded-lg sm:rounded-xl shadow-sm hover:shadow-lg hover:opacity-90 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2"
+                  :style="{
+                    backgroundColor: buttonColor,
+                    color: getButtonTextColor(buttonColor),
+                    focusRingColor: buttonColor,
+                  }"
                   @click="handleCreateUser"
                 >
                   <span class="material-icons text-18 sm:text-20 mr-2"
@@ -603,6 +608,7 @@ import { ref, computed, onMounted, onUnmounted, watch } from "vue";
 import { useRouter } from "vue-router";
 import { useToast } from "vue-toast-notification";
 import { useAuthStore } from "@/stores/auth";
+import { useTheme } from "@/composables/useTheme";
 import { useUsersStore } from "@/stores/usersAPI";
 import Sidebar from "@/components/Sidebar.vue";
 import Navbar from "@/components/Navbar.vue";
@@ -611,6 +617,7 @@ import UserEditRole from "@/components/Users/UserEditRole.vue";
 const router = useRouter();
 const toast = useToast();
 const auth = useAuthStore();
+const { buttonColor, getButtonTextColor } = useTheme();
 const usersStore = useUsersStore();
 
 const showModal = ref(false);

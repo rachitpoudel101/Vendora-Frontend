@@ -14,7 +14,11 @@
 
         <button
           type="submit"
-          class="bg-blue-500 text-white px-4 py-2 rounded mt-3"
+          class="px-4 py-2 rounded text-white font-medium hover:opacity-90 transition-all"
+          :style="{
+            backgroundColor: buttonColor,
+            color: getButtonTextColor(),
+          }"
         >
           Save
         </button>
@@ -27,9 +31,11 @@
 import { computed, onMounted, ref, watch } from "vue";
 import Modal from "@/components/Modal.vue";
 import { useUsersStore } from "@/stores/usersAPI";
+import { useTheme } from "@/composables/useTheme";
 import { useToast } from "vue-toast-notification";
 
 const $toast = useToast();
+const { buttonColor, getButtonTextColor } = useTheme();
 
 // Props
 const props = defineProps({

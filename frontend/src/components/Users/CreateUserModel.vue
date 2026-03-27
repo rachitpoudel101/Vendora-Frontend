@@ -5,7 +5,9 @@
       <Sidebar />
       <main class="flex-1 flex items-center justify-center overflow-auto">
         <div class="bg-white p-8 rounded shadow w-full max-w-lg text-center">
-          <h2 class="text-3xl font-bold mb-4 text-blue-700">Create User</h2>
+          <h2 class="text-3xl font-bold mb-4" :style="{ color: buttonColor }">
+            Create User
+          </h2>
           <form @submit.prevent="onSubmit" class="space-y-4">
             <input
               v-model="username"
@@ -62,7 +64,11 @@
             </select>
             <button
               type="submit"
-              class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+              class="w-full px-4 py-2 text-white rounded font-medium hover:opacity-90 transition-all"
+              :style="{
+                backgroundColor: buttonColor,
+                color: getButtonTextColor(),
+              }"
             >
               Create
             </button>
@@ -77,6 +83,7 @@ import Sidebar from "@/components/Sidebar.vue";
 import Navbar from "@/components/Navbar.vue";
 import { ref, computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
+import { useTheme } from "@/composables/useTheme";
 import { useUsersStore } from "@/stores/usersAPI";
 import { useAuthStore } from "@/stores/auth";
 import { useTenantsStore } from "@/stores/tenantsAPI";
@@ -90,6 +97,7 @@ const role = ref("");
 const tenant = ref("");
 const router = useRouter();
 const authStore = useAuthStore();
+const { buttonColor, getButtonTextColor } = useTheme();
 const usersStore = useUsersStore();
 const tenantsStore = useTenantsStore();
 

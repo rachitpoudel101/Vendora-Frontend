@@ -3,7 +3,8 @@
     <div class="w-full">
       <div class="flex items-center gap-3 mb-6">
         <div
-          class="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center"
+          class="w-10 h-10 rounded-lg flex items-center justify-center"
+          :style="{ backgroundColor: buttonColor }"
         >
           <svg
             class="w-6 h-6 text-white"
@@ -135,7 +136,11 @@
           <div class="flex gap-3 border-t border-gray-200">
             <button
               type="submit"
-              class="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 text-white px-4 py-2.5 rounded-lg hover:shadow-lg hover:from-blue-700 hover:to-blue-800 font-medium transition-all duration-200 text-sm flex items-center justify-center gap-2"
+              class="flex-1 text-white px-4 py-2.5 rounded-lg hover:shadow-lg hover:opacity-90 font-medium transition-all duration-200 text-sm flex items-center justify-center gap-2"
+              :style="{
+                backgroundColor: buttonColor,
+                color: getButtonTextColor(),
+              }"
             >
               <svg
                 class="w-4 h-4"
@@ -182,10 +187,12 @@
 <script setup lang="ts">
 import { ref, watch, computed } from "vue";
 import { useToast } from "vue-toast-notification";
+import { useTheme } from "@/composables/useTheme";
 import Modal from "@/components/Modal.vue";
 import { useUsersStore } from "@/stores/usersAPI";
 
 const $toast = useToast();
+const { buttonColor, getButtonTextColor } = useTheme();
 // Props
 const props = defineProps({
   show: { type: Boolean, required: true },

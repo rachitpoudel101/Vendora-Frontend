@@ -8,7 +8,8 @@
 
   <!-- Sidebar -->
   <div
-    class="sidebar fixed left-0 w-64 bg-gradient-to-b bg-[#102b46] text-white shadow-2xl z-30 transition-transform duration-300 ease-in-out"
+    class="sidebar fixed left-0 w-64 text-white shadow-2xl z-30 transition-transform duration-300 ease-in-out"
+    :style="{ backgroundColor: sidebarColor }"
     :class="[
       showSidebar ? 'translate-x-0' : '-translate-x-full',
       'top-0 h-screen md:top-16 md:h-[calc(100vh-4rem)] md:translate-x-0',
@@ -90,11 +91,14 @@
 import { computed, watch } from "vue";
 import { useRoute } from "vue-router";
 import { useAuthStore } from "@/stores/auth";
+import { useThemeStore } from "@/stores/themeStore";
 import { useSidebar } from "@/composables/useSidebar";
 
 const $route = useRoute();
 const auth = useAuthStore();
+const theme = useThemeStore();
 const { sidebarOpen: showSidebar } = useSidebar();
+const sidebarColor = computed(() => theme.sidebarColor);
 
 // Close sidebar when route changes
 watch(
@@ -114,6 +118,12 @@ const allNavItems = [
     label: "Unit Configurations",
     path: "/configurations",
     icon: "⚙️",
+    adminOnly: true,
+  },
+  {
+    label: "Theme Settings",
+    path: "/theme-settings",
+    icon: "🎨",
     adminOnly: true,
   },
   { label: "Tenants", path: "/tenants", icon: "🏢", superAdminOnly: true },

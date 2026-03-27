@@ -28,7 +28,11 @@
 
                 <button
                   @click="openModal = true"
-                  class="w-full lg:w-auto inline-flex items-center justify-center px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-medium rounded-lg sm:rounded-xl shadow-sm hover:shadow-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                  class="w-full lg:w-auto inline-flex items-center justify-center px-4 sm:px-6 py-2.5 sm:py-3 text-white font-medium rounded-lg sm:rounded-xl shadow-sm hover:shadow-lg hover:opacity-90 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2"
+                  :style="{
+                    backgroundColor: buttonColor,
+                    color: getButtonTextColor(),
+                  }"
                 >
                   <svg
                     class="w-4 h-4 sm:w-5 sm:h-5 mr-2"
@@ -110,7 +114,11 @@
                     searchQuery || selectedPaymentFilter || dateFrom || dateTo
                   "
                   @click="clearFilters"
-                  class="px-4 py-2.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors whitespace-nowrap"
+                  class="px-4 py-2.5 rounded-lg hover:opacity-80 transition-colors whitespace-nowrap"
+                  :style="{
+                    backgroundColor: buttonColor + '20',
+                    color: buttonColor,
+                  }"
                 >
                   <span class="flex items-center">
                     <span class="material-icons text-18 mr-1">clear</span>
@@ -450,10 +458,12 @@ import printBill from "@/components/Bill/PrintBill.vue";
 import { useBillsStore } from "@/stores/billsAPI";
 import { useToast } from "vue-toast-notification";
 import { useInventoryStore } from "@/stores/InventoryAPI";
+import { useTheme } from "@/composables/useTheme";
 
 const auth = useAuthStore();
 const billsStore = useBillsStore();
 const inventoryStore = useInventoryStore();
+const { buttonColor, getButtonTextColor } = useTheme();
 
 onMounted(async () => {
   if (!auth.user) {

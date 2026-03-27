@@ -15,7 +15,11 @@
         <div class="flex space-x-2 w-full sm:w-auto">
           <button
             @click="printBill"
-            class="flex-1 sm:flex-none bg-blue-600 text-white px-3 sm:px-4 py-2 rounded text-sm hover:bg-blue-700 transition"
+            class="flex-1 sm:flex-none text-white px-3 sm:px-4 py-2 rounded text-sm hover:opacity-90 transition"
+            :style="{
+              backgroundColor: buttonColor,
+              color: getButtonTextColor(),
+            }"
           >
             <svg
               class="w-4 h-4 inline mr-1 sm:mr-2"
@@ -357,6 +361,7 @@
 
 <script setup>
 import { computed, ref, onMounted, onUnmounted } from "vue";
+import { useTheme } from "@/composables/useTheme";
 
 const props = defineProps({
   bill: {
@@ -376,6 +381,7 @@ const props = defineProps({
 const emit = defineEmits(["close"]);
 
 const billedByUsername = ref("");
+const { buttonColor, getButtonTextColor } = useTheme();
 
 // Get username from user ID with improved logic
 const getUsernameFromId = (userId) => {
