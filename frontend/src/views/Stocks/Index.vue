@@ -32,7 +32,11 @@
                   v-if="!isStaff"
                 >
                   <button
-                    class="w-full sm:w-auto inline-flex items-center justify-center px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-medium rounded-lg sm:rounded-xl shadow-sm hover:shadow-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                    class="w-full sm:w-auto inline-flex items-center justify-center px-4 sm:px-6 py-2.5 sm:py-3 text-white font-medium rounded-lg sm:rounded-xl shadow-sm hover:shadow-lg hover:opacity-90 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2"
+                    :style="{
+                      backgroundColor: buttonColor,
+                      color: getButtonTextColor(),
+                    }"
                     @click="handleCreateStockClick"
                   >
                     <span class="material-icons text-18 sm:text-20 mr-2"
@@ -41,7 +45,11 @@
                     <span class="text-sm sm:text-base">Add Product</span>
                   </button>
                   <button
-                    class="w-full sm:w-auto inline-flex items-center justify-center px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-emerald-600 to-emerald-700 text-white font-medium rounded-lg sm:rounded-xl shadow-sm hover:shadow-lg hover:from-emerald-700 hover:to-emerald-800 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
+                    class="w-full sm:w-auto inline-flex items-center justify-center px-4 sm:px-6 py-2.5 sm:py-3 text-white font-medium rounded-lg sm:rounded-xl shadow-sm hover:shadow-lg hover:opacity-90 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2"
+                    :style="{
+                      backgroundColor: buttonColor,
+                      color: getButtonTextColor(),
+                    }"
                     @click="handleCreateCategoryClick"
                   >
                     <span class="material-icons text-18 sm:text-20 mr-2"
@@ -67,8 +75,13 @@
                   class="relative py-3 sm:py-4 px-1 font-medium text-xs sm:text-sm transition-colors duration-200 border-b-2 focus:outline-none"
                   :class="
                     tab === 'products'
-                      ? 'text-blue-600 border-blue-600'
+                      ? 'border-b-2 focus:outline-none'
                       : 'text-gray-500 border-transparent hover:text-gray-700 hover:border-gray-300'
+                  "
+                  :style="
+                    tab === 'products'
+                      ? { color: buttonColor, borderBottomColor: buttonColor }
+                      : {}
                   "
                   @click="tab = 'products'"
                 >
@@ -79,7 +92,11 @@
                     <span class="hidden sm:inline">Products</span>
                     <span class="sm:hidden">Items</span>
                     <span
-                      class="ml-1 sm:ml-2 bg-blue-100 text-blue-600 py-0.5 px-1.5 sm:py-1 sm:px-2 rounded-full text-xs font-medium"
+                      class="ml-1 sm:ml-2 py-0.5 px-1.5 sm:py-1 sm:px-2 rounded-full text-xs font-medium"
+                      :style="{
+                        backgroundColor: buttonColor + '20',
+                        color: buttonColor,
+                      }"
                     >
                       {{ products.length }}
                     </span>
@@ -89,8 +106,13 @@
                   class="relative py-3 sm:py-4 px-1 font-medium text-xs sm:text-sm transition-colors duration-200 border-b-2 focus:outline-none"
                   :class="
                     tab === 'categories'
-                      ? 'text-emerald-600 border-emerald-600'
+                      ? 'border-b-2 focus:outline-none'
                       : 'text-gray-500 border-transparent hover:text-gray-700 hover:border-gray-300'
+                  "
+                  :style="
+                    tab === 'categories'
+                      ? { color: buttonColor, borderBottomColor: buttonColor }
+                      : {}
                   "
                   @click="tab = 'categories'"
                 >
@@ -101,7 +123,11 @@
                     <span class="hidden sm:inline">Categories</span>
                     <span class="sm:hidden">Cats</span>
                     <span
-                      class="ml-1 sm:ml-2 bg-emerald-100 text-emerald-600 py-0.5 px-1.5 sm:py-1 sm:px-2 rounded-full text-xs font-medium"
+                      class="ml-1 sm:ml-2 py-0.5 px-1.5 sm:py-1 sm:px-2 rounded-full text-xs font-medium"
+                      :style="{
+                        backgroundColor: buttonColor + '20',
+                        color: buttonColor,
+                      }"
                     >
                       {{ categories.length }}
                     </span>
@@ -172,7 +198,11 @@
                         selectedStockFilter
                       "
                       @click="clearFilters"
-                      class="px-4 py-2.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors whitespace-nowrap"
+                      class="px-4 py-2.5 text-gray-700 rounded-lg hover:opacity-80 transition-colors whitespace-nowrap"
+                      :style="{
+                        backgroundColor: buttonColor + '20',
+                        color: buttonColor,
+                      }"
                     >
                       <span class="flex items-center">
                         <span class="material-icons text-18 mr-1">clear</span>
@@ -566,9 +596,17 @@
                               :class="[
                                 'px-3 py-2 text-sm font-medium rounded-lg transition-colors duration-150',
                                 currentPage === page
-                                  ? 'bg-blue-600 text-white'
+                                  ? 'text-white'
                                   : 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-50',
                               ]"
+                              :style="
+                                currentPage === page
+                                  ? {
+                                      backgroundColor: buttonColor,
+                                      color: getButtonTextColor(),
+                                    }
+                                  : {}
+                              "
                             >
                               {{ page }}
                             </button>
@@ -1039,6 +1077,7 @@ import EditProductModal from "@/components/Stocks/EditProductModal.vue";
 import CreateCategoryModal from "@/components/Stocks/CreateCategoryModal.vue";
 import EditCategoryModal from "@/components/Stocks/EditCategoryModal.vue";
 import { useAuthStore } from "@/stores/auth";
+import { useTheme } from "@/composables/useTheme";
 import { useToast } from "vue-toast-notification";
 import { useInventoryStore } from "@/stores/InventoryAPI";
 
@@ -1193,6 +1232,7 @@ function prevPage() {
   if (currentPage.value > 1) currentPage.value--;
 }
 const auth = useAuthStore();
+const { buttonColor, getButtonTextColor } = useTheme();
 const $toast = useToast();
 const inventoryStore = useInventoryStore();
 

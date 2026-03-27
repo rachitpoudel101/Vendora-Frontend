@@ -66,7 +66,11 @@
               </button>
               <button
                 type="submit"
-                class="flex-1 px-4 py-3 bg-emerald-600 text-white rounded-xl font-medium hover:bg-emerald-700 transition-colors duration-150"
+                class="flex-1 px-4 py-3 text-white rounded-xl font-medium hover:opacity-90 transition-colors duration-150"
+                :style="{
+                  backgroundColor: buttonColor,
+                  color: getButtonTextColor(),
+                }"
               >
                 Create Category
               </button>
@@ -80,7 +84,7 @@
 
 <script setup lang="ts">
 import { ref, watch } from "vue";
-// import { useInventoryStore } from "@/stores/InventoryAPI";
+import { useTheme } from "@/composables/useTheme";
 
 interface CreateCategoryForm {
   name: string;
@@ -98,6 +102,8 @@ const emit = defineEmits<{
   close: [];
   submit: [form: CreateCategoryForm];
 }>();
+
+const { buttonColor, getButtonTextColor } = useTheme();
 
 const form = ref<CreateCategoryForm>({
   name: "",

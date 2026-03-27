@@ -201,7 +201,11 @@
               </button>
               <button
                 type="submit"
-                class="flex-1 px-4 py-3 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 transition-colors duration-150"
+                class="flex-1 px-4 py-3 text-white rounded-xl font-medium hover:opacity-90 transition-colors duration-150"
+                :style="{
+                  backgroundColor: buttonColor,
+                  color: getButtonTextColor(),
+                }"
               >
                 Save Changes
               </button>
@@ -215,6 +219,7 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
+import { useTheme } from "@/composables/useTheme";
 
 interface EditProductForm {
   name: string;
@@ -260,6 +265,8 @@ const emit = defineEmits<{
   close: [];
   submit: [form: EditProductForm];
 }>();
+
+const { buttonColor, getButtonTextColor } = useTheme();
 
 const localForm = ref<EditProductForm>({ ...props.editForm });
 

@@ -4,7 +4,8 @@
   >
     <!-- Header -->
     <div
-      class="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-4 sm:px-6 py-3 sm:py-4"
+      class="text-white px-4 sm:px-6 py-3 sm:py-4"
+      :style="{ backgroundColor: buttonColor, color: getButtonTextColor() }"
     >
       <h3 class="font-semibold text-base sm:text-lg flex items-center">
         <svg
@@ -87,13 +88,20 @@
 
         <!-- Grand Total -->
         <div
-          class="col-span-2 md:col-span-1 flex flex-col items-center justify-center p-3 sm:p-4 bg-blue-50 rounded-lg border-2 border-blue-200"
+          class="col-span-2 md:col-span-1 flex flex-col items-center justify-center p-3 sm:p-4 rounded-lg border-2"
+          :style="{
+            backgroundColor: buttonColor + '10',
+            borderColor: buttonColor,
+          }"
         >
           <label class="text-xs sm:text-sm font-bold text-gray-900 mb-2">
             Grand Total:
           </label>
           <div class="text-center">
-            <span class="text-xl sm:text-2xl font-bold text-blue-600">
+            <span
+              class="text-xl sm:text-2xl font-bold"
+              :style="{ color: buttonColor }"
+            >
               Rs. {{ grandTotal.toFixed(2) }}
             </span>
           </div>
@@ -105,6 +113,9 @@
 
 <script setup>
 import { defineProps } from "vue";
+import { useTheme } from "@/composables/useTheme";
+
+const { buttonColor, getButtonTextColor } = useTheme();
 
 const props = defineProps({
   totalQuantity: {

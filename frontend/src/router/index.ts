@@ -50,6 +50,12 @@ const routes = [
     component: () => import("@/views/Tenants/index.vue"),
     meta: { requiresAuth: true, requiresSuperAdmin: true },
   },
+  {
+    path: "/theme-settings",
+    name: "ThemeSettings",
+    component: () => import("@/views/ThemeSettings.vue"),
+    meta: { requiresAuth: true, requiresAdmin: true },
+  },
 ];
 
 const router = createRouter({
@@ -60,6 +66,18 @@ const router = createRouter({
 // Route guard to check permissions
 router.beforeEach((to, _from, next) => {
   const authStore = useAuthStore();
+
+  // Check if route requires admin
+  if (to.meta.requiresAdmin) {
+    const isAdmin =
+      authStore.user?.role === "admin" || authStore.user?.role === "superadmin";
+
+    if (!isAdmin) {
+      // Redirect to dashboard if not admin
+      next({ name: "Dashboard" });
+      return;
+    }
+  }
 
   // Check if route requires superadmin
   if (to.meta.requiresSuperAdmin) {

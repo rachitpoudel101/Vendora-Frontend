@@ -31,7 +31,11 @@
                 <div class="flex flex-col sm:flex-row gap-2 sm:gap-3">
                   <button
                     @click="openCreateModal"
-                    class="w-full sm:w-auto inline-flex items-center justify-center px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-medium rounded-lg sm:rounded-xl shadow-sm hover:shadow-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                    class="w-full sm:w-auto inline-flex items-center justify-center px-4 sm:px-6 py-2.5 sm:py-3 text-white font-medium rounded-lg sm:rounded-xl shadow-sm hover:shadow-lg hover:opacity-90 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2"
+                    :style="{
+                      backgroundColor: buttonColor,
+                      color: getButtonTextColor(),
+                    }"
                   >
                     <svg
                       class="w-5 h-5 mr-2"
@@ -89,10 +93,15 @@
                   @click="activeTab = 'units'"
                   :class="[
                     activeTab === 'units'
-                      ? 'border-blue-500 text-blue-600'
+                      ? 'border-b-2 text-white'
                       : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300',
                     'whitespace-nowrap border-b-2 py-2 px-1 text-sm font-medium',
                   ]"
+                  :style="
+                    activeTab === 'units'
+                      ? { borderBottomColor: buttonColor, color: buttonColor }
+                      : {}
+                  "
                 >
                   Units
                 </button>
@@ -661,6 +670,7 @@
 import { ref, onMounted, computed, watch } from "vue";
 import { useUnitStore } from "@/stores/UnitAPI";
 import { useUnitConfigStore } from "@/stores/unitConfigAPI";
+import { useTheme } from "@/composables/useTheme";
 import CreateUnitModel from "@/components/Unit/CreateUnitModel.vue";
 import EditUnitModel from "@/components/Unit/EditUnitModel.vue";
 import CreateUnitConfig from "@/components/UnitTypeConfigurations/CreateUnitConfigModal.vue";
@@ -690,6 +700,7 @@ export interface UnitConfig {
 
 const unitStore = useUnitStore();
 const unitConfigStore = useUnitConfigStore();
+const { buttonColor, getButtonTextColor } = useTheme();
 
 const units = computed(() => unitStore.units);
 const unitConfigs = computed(() => unitConfigStore.unitConfigs);
